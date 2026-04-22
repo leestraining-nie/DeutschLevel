@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeutschLevel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+// ════════════════════════════════════════════════
+//  ENIGE INSTELLING DIE JE HOEFT AAN TE PASSEN:
+//  Vul hier de URL van jouw SharePoint-site in.
+//  Voorbeeld: "https://school.sharepoint.com/sites/duits"
+// ════════════════════════════════════════════════
+const SP_SITE_URL = "https://jsgmaimonides.sharepoint.com/sites/Deutschlevelleesvaardigheidstool";
+const SP_LIST_NAME = "DeutschLevel";   // naam van de SharePoint-lijst (aanmaken via stap 2)
+const SP_SYNC_INTERVAL = 30000;        // auto-refresh elke 30 seconden
+// ════════════════════════════════════════════════
+</script>
+<style>
+:root{
+  --ink:#0d0d0d;--paper:#f5f0e8;--cream:#ede7d9;
+  --accent:#c8392b;--gold:#d4a843;--muted:#8a8278;--border:#d4c9b8;
+  --a1:#3a7d44;--a2:#5a9e5f;--b1:#2e6da4;--b2:#1a4d7e;--c1:#8b3a8b;--c2:#5c1f5c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+
+/* ── MODE SCREEN ── */
+#modeScreen{position:fixed;inset:0;background:#0d0d0d;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#modeScreen.hidden{display:none;}
+.mode-logo{font-family:'DM Serif Display',serif;font-size:26px;color:#f5f0e8;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.mode-flag{display:flex;width:30px;height:21px;border-radius:3px;overflow:hidden;flex-direction:column;}
+.mode-flag span{flex:1;display:block;}
+.mode-flag span:nth-child(1){background:#000;}
+.mode-flag span:nth-child(2){background:#dd0000;}
+.mode-flag span:nth-child(3){background:#ffce00;}
+.mode-tagline{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:44px;}
+.mode-cards{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;padding:0 20px;}
+.mode-btn{width:230px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:26px 22px;cursor:pointer;transition:all 0.2s;text-align:center;font-family:'DM Sans',sans-serif;color:white;}
+.mode-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.28);transform:translateY(-3px);}
+.mode-btn.teacher:hover{border-color:rgba(100,160,220,0.6);}
+.mode-btn.student:hover{border-color:rgba(212,168,67,0.6);}
+.mode-icon{font-size:38px;margin-bottom:12px;display:block;}
+.mode-btn h2{font-family:'DM Serif Display',serif;font-size:21px;margin-bottom:5px;}
+.mode-btn p{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;}
+.mode-chip{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;}
+.mode-chip.teacher{background:rgba(46,109,164,0.2);color:#7ab3e0;}
+.mode-chip.student{background:rgba(212,168,67,0.2);color:#d4a843;}
+
+/* ── HEADER ── */
+header{background:var(--ink);color:var(--paper);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:200;border-bottom:3px solid var(--accent);}
+.logo{font-family:'DM Serif Display',serif;font-size:19px;display:flex;align-items:center;gap:9px;}
+.logo-flag{display:flex;width:24px;height:17px;border-radius:3px;overflow:hidden;flex-direction:column;}
+.logo-flag span{flex:1;display:block;}
+.logo-flag span:nth-child(1){background:#000;}
+.logo-flag span:nth-child(2){background:#dd0000;}
+.logo-flag span:nth-child(3){background:#ffce00;}
+.mode-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-left:6px;cursor:pointer;}
+.mode-badge.teacher{background:rgba(46,109,164,0.3);color:#7ab3e0;}
+.mode-badge.student{background:rgba(212,168,67,0.2);color:#d4a843;}
+.header-right{display:flex;align-items:center;gap:12px;}
+nav{display:flex;gap:2px;}
+nav button{background:none;border:none;color:#aaa;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;text-transform:uppercase;cursor:pointer;padding:6px 11px;border-radius:5px;transition:all 0.2s;}
+nav button:hover{color:#fff;background:rgba(255,255,255,0.1);}
+nav button.active{color:#d4a843;}
+.xp-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.07);padding:5px 12px;border-radius:18px;cursor:pointer;}
+.xp-pill:hover{background:rgba(255,255,255,0.12);}
+.xp-val{font-size:12px;font-weight:700;color:#d4a843;}
+.lv-chip{background:#d4a843;color:#0d0d0d;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;}
+
+/* ── VIEWS ── */
+.view{display:none;}.view.active{display:block;}
+.container{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+/* ── HERO ── */
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:9px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,48px);line-height:1.1;letter-spacing:-1px;margin-bottom:9px;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero p{color:var(--muted);max-width:500px;font-size:14px;line-height:1.7;}
+.level-strip{display:flex;gap:6px;margin:20px 0;flex-wrap:wrap;}
+.level-badge{padding:4px 11px;border-radius:4px;font-size:11px;font-weight:600;cursor:default;}
+.level-badge.a1{background:var(--a1);color:white;}.level-badge.a2{background:var(--a2);color:white;}
+.level-badge.b1{background:var(--b1);color:white;}.level-badge.b2{background:var(--b2);color:white;}
+.level-badge.c1{background:var(--c1);color:white;}.level-badge.c2{background:var(--c2);color:white;}
+
+/* ── LAYOUT ── */
+.main-grid{display:grid;grid-template-columns:1fr 350px;gap:24px;align-items:start;}
+.panel{background:white;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.panel-header{padding:13px 18px;border-bottom:1px solid var(--border);background:var(--cream);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-family:'DM Serif Display',serif;font-size:16px;}
+.panel-body{padding:18px;}
+
+/* ── IMAGE UPLOAD ── */
+.img-upload-zone{border:2px dashed rgba(46,109,164,0.3);border-radius:7px;padding:18px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:10px;position:relative;background:rgba(46,109,164,0.02);}
+.img-upload-zone:hover{border-color:var(--b1);background:rgba(46,109,164,0.04);}
+.img-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+#imgPreviewBox{display:none;margin-bottom:10px;position:relative;}
+#imgPreview{max-width:100%;max-height:150px;border-radius:6px;border:1px solid var(--border);display:block;}
+.img-clear-btn{position:absolute;top:5px;right:5px;background:var(--ink);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* ── UPLOAD ── */
+.upload-zone{border:2px dashed var(--border);border-radius:7px;padding:28px 18px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:14px;position:relative;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(200,57,43,0.03);}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:30px;margin-bottom:7px;display:block;}
+.upload-zone h3{font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:3px;}
+.upload-zone p{color:var(--muted);font-size:12px;}
+.divider{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:13px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.text-input-area{width:100%;min-height:145px;border:1px solid var(--border);border-radius:6px;padding:11px;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;resize:vertical;background:var(--paper);color:var(--ink);transition:border-color 0.2s;}
+.text-input-area:focus{outline:none;border-color:var(--accent);}
+.text-input-area::placeholder{color:var(--muted);}
+.input-meta{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted);}
+.btn-primary{width:100%;padding:12px;background:var(--ink);color:var(--paper);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--accent);transform:translateX(-100%);transition:transform 0.3s ease;}
+.btn-primary:hover::before{transform:translateX(0);}
+.btn-primary span{position:relative;z-index:1;}
+.btn-primary:disabled{opacity:0.45;cursor:not-allowed;}
+.btn-primary:disabled::before{display:none;}
+.btn-sm{padding:5px 12px;background:none;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.btn-sm:hover{background:var(--ink);color:white;border-color:var(--ink);}
+.btn-green{background:var(--a1)!important;color:white!important;border-color:var(--a1)!important;}
+.btn-green:hover{background:#2d6336!important;}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;position:relative;z-index:1;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── RESULTS ── */
+.result-section{display:none;margin-top:18px;}
+.result-section.visible{display:block;animation:fadeUp 0.4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.result-header{display:flex;align-items:center;gap:11px;margin-bottom:14px;padding-bottom:13px;border-bottom:1px solid var(--border);}
+.result-level-badge{width:56px;height:56px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.18);}
+.result-level-info h2{font-family:'DM Serif Display',serif;font-size:17px;margin-bottom:2px;}
+.result-level-info p{color:var(--muted);font-size:11px;}
+.conf-wrap{margin-bottom:14px;}
+.conf-wrap label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px;}
+.conf-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;}
+.conf-fill{height:100%;border-radius:99px;transition:width 1s ease;width:0;}
+.prob-grid{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;}
+.prob-row{display:grid;grid-template-columns:30px 1fr 34px;gap:7px;align-items:center;font-size:11px;}
+.prob-label{font-weight:700;text-align:center;}
+.prob-bar{height:4px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prob-fill{height:100%;border-radius:99px;transition:width 1s ease;width:0;}
+.prob-pct{color:var(--muted);text-align:right;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px;}
+.stat-card{background:var(--cream);border-radius:5px;padding:9px;}
+.stat-val{font-family:'DM Serif Display',serif;font-size:18px;line-height:1;margin-bottom:2px;}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;}
+.explanation{background:var(--cream);border-left:3px solid var(--accent);border-radius:0 5px 5px 0;padding:11px;font-size:12px;line-height:1.65;margin-bottom:13px;color:#333;}
+.text-preview{background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:11px;font-size:12px;line-height:1.8;max-height:140px;overflow-y:auto;}
+.highlight-hard{background:rgba(200,57,43,0.13);border-radius:3px;padding:1px 3px;}
+.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;}
+
+/* ── WORKFLOW STEPS ── */
+.wf-steps{display:flex;align-items:center;gap:0;margin-bottom:16px;flex-wrap:wrap;}
+.wf-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);transition:all 0.2s;}
+.wf-step.active{background:var(--ink);color:white;border-color:var(--ink);}
+.wf-step.done{background:var(--a1);color:white;border-color:var(--a1);}
+.wf-num{width:17px;height:17px;border-radius:50%;background:rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.wf-step.active .wf-num{background:rgba(255,255,255,0.2);}
+.wf-step.done .wf-num{font-size:0;}
+.wf-step.done .wf-num::after{content:'✓';font-size:9px;}
+.wf-arrow{margin:0 5px;color:var(--border);font-size:14px;}
+.lle-block{background:linear-gradient(135deg,rgba(26,58,92,0.05),rgba(46,109,164,0.03));border:1px solid rgba(46,109,164,0.2);border-radius:8px;padding:16px;}
+.lle-block-header{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+.lle-logo{width:30px;height:30px;background:linear-gradient(135deg,#1a3a5c,#2e6da4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.lle-title{font-weight:600;font-size:12px;}
+.lle-sub{font-size:10px;color:var(--muted);}
+.btn-lle{background:linear-gradient(135deg,#1a3a5c,#2e6da4);color:white;border:none;border-radius:6px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;flex:1;justify-content:center;}
+.btn-lle:hover{filter:brightness(1.15);transform:translateY(-1px);}
+.niveau-pick-btn{padding:7px 12px;border:none;border-radius:6px;color:white;font-family:'DM Serif Display',serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;opacity:0.7;}
+.niveau-pick-btn:hover{opacity:1;transform:translateY(-2px);}
+.niveau-pick-btn.selected{opacity:1;outline:3px solid white;outline-offset:2px;transform:scale(1.08);}
+.niveau-final-btn{padding:8px 14px;border:2px solid transparent;border-radius:6px;color:white;font-family:'DM Serif Display',serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;opacity:0.65;}
+.niveau-final-btn:hover{opacity:0.9;}
+.niveau-final-btn.selected{opacity:1;border-color:white;}
+.gen-bar{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;}
+.gen-bar-info p:first-child{font-weight:600;font-size:13px;margin-bottom:2px;}
+.gen-bar-info p:last-child{font-size:11px;color:var(--muted);}
+
+/* ── CITO QUESTIONS ── */
+.questions-panel{display:none;margin-top:18px;}
+.questions-panel.visible{display:block;animation:fadeUp 0.4s ease;}
+.xp-banner{background:linear-gradient(135deg,#1a1a2e,#16213e);color:white;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.xp-banner h3{font-size:13px;font-weight:600;margin-bottom:1px;}
+.xp-banner p{font-size:10px;color:rgba(255,255,255,0.55);}
+.xp-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.xp-chip{padding:3px 9px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(212,168,67,0.15);color:#d4a843;border:1px solid rgba(212,168,67,0.25);}
+.cito-context{background:var(--cream);border:1px solid var(--border);border-radius:7px 7px 0 0;padding:10px 14px;font-size:12px;line-height:1.6;color:#444;border-bottom:2px solid var(--border);}
+.cito-context-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;}
+.question-item{border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:12px;}
+.question-item.has-context{border-radius:0 0 7px 7px;border-top:none;}
+.question-header{padding:11px 14px;background:var(--cream);}
+.q-meta{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;}
+.q-num{background:var(--ink);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;}
+.q-pts{font-size:9px;color:var(--muted);background:var(--border);padding:2px 6px;border-radius:8px;}
+.q-type-badge{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:8px;}
+.q-type-badge.mc,.q-type-badge.aansluit,.q-type-badge.invul{background:rgba(46,109,164,0.1);color:var(--b1);}
+.q-type-badge.bewering{background:rgba(200,57,43,0.09);color:var(--accent);}
+.q-type-badge.citeer{background:rgba(139,58,139,0.1);color:var(--c1);}
+.q-type-badge.volgorde{background:rgba(212,168,67,0.15);color:#7a5c00;}
+.q-type-badge.open{background:rgba(58,125,68,0.1);color:var(--a1);}
+.q-text{font-size:13px;line-height:1.5;font-weight:500;}
+.answer-options{padding:9px 12px;display:flex;flex-direction:column;gap:5px;}
+.answer-option{padding:8px 11px;border:1px solid var(--border);border-radius:5px;cursor:pointer;font-size:12px;transition:all 0.15s;display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.answer-option:hover{border-color:#999;background:var(--cream);}
+.answer-option.selected{border-color:var(--b1);background:rgba(46,109,164,0.05);}
+.answer-option.correct{border-color:var(--a1);background:rgba(58,125,68,0.09);color:#2d5c35;}
+.answer-option.wrong{border-color:var(--accent);background:rgba(200,57,43,0.07);color:#8a1a0a;}
+.answer-option.reveal{border-color:var(--a1);background:rgba(58,125,68,0.05);}
+.opt-key{width:20px;height:20px;border-radius:4px;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.bewering-table{margin:8px 12px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.bewering-row{display:grid;grid-template-columns:1fr 90px;border-bottom:1px solid var(--border);}
+.bewering-row:last-child{border-bottom:none;}
+.bewering-row.header{background:var(--cream);}
+.bewering-cell{padding:8px 10px;font-size:12px;line-height:1.45;}
+.bewering-cell.right{border-left:1px solid var(--border);display:flex;gap:4px;align-items:center;}
+.bew-btn{flex:1;padding:5px 3px;border:1px solid var(--border);border-radius:4px;background:white;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;}
+.bew-btn:hover{background:var(--cream);}
+.bew-btn.sel-j{background:var(--a1);color:white;border-color:var(--a1);}
+.bew-btn.sel-n{background:var(--accent);color:white;border-color:var(--accent);}
+.bew-btn.wrong-choice{background:#ffeaea;color:#c00;border-color:#ffb3b3;}
+.volgorde-items{margin:8px 12px;display:flex;flex-direction:column;gap:5px;}
+.volgorde-row{display:flex;align-items:center;gap:8px;}
+.volgorde-label{font-size:11px;font-weight:700;width:18px;color:var(--muted);}
+.volgorde-text{flex:1;background:var(--cream);border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-size:12px;line-height:1.4;}
+.volgorde-select{padding:5px 7px;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:11px;background:white;min-width:52px;}
+.open-answer-box,.citeer-box{width:100%;border:1px solid var(--border);border-radius:5px;padding:8px;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;background:var(--paper);}
+.open-answer-box:focus,.citeer-box:focus{outline:none;border-color:var(--b1);}
+.feedback-box{margin:0 12px 9px;padding:8px 11px;border-radius:5px;font-size:11px;line-height:1.5;display:none;}
+.feedback-box.show{display:block;}
+.feedback-box.correct-fb{background:rgba(58,125,68,0.09);border:1px solid rgba(58,125,68,0.22);color:#2d5c35;}
+.feedback-box.partial-fb{background:rgba(212,168,67,0.09);border:1px solid rgba(212,168,67,0.28);color:#7a5c00;}
+.feedback-box.wrong-fb{background:rgba(200,57,43,0.07);border:1px solid rgba(200,57,43,0.18);color:#8a1a0a;}
+.score-summary{background:white;border:1px solid var(--border);border-radius:7px;padding:15px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.score-big{font-family:'DM Serif Display',serif;font-size:32px;line-height:1;}
+.score-bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:5px;}
+.score-bar-fill{height:100%;border-radius:99px;transition:width 1s ease;}
+.xp-earned-pill{background:linear-gradient(135deg,#d4a843,#e8c060);color:var(--ink);padding:7px 14px;border-radius:18px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:5px;}
+
+/* ── TEXT MARKING ── */
+.mark-toolbar{display:flex;align-items:center;gap:5px;padding:8px 12px;background:var(--cream);border-radius:6px;margin-bottom:12px;border:1px solid var(--border);flex-wrap:wrap;}
+.mark-btn{width:26px;height:26px;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;border:2px solid rgba(0,0,0,0.15);}
+.mark-btn:hover{transform:scale(1.2);}
+.mark-btn.mark-active{outline:2px solid var(--ink);transform:scale(1.15);}
+mark.hl-yellow{background:#fff176;border-radius:2px;padding:0 2px;}
+mark.hl-green{background:#b9f6ca;border-radius:2px;padding:0 2px;}
+mark.hl-blue{background:#b3e5fc;border-radius:2px;padding:0 2px;}
+mark.hl-orange{background:#ffe0b2;border-radius:2px;padding:0 2px;}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:15px;}
+.xp-widget{background:linear-gradient(160deg,#1a1a2e,#0f3460);color:white;border-radius:9px;padding:16px;overflow:hidden;}
+.xp-widget-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.player-level{font-family:'DM Serif Display',serif;font-size:24px;color:#d4a843;}
+.player-title{font-size:10px;color:rgba(255,255,255,0.55);}
+.level-badge-widget{background:rgba(212,168,67,0.18);border:1px solid rgba(212,168,67,0.35);padding:4px 10px;border-radius:10px;font-size:11px;font-weight:700;color:#d4a843;}
+.xp-progress-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;}
+.xp-bar{height:7px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;margin-bottom:12px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,#d4a843,#f0d060);border-radius:99px;transition:width 0.8s ease;}
+.xp-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.xp-stat{background:rgba(255,255,255,0.06);border-radius:5px;padding:7px;}
+.xp-stat-val{font-size:16px;font-weight:700;color:white;}
+.xp-stat-label{font-size:9px;color:rgba(255,255,255,0.45);}
+.streak-row{display:flex;gap:4px;margin-bottom:10px;}
+.streak-day{width:25px;height:25px;border-radius:4px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.35);}
+.streak-day.done{background:#d4a843;color:#0d0d0d;}
+.streak-day.today{background:rgba(212,168,67,0.25);color:#d4a843;border:1px solid rgba(212,168,67,0.4);}
+.mission-item{background:rgba(255,255,255,0.04);border-radius:5px;padding:8px;margin-bottom:5px;}
+.mission-top{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.mission-name{font-size:11px;font-weight:600;color:white;}
+.mission-desc{font-size:9px;color:rgba(255,255,255,0.45);}
+.mission-reward{font-size:10px;font-weight:700;color:#d4a843;}
+.mission-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;}
+.mission-bar-fill{height:100%;background:#d4a843;border-radius:99px;transition:width 0.5s ease;}
+.mission-item.done{opacity:0.45;}
+.badge-shelf{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.badge{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative;cursor:default;}
+.badge.locked{filter:grayscale(1) opacity(0.3);}
+.badge-tt{position:absolute;bottom:calc(100%+5px);left:50%;transform:translateX(-50%);background:var(--ink);color:white;font-size:9px;white-space:nowrap;padding:3px 7px;border-radius:3px;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:10;}
+.badge:hover .badge-tt{opacity:1;}
+.level-road{display:flex;flex-direction:column;gap:3px;}
+.road-item{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:5px;}
+.road-item.current{background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.25);}
+.road-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.road-name{font-size:10px;color:rgba(255,255,255,0.7);}
+.road-lvl{font-size:9px;color:#d4a843;margin-left:auto;}
+.lib-filter{display:flex;gap:4px;margin-bottom:9px;flex-wrap:wrap;}
+.filter-btn{padding:3px 7px;border-radius:4px;border:1px solid var(--border);background:white;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.filter-btn:hover{border-color:var(--ink);}
+.filter-btn.active{background:var(--ink);color:white;border-color:var(--ink);}
+.filter-btn.a1.active{background:var(--a1);border-color:var(--a1);}
+.filter-btn.a2.active{background:var(--a2);border-color:var(--a2);}
+.filter-btn.b1.active{background:var(--b1);border-color:var(--b1);}
+.filter-btn.b2.active{background:var(--b2);border-color:var(--b2);}
+.filter-btn.c1.active{background:var(--c1);border-color:var(--c1);}
+.filter-btn.c2.active{background:var(--c2);border-color:var(--c2);}
+.text-card{border:1px solid var(--border);border-radius:5px;padding:10px;margin-bottom:7px;cursor:pointer;transition:all 0.2s;background:white;}
+.text-card:hover{border-color:var(--ink);box-shadow:0 2px 7px rgba(0,0,0,0.07);transform:translateY(-1px);}
+.text-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.text-card h4{font-size:11px;font-weight:600;flex:1;margin-right:5px;}
+.text-card p{font-size:10px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.mini-badge{padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;color:white;flex-shrink:0;}
+.empty-lib{text-align:center;padding:24px 10px;color:var(--muted);}
+.empty-lib .empty-icon{font-size:22px;margin-bottom:7px;display:block;}
+.empty-lib p{font-size:10px;}
+.erk-ref .level-row{display:grid;grid-template-columns:36px 1fr;gap:9px;padding:9px 6px;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.erk-ref .level-row:last-child{border-bottom:none;}
+.erk-ref .level-row:hover{background:var(--cream);}
+.erk-level-pill{width:32px;height:32px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:12px;color:white;flex-shrink:0;}
+.erk-level-text h4{font-size:11px;font-weight:600;margin-bottom:1px;}
+.erk-level-text p{font-size:10px;color:var(--muted);line-height:1.35;}
+
+/* ── LIB PAGE ── */
+.lib-page-header{padding:36px 0 22px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.lib-page-header h1{font-family:'DM Serif Display',serif;font-size:34px;letter-spacing:-0.5px;margin-bottom:6px;}
+.lib-page-header p{color:var(--muted);font-size:13px;}
+.lib-controls{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.lib-controls .filter-btn{font-size:11px;padding:5px 11px;}
+.lib-search{flex:1;min-width:150px;max-width:260px;padding:7px 11px;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;font-size:12px;background:white;}
+.lib-search:focus{outline:none;border-color:var(--accent);}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-bottom:50px;}
+.lib-card{background:white;border:1px solid var(--border);border-radius:9px;overflow:hidden;transition:all 0.2s;cursor:pointer;}
+.lib-card:hover{transform:translateY(-3px);box-shadow:0 7px 20px rgba(0,0,0,0.09);}
+.lib-card-top{padding:14px 16px;border-bottom:1px solid var(--border);}
+.lib-card-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;color:white;margin-bottom:7px;}
+.lib-card-top h3{font-family:'DM Serif Display',serif;font-size:14px;line-height:1.3;margin-bottom:5px;}
+.lib-card-top p{font-size:11px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.lib-card-bottom{padding:9px 14px;display:flex;align-items:center;justify-content:space-between;background:var(--cream);}
+.lib-card-meta{font-size:10px;color:var(--muted);}
+.diff-stars{display:flex;gap:2px;margin-top:6px;}
+.diff-star{width:10px;height:10px;border-radius:50%;background:var(--border);}
+.diff-star.on{background:#d4a843;}
+.xp-pill-sm{font-size:10px;font-weight:700;color:#d4a843;background:rgba(212,168,67,0.1);padding:2px 7px;border-radius:8px;}
+.lib-card-actions{display:flex;gap:5px;}
+.lib-card-actions button{padding:4px 8px;border-radius:4px;border:1px solid var(--border);background:white;font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer;transition:all 0.15s;}
+.lib-card-actions button:hover{background:var(--ink);color:white;border-color:var(--ink);}
+.lib-card-actions .del-btn:hover{background:var(--accent)!important;border-color:var(--accent)!important;}
+.lib-empty{grid-column:1/-1;text-align:center;padding:60px 16px;color:var(--muted);}
+.lib-empty .empty-icon{font-size:36px;margin-bottom:10px;display:block;}
+.lib-empty h3{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:5px;color:var(--ink);}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;align-items:center;justify-content:center;padding:14px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--paper);border-radius:11px;width:100%;max-width:800px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.3s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.modal-header{padding:14px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--cream);flex-shrink:0;}
+.modal-header-left{display:flex;align-items:center;gap:10px;}
+.modal-badge{padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:white;}
+.modal-title{font-family:'DM Serif Display',serif;font-size:16px;}
+.modal-close{width:30px;height:30px;border-radius:50%;border:none;background:none;font-size:18px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:var(--border);}
+.modal-tabs{display:flex;border-bottom:1px solid var(--border);background:white;flex-shrink:0;}
+.modal-tab{padding:10px 18px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;}
+.modal-tab:hover{color:var(--ink);}
+.modal-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.modal-body{overflow-y:auto;flex:1;}
+.modal-tab-content{display:none;padding:20px;}
+.modal-tab-content.active{display:block;}
+.reader-text{font-size:14px;line-height:1.85;color:#222;user-select:text;}
+.reader-text p{margin-bottom:12px;}
+.modal-check-wrap{padding:0 20px 16px;flex-shrink:0;}
+
+/* ── ACHIEVEMENT ── */
+.achievement-popup{position:fixed;top:76px;right:20px;z-index:600;background:linear-gradient(135deg,#1a1a2e,#0f3460);color:white;border-radius:9px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 24px rgba(0,0,0,0.35);transform:translateX(120%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);min-width:240px;border:1px solid rgba(212,168,67,0.25);}
+.achievement-popup.show{transform:translateX(0);}
+.ach-icon{font-size:24px;}
+.ach-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#d4a843;}
+.ach-name{font-size:13px;font-weight:600;}
+.xp-float{position:fixed;font-family:'DM Serif Display',serif;font-size:20px;font-weight:700;color:#d4a843;pointer-events:none;z-index:598;animation:xpFloat 1.4s ease forwards;}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-60px);}}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:white;padding:9px 18px;border-radius:7px;font-size:12px;font-weight:500;z-index:599;transition:transform 0.3s ease;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── ERK GUIDE ── */
+.erk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:50px;}
+footer{margin-top:48px;padding:20px 0;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:11px;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@media(max-width:840px){.main-grid{grid-template-columns:1fr;}.container{padding:0 14px;}header{padding:0 14px;}nav button{font-size:9px;padding:5px 7px;}.lib-grid{grid-template-columns:1fr;}.mode-cards{flex-direction:column;align-items:center;}}
+
+/* ── SHAREPOINT SYNC ── */
+#syncBar{position:fixed;top:58px;left:0;right:0;z-index:190;padding:5px 20px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:8px;transform:translateY(-110%);transition:transform 0.3s ease;pointer-events:none;}
+#syncBar.show{transform:translateY(0);}
+#syncBar.syncing{background:rgba(46,109,164,0.93);color:white;}
+#syncBar.ok{background:rgba(58,125,68,0.93);color:white;}
+#syncBar.err{background:rgba(200,57,43,0.93);color:white;}
+#syncBar.offline{background:rgba(80,70,60,0.93);color:white;}
+.sync-spin{width:10px;height:10px;border:2px solid rgba(255,255,255,0.35);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+#syncBar.ok .sync-spin,#syncBar.err .sync-spin,#syncBar.offline .sync-spin{animation:none;border:none;width:10px;height:10px;border-radius:50%;background:currentColor;}
+.user-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);padding:4px 11px;border-radius:14px;font-size:11px;color:#bbb;cursor:default;white-space:nowrap;}
+.user-avatar{width:20px;height:20px;border-radius:50%;background:#2e6da4;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;}
+#spOfflineDot{display:none;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:2px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SYNC BAR ═══ -->
+<div id="syncBar"><div class="sync-spin"></div><span id="syncMsg">Synchroniseren…</span></div>
+
+<!-- ═══ MODE SCREEN ═══ -->
+<div id="modeScreen">
+  <div class="mode-logo">
+    <div class="mode-flag"><span></span><span></span><span></span></div>
+    DeutschLevel
+  </div>
+  <p class="mode-tagline">ERK Tekstanalyse &amp; CITO-Opgaven voor Duits</p>
+  <div class="mode-cards">
+    <button class="mode-btn teacher" onclick="selectMode('teacher')" type="button">
+      <span class="mode-icon">👩‍🏫</span>
+      <h2>Docent</h2>
+      <p>Teksten analyseren, ERK-niveau bepalen via AI + LLE, en opgaven aanmaken voor leerlingen.</p>
+      <span class="mode-chip teacher">Analyseren · LLE · Beheren</span>
+    </button>
+    <button class="mode-btn student" onclick="selectMode('student')" type="button">
+      <span class="mode-icon">🎓</span>
+      <h2>Leerling</h2>
+      <p>Teksten lezen, CITO-stijl opgaven maken, XP verdienen en niveaus ontgrendelen.</p>
+      <span class="mode-chip student">Lezen · Oefenen · XP verdienen</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="logo">
+    <div class="logo-flag"><span></span><span></span><span></span></div>
+    DeutschLevel
+    <span class="mode-badge" id="modeBadge" onclick="document.getElementById('modeScreen').classList.remove('hidden')" style="cursor:pointer;">—</span>
+  </div>
+  <div class="header-right">
+    <nav>
+      <button onclick="switchView('analyse',this)" class="active" id="navAnalyse">📝 Analyse</button>
+      <button onclick="switchView('bibliotheek',this)" id="navBib">📚 Bibliotheek</button>
+      <button onclick="switchView('referentie',this)" id="navRef">📖 ERK Gids</button>
+    </nav>
+    <div class="xp-pill" id="xpPillHeader" onclick="switchView('bibliotheek',null)" style="display:none;">
+      <span>⚡</span><span class="xp-val" id="headerXP">0 XP</span>
+      <span class="lv-chip" id="headerLevel">Lv 1</span>
+    </div>
+    <div class="user-chip" id="userChip" style="display:none;">
+      <div class="user-avatar" id="userAvatar">👤</div>
+      <span id="userName">—</span>
+      <div id="spOfflineDot" title="Offline — lokale modus"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ VIEW: ANALYSE ═══ -->
+<div class="view active" id="view-analyse">
+<div class="container">
+  <div class="hero">
+    <p class="hero-eyebrow" id="heroEyebrow">ERK Tekstanalyse</p>
+    <h1 id="heroTitle">Analyseer <em>Deutsche Texte</em><br>op ERK-niveau</h1>
+    <p id="heroSubtitle">Upload een tekst of screenshot, analyseer het ERK-niveau en genereer CITO-stijl opgaven.</p>
+    <div class="level-strip">
+      <span class="level-badge a1">A1</span><span class="level-badge a2">A2</span>
+      <span class="level-badge b1">B1</span><span class="level-badge b2">B2</span>
+      <span class="level-badge c1">C1</span><span class="level-badge c2">C2</span>
+    </div>
+  </div>
+  <div class="main-grid">
+    <div>
+      <!-- Input -->
+      <div class="panel" id="inputPanel">
+        <div class="panel-header">
+          <span class="panel-title" id="inputPanelTitle">Tekst invoeren</span>
+          <span style="font-size:10px;color:var(--muted)" id="inputPanelSub">AI + LLE analyse</span>
+        </div>
+        <div class="panel-body">
+          <!-- URL import -->
+          <div style="display:flex;gap:7px;margin-bottom:10px;align-items:center;">
+            <input type="url" id="urlInput" placeholder="🔗 Plak een webpagina-URL om tekst te importeren…" style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;background:var(--paper);color:var(--ink);" onkeydown="if(event.key==='Enter')importURL()">
+            <button id="urlImportBtn" onclick="importURL()" style="padding:8px 13px;background:var(--b1);color:white;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">Importeer</button>
+          </div>
+          <!-- Screenshot upload -->
+          <div class="img-upload-zone" id="imgUploadZone">
+            <input type="file" id="imgInput" accept="image/*" onchange="handleImageUpload(event)">
+            <span style="font-size:22px;display:block;margin-bottom:5px;">📄</span>
+            <p style="font-size:12px;color:var(--b1);font-weight:600;margin-bottom:2px;">Sleep een screenshot hierheen</p>
+            <p style="font-size:11px;color:var(--muted);">AI leest de tekst automatisch · JPG, PNG, WEBP</p>
+          </div>
+          <div id="imgPreviewBox">
+            <img id="imgPreview" alt="preview">
+            <button class="img-clear-btn" onclick="clearImage()">✕</button>
+            <p id="imgStatus" style="font-size:11px;color:var(--muted);margin-top:4px;"></p>
+          </div>
+          <!-- TXT upload -->
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept=".txt" onchange="handleFile(event)">
+            <span class="upload-icon">📄</span>
+            <h3>Of sleep een .txt bestand hierheen</h3>
+            <p>of klik om te bladeren</p>
+          </div>
+          <div class="divider">of typ / plak tekst</div>
+          <textarea class="text-input-area" id="textInput" placeholder='Plak hier een Duitse tekst…' oninput="updateWordCount()"></textarea>
+          <div class="input-meta">
+            <span id="wordCount">0 woorden</span>
+            <span style="color:var(--accent);font-size:10px;">Min. 50 woorden aanbevolen</span>
+          </div>
+          <button class="btn-primary" id="analyseBtn" onclick="startAnalyse()">
+            <span>🔍 Analyseer ERK-niveau</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="result-section" id="resultSection">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">AI Analyseresultaat</span>
+            <button class="btn-sm" id="quickSaveBtn" onclick="quickSave()" style="display:none;">＋ Opslaan</button>
+          </div>
+          <div class="panel-body">
+            <div class="result-header">
+              <div class="result-level-badge" id="resultBadge">—</div>
+              <div class="result-level-info">
+                <h2 id="resultTitle">—</h2>
+                <p id="resultSubtitle">—</p>
+              </div>
+            </div>
+            <div class="conf-wrap">
+              <label><span>Betrouwbaarheid AI-analyse</span><span id="confPct">—</span></label>
+              <div class="conf-bar"><div class="conf-fill" id="confFill"></div></div>
+            </div>
+            <p class="sec-label">Kansen per niveau</p>
+            <div class="prob-grid" id="probGrid"></div>
+            <p class="sec-label" style="margin-top:12px;">Statistieken</p>
+            <div class="stats-grid" id="statsGrid"></div>
+            <p class="sec-label">Toelichting</p>
+            <div class="explanation" id="explanationText"></div>
+            <p class="sec-label">Tekst met markering</p>
+            <div class="text-preview" id="textPreview"></div>
+
+            <!-- Workflow (teacher only) -->
+            <div id="workflowBlock" style="display:none;margin-top:18px;border-top:1px solid var(--border);padding-top:16px;">
+              <div class="wf-steps">
+                <div class="wf-step active" id="wfStep1"><span class="wf-num">1</span><span>LLE analyseren</span></div>
+                <span class="wf-arrow">›</span>
+                <div class="wf-step" id="wfStep2"><span class="wf-num">2</span><span>Niveau kiezen</span></div>
+                <span class="wf-arrow">›</span>
+                <div class="wf-step" id="wfStep3"><span class="wf-num">3</span><span>Opgaven genereren</span></div>
+              </div>
+
+              <!-- Stap 1: LLE -->
+              <div id="wBlock1">
+                <div class="lle-block">
+                  <div class="lle-block-header">
+                    <div class="lle-logo">LLE</div>
+                    <div><div class="lle-title">Stap 1 — Analyseer via LLE Deutsch</div>
+                    <div class="lle-sub">L-Pub × Ernst Klett Sprachen · gevalideerde lexicale ERK-analyse</div></div>
+                  </div>
+                  <p style="font-size:12px;color:#555;line-height:1.6;margin-bottom:11px;">Kopieer de tekst → open LLE → plak &amp; analyseer → klik hieronder het gevonden niveau.</p>
+                  <div style="display:flex;gap:7px;margin-bottom:8px;">
+                    <button class="btn-sm" onclick="copyTextForLLE()" style="flex:1;padding:9px;">📋 Kopieer tekst</button>
+                  </div>
+                  <div style="display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;">
+                    <button class="btn-lle" onclick="openLLE()" style="flex:1;">🔗 LLE Deutsch</button>
+                    <button class="btn-lle" onclick="window.open('https://wortliga.de/sprachniveau-test-tool/','_blank')" style="flex:1;background:linear-gradient(135deg,#2d6a4f,#40916c);">🔗 Wortliga</button>
+                    <button class="btn-lle" onclick="window.open('https://www.accessibility.nl/tools/leesniveau','_blank')" style="flex:1;background:linear-gradient(135deg,#6a0572,#9c27b0);">🔗 Accessibility.nl</button>
+                  </div>
+                  <p style="font-size:11px;font-weight:600;color:var(--ink);margin-bottom:8px;">Wat geeft LLE als ERK-niveau?</p>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap;" id="lleNiveauBtns">
+                    <button class="niveau-pick-btn" onclick="pickLLENiveau('A1',this)" style="background:var(--a1);">A1</button>
+                    <button class="niveau-pick-btn" onclick="pickLLENiveau('A2',this)" style="background:var(--a2);">A2</button>
+                    <button class="niveau-pick-btn" onclick="pickLLENiveau('B1',this)" style="background:var(--b1);">B1</button>
+                    <button class="niveau-pick-btn" onclick="pickLLENiveau('B2',this)" style="background:var(--b2);">B2</button>
+                    <button class="niveau-pick-btn" onclick="pickLLENiveau('C1',this)" style="background:var(--c1);">C1</button>
+                    <button class="niveau-pick-btn" onclick="pickLLENiveau('C2',this)" style="background:var(--c2);">C2</button>
+                  </div>
+                  <p style="font-size:10px;color:var(--muted);margin-top:9px;">Geen LLE-toegang? <button onclick="skipToStep2()" style="background:none;border:none;color:var(--b1);font-size:10px;cursor:pointer;text-decoration:underline;font-family:'DM Sans',sans-serif;">Sla over en gebruik AI-niveau</button></p>
+                </div>
+              </div>
+
+              <!-- Stap 2 -->
+              <div id="wBlock2" style="display:none;">
+                <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:16px 18px;">
+                  <p class="sec-label" style="margin-bottom:11px;">Stap 2 — Kies het definitieve niveau en sla op</p>
+                  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:110px;background:var(--cream);border-radius:6px;padding:10px 12px;border:1px solid var(--border);">
+                      <p style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">🤖 AI-analyse</p>
+                      <div style="display:flex;align-items:center;gap:7px;">
+                        <div id="aiNiveauBadge" style="width:34px;height:34px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:14px;color:white;"></div>
+                        <span id="aiNiveauLabel" style="font-size:12px;font-weight:600;"></span>
+                      </div>
+                    </div>
+                    <div id="lleCompareBox" style="flex:1;min-width:110px;background:rgba(46,109,164,0.04);border-radius:6px;padding:10px 12px;border:1px solid rgba(46,109,164,0.15);display:none;">
+                      <p style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">📊 LLE Deutsch</p>
+                      <div style="display:flex;align-items:center;gap:7px;">
+                        <div id="lleNiveauBadge2" style="width:34px;height:34px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:14px;color:white;"></div>
+                        <span id="lleNiveauLabel2" style="font-size:12px;font-weight:600;"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:11px;font-weight:600;margin-bottom:8px;">Klik op het definitieve niveau:</p>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px;">
+                    <button class="niveau-final-btn" onclick="setFinalNiveau('A1',this)" data-lvl="A1" style="background:var(--a1);">A1</button>
+                    <button class="niveau-final-btn" onclick="setFinalNiveau('A2',this)" data-lvl="A2" style="background:var(--a2);">A2</button>
+                    <button class="niveau-final-btn" onclick="setFinalNiveau('B1',this)" data-lvl="B1" style="background:var(--b1);">B1</button>
+                    <button class="niveau-final-btn" onclick="setFinalNiveau('B2',this)" data-lvl="B2" style="background:var(--b2);">B2</button>
+                    <button class="niveau-final-btn" onclick="setFinalNiveau('C1',this)" data-lvl="C1" style="background:var(--c1);">C1</button>
+                    <button class="niveau-final-btn" onclick="setFinalNiveau('C2',this)" data-lvl="C2" style="background:var(--c2);">C2</button>
+                  </div>
+                  <div id="finalNiveauConfirm" style="display:none;align-items:center;gap:10px;background:var(--cream);border-radius:6px;padding:10px 14px;margin-bottom:12px;">
+                    <div id="finalBadge" style="width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:17px;color:white;flex-shrink:0;"></div>
+                    <div style="flex:1;"><p id="finalNiveauLabel" style="font-weight:600;font-size:13px;margin-bottom:1px;"></p><p id="finalSource" style="font-size:11px;color:var(--muted);"></p></div>
+                    <span>✓</span>
+                  </div>
+                  <div style="display:flex;gap:7px;">
+                    <button class="btn-sm btn-green" onclick="saveToLibraryFinal()" id="btnSaveLib" style="flex:1;padding:10px;font-size:12px;opacity:0.4;cursor:not-allowed;" disabled>📚 Opslaan in bibliotheek</button>
+                    <button class="btn-primary" style="flex:1;margin-top:0;padding:10px;font-size:12px;opacity:0.4;" id="btnNaarStap3" onclick="goToStep3()" disabled><span>📝 Opgaven genereren →</span></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stap 3 -->
+              <div id="wBlock3" style="display:none;">
+                <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:14px 18px;">
+                  <p class="sec-label" style="margin-bottom:10px;">Stap 3 — Genereer CITO-stijl opgaven</p>
+                  <div id="step3NiveauInfo" style="display:flex;align-items:center;gap:9px;margin-bottom:12px;padding:8px 12px;background:var(--cream);border-radius:5px;">
+                    <div id="step3Badge" style="width:32px;height:32px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:13px;color:white;flex-shrink:0;"></div>
+                    <p id="step3Info" style="font-size:12px;color:#444;line-height:1.4;"></p>
+                  </div>
+                  <div style="display:flex;gap:7px;align-items:center;">
+                    <select id="qCount" style="padding:7px 9px;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;font-size:12px;background:white;">
+                      <option value="4">4 opgaven</option>
+                      <option value="6" selected>6 opgaven</option>
+                      <option value="8">8 opgaven</option>
+                    </select>
+                    <button class="btn-primary" style="flex:1;margin-top:0;padding:10px;font-size:12px;" id="genQBtn" onclick="generateQuestions()">
+                      <span>🔍 Analyseer &amp; genereer opgaven</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Questions -->
+      <div class="questions-panel" id="questionsPanel">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">📝 Opgaven</span>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+              <span id="scoreDisplay" style="font-size:10px;color:var(--muted);display:none;font-weight:700;"></span>
+              <button class="btn-sm btn-green" onclick="checkAllAnswers()">✓ Nakijken</button>
+              <button class="btn-sm" id="saveWithQBtn" onclick="saveWithQuestions()" style="background:var(--b1);color:white;border-color:var(--b1);display:none;">📚 Bewaar in bibliotheek</button>
+            </div>
+          </div>
+          <div class="panel-body" id="questionsBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="xp-widget" id="xpWidget" style="display:none;">
+        <div class="xp-widget-header">
+          <div><div class="player-level" id="playerLevelDisplay">Lv 1</div><div class="player-title" id="playerTitle">Deutsch-Anfänger</div></div>
+          <div class="level-badge-widget" id="levelBadgeWidget">Beginner</div>
+        </div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);margin-bottom:4px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;">🔥 Streak</div>
+        <div class="streak-row" id="streakRow"></div>
+        <div class="xp-progress-label"><span id="xpCurrent">0 XP</span><span id="xpNext">→ Lv 2</span></div>
+        <div class="xp-bar"><div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div></div>
+        <div class="xp-stats">
+          <div class="xp-stat"><div class="xp-stat-val" id="statTexten">0</div><div class="xp-stat-label">Teksten</div></div>
+          <div class="xp-stat"><div class="xp-stat-val" id="statOpgaven">0</div><div class="xp-stat-label">Opgaven</div></div>
+          <div class="xp-stat"><div class="xp-stat-val" id="statStreak">0🔥</div><div class="xp-stat-label">Streak</div></div>
+          <div class="xp-stat"><div class="xp-stat-val" id="statHighLevel">—</div><div class="xp-stat-label">Top niveau</div></div>
+        </div>
+        <div style="margin-top:10px;font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;">🎯 Missies</div>
+        <div id="missionsContainer"></div>
+        <div style="margin-top:9px;font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;">🏅 Badges</div>
+        <div class="badge-shelf" id="badgeShelf"></div>
+        <div style="margin-top:11px;font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;">🗺 Levelpad</div>
+        <div class="level-road" id="levelRoad"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Bibliotheek</span><span id="libCount" style="font-size:10px;color:var(--muted)">0</span></div>
+        <div class="panel-body" style="padding:10px 14px;">
+          <div class="lib-filter">
+            <button class="filter-btn active" onclick="filterLib('alle',this)">Alle</button>
+            <button class="filter-btn a1" onclick="filterLib('A1',this)">A1</button>
+            <button class="filter-btn a2" onclick="filterLib('A2',this)">A2</button>
+            <button class="filter-btn b1" onclick="filterLib('B1',this)">B1</button>
+            <button class="filter-btn b2" onclick="filterLib('B2',this)">B2</button>
+            <button class="filter-btn c1" onclick="filterLib('C1',this)">C1</button>
+            <button class="filter-btn c2" onclick="filterLib('C2',this)">C2</button>
+          </div>
+          <div id="libList"></div>
+          <button class="btn-sm" style="width:100%;margin-top:4px;font-size:10px;" onclick="switchView('bibliotheek',null)">Volledige bibliotheek →</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">ERK Niveaugids</span></div>
+        <div class="panel-body" style="padding:3px 10px;">
+          <div class="erk-ref">
+            <div class="level-row"><div class="erk-level-pill" style="background:var(--a1)">A1</div><div class="erk-level-text"><h4>Beginner</h4><p>Dagelijkse zinnen, basiswoordenschat.</p></div></div>
+            <div class="level-row"><div class="erk-level-pill" style="background:var(--a2)">A2</div><div class="erk-level-text"><h4>Elementair</h4><p>Routinezinnen, bekende onderwerpen.</p></div></div>
+            <div class="level-row"><div class="erk-level-pill" style="background:var(--b1)">B1</div><div class="erk-level-text"><h4>Drempel</h4><p>Vertrouwde situaties, reizen.</p></div></div>
+            <div class="level-row"><div class="erk-level-pill" style="background:var(--b2)">B2</div><div class="erk-level-text"><h4>Zelfstandig</h4><p>Complexe teksten, HAVO niveau.</p></div></div>
+            <div class="level-row"><div class="erk-level-pill" style="background:var(--c1)">C1</div><div class="erk-level-text"><h4>Gevorderd</h4><p>Lange teksten, VWO niveau.</p></div></div>
+            <div class="level-row"><div class="erk-level-pill" style="background:var(--c2)">C2</div><div class="erk-level-text"><h4>Vaardig</h4><p>Vrijwel moedertaalniveau.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ VIEW: BIBLIOTHEEK ═══ -->
+<div class="view" id="view-bibliotheek">
+<div class="container">
+  <div class="lib-page-header">
+    <p class="hero-eyebrow">Tekstcollectie</p>
+    <h1>📚 Bibliotheek</h1>
+    <p id="libPageSubtitle">Open teksten en maak de bijbehorende CITO-opgaven.</p>
+  </div>
+  <div class="lib-controls">
+    <input type="text" class="lib-search" id="libSearch" placeholder="🔍 Zoeken…" oninput="renderLibPage()">
+    <button class="filter-btn active" onclick="filterLibPage('alle',this)">Alle</button>
+    <button class="filter-btn a1" onclick="filterLibPage('A1',this)">A1</button>
+    <button class="filter-btn a2" onclick="filterLibPage('A2',this)">A2</button>
+    <button class="filter-btn b1" onclick="filterLibPage('B1',this)">B1</button>
+    <button class="filter-btn b2" onclick="filterLibPage('B2',this)">B2</button>
+    <button class="filter-btn c1" onclick="filterLibPage('C1',this)">C1</button>
+    <button class="filter-btn c2" onclick="filterLibPage('C2',this)">C2</button>
+  </div>
+  <div class="lib-grid" id="libGrid"></div>
+</div>
+</div>
+
+<!-- ═══ VIEW: ERK GIDS ═══ -->
+<div class="view" id="view-referentie">
+<div class="container">
+  <div class="lib-page-header">
+    <p class="hero-eyebrow">Europees Referentiekader</p>
+    <h1>📖 ERK Niveaugids</h1>
+    <p>Kenmerken, grammatica en voorbeeldzinnen per niveau.</p>
+  </div>
+  <div class="erk-grid" id="erkCards"></div>
+</div>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal-overlay" id="readerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <span class="modal-badge" id="modalBadge">—</span>
+        <span class="modal-title" id="modalTitle">Tekst lezen</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLezen" onclick="switchModalTab('lezen',this)">📖 Lezen</button>
+      <button class="modal-tab" id="tabVragen" onclick="switchModalTab('vragen',this)">📝 Opgaven</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tab-content active" id="modal-lezen">
+        <!-- Markeer toolbar -->
+        <div class="mark-toolbar">
+          <span style="font-size:10px;font-weight:600;color:var(--muted);">Markeer:</span>
+          <button class="mark-btn mark-active" onclick="setMarkColor('yellow',this)" style="background:#fff176;" title="Geel">🖊</button>
+          <button class="mark-btn" onclick="setMarkColor('green',this)" style="background:#b9f6ca;" title="Groen">🖊</button>
+          <button class="mark-btn" onclick="setMarkColor('blue',this)" style="background:#b3e5fc;" title="Blauw">🖊</button>
+          <button class="mark-btn" onclick="setMarkColor('orange',this)" style="background:#ffe0b2;" title="Oranje">🖊</button>
+          <button class="mark-btn" onclick="setMarkColor('erase',this)" style="background:white;color:var(--accent);font-size:10px;font-weight:700;" title="Wissen">✕</button>
+          <span style="font-size:10px;color:var(--muted);margin-left:6px;">Selecteer tekst om te markeren</span>
+        </div>
+        <div class="reader-text" id="modalTextBody" onmouseup="handleTextSelection()" ontouchend="handleTextSelection()"></div>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div>
+            <p style="font-size:12px;font-weight:600;margin-bottom:2px;">Klaar om te oefenen?</p>
+            <p style="font-size:10px;color:var(--muted);" id="modalXpInfo">Maak de opgaven en verdien XP.</p>
+          </div>
+          <button class="btn-primary" style="width:auto;margin-top:0;padding:9px 16px;font-size:12px;" id="modalGenQBtn" onclick="generateModalQuestions()">
+            <span>📝 Genereer CITO-opgaven</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-tab-content" id="modal-vragen">
+        <div id="modalQuestionsBody">
+          <div style="text-align:center;padding:36px 14px;color:var(--muted);">
+            <p style="font-size:26px;margin-bottom:7px;">📝</p>
+            <p style="font-size:12px;">Ga naar <strong>Lezen</strong> en klik op <strong>Genereer CITO-opgaven</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-check-wrap" id="modalCheckWrap" style="display:none;padding-top:12px;">
+      <button class="btn-sm btn-green" style="width:100%;padding:10px;" onclick="checkModalAnswers()">✓ Nakijken & XP verdienen</button>
+    </div>
+  </div>
+</div>
+
+<div class="achievement-popup" id="achievementPopup">
+  <div class="ach-icon" id="achIcon">🏅</div>
+  <div><div class="ach-title">Badge behaald!</div><div class="ach-name" id="achName">—</div><div style="font-size:11px;color:rgba(255,255,255,0.55);" id="achXp">+0 XP</div></div>
+</div>
+<footer><div class="container"><p>DeutschLevel · SharePoint REST API versie · ERK Analyse · CITO-Opgaven · LLE · Gamification</p></div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+// ════ CONSTANTS ════
+const LC={A1:'#3a7d44',A2:'#5a9e5f',B1:'#2e6da4',B2:'#1a4d7e',C1:'#8b3a8b',C2:'#5c1f5c'};
+const LN={A1:'Beginner',A2:'Elementaire Gebruiker',B1:'Drempelgebruiker',B2:'Zelfstandige Gebruiker',C1:'Gevorderde Gebruiker',C2:'Vaardige Gebruiker'};
+const LD={A1:'Beginner niveau',A2:'Elementair niveau',B1:'Drempel niveau',B2:'Zelfstandig niveau',C1:'Gevorderd niveau',C2:'Vaardig niveau'};
+const LEVEL_XP={A1:1,A2:1.5,B1:2,B2:3,C1:4,C2:5};
+const DIFF_STARS={A1:1,A2:2,B1:3,B2:4,C1:5,C2:5};
+const DIFF_STR={A1:'★☆☆☆☆',A2:'★★☆☆☆',B1:'★★★☆☆',B2:'★★★★☆',C1:'★★★★★',C2:'★★★★★'};
+const XP_LABELS={A1:'+10 XP',A2:'+15 XP',B1:'+20 XP',B2:'+30 XP',C1:'+40 XP',C2:'+50 XP'};
+const PLAYER_LEVELS=[
+  {lv:1,title:'Deutsch-Anfänger',xpNeeded:0},{lv:2,title:'Wortschatz-Sammler',xpNeeded:100},
+  {lv:3,title:'Satzbauzler',xpNeeded:250},{lv:4,title:'Lesereifer',xpNeeded:500},
+  {lv:5,title:'Textkenner',xpNeeded:900},{lv:6,title:'Grammatik-Profi',xpNeeded:1400},
+  {lv:7,title:'B-Niveau Meister',xpNeeded:2100},{lv:8,title:'Aufsatz-Experte',xpNeeded:3000},
+  {lv:9,title:'C-Niveau Held',xpNeeded:4200},{lv:10,title:'Deutsch-Champion',xpNeeded:6000},
+];
+const BADGES=[
+  {id:'eerste_analyse',icon:'🔍',name:'Eerste Analyse',xp:25,condition:s=>s.totalAnalyses>=1},
+  {id:'vijf_teksten',icon:'📚',name:'Boekenwurm',xp:50,condition:s=>s.totalAnalyses>=5},
+  {id:'eerste_vragen',icon:'📝',name:'Vraagsteller',xp:30,condition:s=>s.totalQuestions>=1},
+  {id:'perfectionist',icon:'🎯',name:'Perfectionist',xp:75,condition:s=>s.perfectScores>=1},
+  {id:'b1_level',icon:'⬆️',name:'B1 Bereikt',xp:60,condition:s=>(s.levelsAttempted||[]).includes('B1')},
+  {id:'b2_level',icon:'🚀',name:'B2 Durver',xp:100,condition:s=>(s.levelsAttempted||[]).includes('B2')},
+  {id:'c1_level',icon:'🦅',name:'C1 Atleet',xp:150,condition:s=>(s.levelsAttempted||[]).includes('C1')},
+  {id:'streak3',icon:'🔥',name:'Op Stoom',xp:80,condition:s=>s.maxStreak>=3},
+];
+const DAILY_MISSIONS=[
+  {id:'analyse_today',icon:'🔍',name:'Dagelijkse analyse',desc:'Analyseer 1 tekst',xpReward:20,target:1,key:'analysesToday'},
+  {id:'questions_today',icon:'📝',name:'Oefensessie',desc:'Maak 5 vragen',xpReward:30,target:5,key:'questionsToday'},
+  {id:'hard_text',icon:'💪',name:'Uitdaging!',desc:'Oefen een B2/C1/C2 tekst',xpReward:50,target:1,key:'hardTextToday'},
+];
+const ERK_INFO={
+  A1:{name:'Beginner',de:'Anfänger',can:'Eenvoudige uitdrukkingen en dagelijkse zinnen.',vocab:'~500 woorden',gram:'Tegenwoordige tijd, vnw., enkelvoud/meervoud',ex:'„Ich heiße Anna. Ich komme aus Holland."'},
+  A2:{name:'Elementair',de:'Grundlegende Kenntnisse',can:'Vertrouwde onderwerpen: gezin, winkelen.',vocab:'~1.000 woorden',gram:'Perfekt, modale werkwoorden, Akkusativ/Dativ',ex:'„Am Wochenende bin ich in den Park gegangen."'},
+  B1:{name:'Drempel',de:'Mittelstufe',can:'Hoofdpunten begrijpen van standaard taal.',vocab:'~2.000 woorden',gram:'Konjunktiv II, Relativsätze, Passiv eenvoudig',ex:'„Ich würde gerne wissen, ob es hier ein gutes Restaurant gibt."'},
+  B2:{name:'Zelfstandig',de:'Selbstständige Sprachverwendung',can:'Complexe teksten begrijpen. Vloeiend communiceren.',vocab:'~4.000 woorden',gram:'Konjunktiv I, Nominalisierungen, complexe bijzinnen',ex:'„Die Digitalisierung hat erhebliche Auswirkungen auf den Arbeitsmarkt."'},
+  C1:{name:'Gevorderd',de:'Kompetente Sprachverwendung',can:'Lange, veeleisende teksten en impliciete betekenis.',vocab:'~8.000 woorden',gram:'Partizipialkonstruktionen, Stilistik, Register',ex:'„Die philosophischen Implikationen der Quantenmechanik werfen grundlegende Fragen auf."'},
+  C2:{name:'Vaardig',de:'Beherrschende Sprachverwendung',can:'Vrijwel alles begrijpen en vloeiend communiceren.',vocab:'16.000+ woorden',gram:'Volledig geïntegreerd, nuances, ironie',ex:'„Die subtile Ironie in Kafkas Prosa entfaltet sich erst beim zweiten Lesen vollständig."'},
+};
+
+// ════ STATE ════
+let currentMode=null;
+let library=[];
+let playerStats={
+  xp:0,totalAnalyses:0,totalQuestions:0,perfectScores:0,levelsAttempted:[],
+  earnedBadges:[],streak:0,maxStreak:0,lastActiveDay:'',
+  analysesToday:0,questionsToday:0,hardTextToday:0,dailyMissionsDate:''
+};
+let currentText='',currentLevel='',currentAnalysis=null;
+let libFilter='alle',libPageFilter='alle';
+let currentQuestions=[],modalQuestions=[],modalEntry=null;
+let lleSelectedNiveau=null,finalNiveau=null;
+let activeMarkColor='yellow',currentModalId=null;
+let uploadedImageData=null;
+
+// ════ SHAREPOINT REST API STATE ════
+let spReady=false;           // true als SP verbinding werkt
+let spItemId=null;           // ID van het bibliotheek-lijstitem
+let spUserItemId=null;       // ID van het gebruikers-statsitem
+let spCurrentUser=null;      // ingelogde gebruiker info
+let spSyncing=false;
+let spSyncTimer=null;
+const SP_CONFIGURED = SP_SITE_URL !== "JOUW_SHAREPOINT_SITE_URL";
+
+// ════ SHAREPOINT REST HELPERS ════
+// Alle calls gaan naar dezelfde oorsprong (sharepoint.com) — geen token nodig,
+// werkt automatisch via de browser-sessie (cookies) van de ingelogde gebruiker.
+
+async function spGetDigest(){
+  // Request Digest is nodig voor schrijf-operaties (POST/PUT/DELETE)
+  const r = await fetch(`${SP_SITE_URL}/_api/contextinfo`, {
+    method:'POST',
+    credentials:'include',
+    headers:{'Accept':'application/json;odata=nometadata','Content-Type':'application/json;odata=nometadata'}
+  });
+  if(!r.ok) throw new Error('contextinfo HTTP '+r.status);
+  const d = await r.json();
+  return d.FormDigestValue;
+}
+
+async function spGet(endpoint){
+  const r = await fetch(`${SP_SITE_URL}/_api/${endpoint}`, {
+    credentials:'include',
+    headers:{'Accept':'application/json;odata=nometadata'}
+  });
+  if(!r.ok) throw new Error('SP GET '+endpoint+' → '+r.status);
+  return r.json();
+}
+
+async function spPost(endpoint, body, digest){
+  const r = await fetch(`${SP_SITE_URL}/_api/${endpoint}`, {
+    method:'POST',
+    credentials:'include',
+    headers:{
+      'Accept':'application/json;odata=nometadata',
+      'Content-Type':'application/json;odata=nometadata',
+      'X-RequestDigest': digest,
+    },
+    body: JSON.stringify(body)
+  });
+  if(!r.ok){const t=await r.text();throw new Error('SP POST '+endpoint+' → '+r.status+' '+t.substring(0,120));}
+  return r.status===204 ? null : r.json();
+}
+
+async function spPatch(endpoint, body, digest){
+  const r = await fetch(`${SP_SITE_URL}/_api/${endpoint}`, {
+    method:'POST',
+    credentials:'include',
+    headers:{
+      'Accept':'application/json;odata=nometadata',
+      'Content-Type':'application/json;odata=nometadata',
+      'X-RequestDigest': digest,
+      'X-HTTP-Method':'MERGE',
+      'IF-MATCH':'*'
+    },
+    body: JSON.stringify(body)
+  });
+  if(!r.ok&&r.status!==204){const t=await r.text();throw new Error('SP PATCH '+endpoint+' → '+r.status+' '+t.substring(0,120));}
+  return null;
+}
+
+// ════ SYNC BAR ════
+let _syncBarTimer=null;
+function showSync(type,msg,ms=0){
+  const b=document.getElementById('syncBar');
+  const m=document.getElementById('syncMsg');
+  b.className='show '+type; m.textContent=msg;
+  if(_syncBarTimer)clearTimeout(_syncBarTimer);
+  if(ms>0)_syncBarTimer=setTimeout(()=>b.classList.remove('show'),ms);
+}
+function hideSync(){document.getElementById('syncBar').classList.remove('show');}
+
+// ════ SHAREPOINT INIT ════
+async function spInit(){
+  if(!SP_CONFIGURED){
+    // SP_SITE_URL niet ingevuld → lokale modus
+    library=JSON.parse(localStorage.getItem('dl_lib')||'[]');
+    playerStats=JSON.parse(localStorage.getItem('dl_stats')||JSON.stringify(playerStats));
+    renderSidebarLib();
+    return;
+  }
+  showSync('syncing','🔄 Verbinding maken met SharePoint…');
+  try{
+    // Haal ingelogde gebruiker op
+    const u = await spGet('web/currentuser?$select=Title,LoginName,Email');
+    spCurrentUser = u;
+    const naam = u.Title||u.Email||'Gebruiker';
+    const initialen = naam.split(' ').filter(Boolean).map(n=>n[0]).slice(0,2).join('').toUpperCase();
+    document.getElementById('userName').textContent = naam.split(' ')[0];
+    document.getElementById('userAvatar').textContent = initialen;
+    document.getElementById('userChip').style.display='flex';
+
+    // Controleer of de lijst bestaat, anders aanmaken
+    await spEnsureList();
+
+    // Laad bibliotheek en gebruikersdata
+    await spLoadLibrary();
+    await spLoadUserStats();
+
+    spReady=true;
+    showSync('ok','✓ Verbonden met SharePoint',2500);
+    spStartPolling();
+  }catch(e){
+    console.error('SP init fout:',e);
+    spGoOffline(e.message);
+  }
+}
+
+async function spEnsureList(){
+  // Controleer of lijst bestaat
+  try{
+    await spGet(`web/lists/getbytitle('${SP_LIST_NAME}')?$select=Id`);
+    return; // bestaat al
+  }catch(e){/* bestaat niet → aanmaken */}
+
+  const digest = await spGetDigest();
+  await spPost('web/lists', {
+    '__metadata':{'type':'SP.List'},
+    'AllowContentTypes':true,
+    'BaseTemplate':100,
+    'ContentTypesEnabled':false,
+    'Description':'DeutschLevel gedeelde bibliotheek',
+    'Title': SP_LIST_NAME
+  }, digest);
+
+  // Voeg kolom 'JsonData' toe (multi-line tekst voor JSON opslag)
+  const digest2 = await spGetDigest();
+  await spPost(`web/lists/getbytitle('${SP_LIST_NAME}')/fields`, {
+    '__metadata':{'type':'SP.FieldMultiLineText'},
+    'FieldTypeKind':3,
+    'Title':'JsonData',
+    'NumberOfLines':100,
+    'UnlimitedLengthInDocumentLibrary':true
+  }, digest2);
+}
+
+// ════ BIBLIOTHEEK LADEN / OPSLAAN ════
+async function spLoadLibrary(){
+  try{
+    const data = await spGet(`web/lists/getbytitle('${SP_LIST_NAME}')/items?$select=Id,Title,JsonData&$filter=Title eq 'library'&$top=1`);
+    if(data.value && data.value.length>0){
+      const item = data.value[0];
+      spItemId = item.Id;
+      library = JSON.parse(item.JsonData||'[]');
+    } else {
+      library = [];
+      spItemId = null;
+    }
+    localStorage.setItem('dl_lib',JSON.stringify(library)); // lokale cache
+    renderSidebarLib();
+    renderLibPage();
+    updateXPDisplay();
+  }catch(e){
+    console.warn('Bibliotheek laden mislukt:',e);
+    library=JSON.parse(localStorage.getItem('dl_lib')||'[]');
+  }
+}
+
+async function spSaveLibrary(){
+  if(!spReady){localStorage.setItem('dl_lib',JSON.stringify(library));return;}
+  if(spSyncing)return;
+  spSyncing=true;
+  showSync('syncing','🔄 Opslaan…');
+  try{
+    const digest = await spGetDigest();
+    const jsonStr = JSON.stringify(library);
+    if(spItemId){
+      // Update bestaand item
+      await spPatch(`web/lists/getbytitle('${SP_LIST_NAME}')/items(${spItemId})`,{
+        '__metadata':{'type':`SP.Data.${SP_LIST_NAME.replace(/\s/g,'')}ListItem`},
+        'JsonData': jsonStr
+      }, digest);
+    } else {
+      // Nieuw item aanmaken
+      const result = await spPost(`web/lists/getbytitle('${SP_LIST_NAME}')/items`,{
+        '__metadata':{'type':`SP.Data.${SP_LIST_NAME.replace(/\s/g,'')}ListItem`},
+        'Title':'library',
+        'JsonData': jsonStr
+      }, digest);
+      if(result) spItemId = result.Id;
+    }
+    localStorage.setItem('dl_lib',JSON.stringify(library));
+    showSync('ok','✓ Opgeslagen',2000);
+  }catch(e){
+    console.error('Bibliotheek opslaan mislukt:',e);
+    localStorage.setItem('dl_lib',JSON.stringify(library));
+    showSync('err','⚠️ Opslaan mislukt — lokaal gecacht',4000);
+  }
+  spSyncing=false;
+}
+
+// ════ GEBRUIKERSSTATS LADEN / OPSLAAN ════
+function spUserKey(){
+  if(!spCurrentUser) return null;
+  // Gebruik LoginName als unieke key (bijv. i:0#.f|membership|karen@school.nl)
+  return 'stats_'+(spCurrentUser.LoginName||spCurrentUser.Email||'unknown').replace(/[^a-zA-Z0-9]/g,'_').substring(0,60);
+}
+
+async function spLoadUserStats(){
+  const key = spUserKey();
+  if(!key) return;
+  try{
+    const data = await spGet(`web/lists/getbytitle('${SP_LIST_NAME}')/items?$select=Id,Title,JsonData&$filter=Title eq '${key}'&$top=1`);
+    if(data.value && data.value.length>0){
+      const item = data.value[0];
+      spUserItemId = item.Id;
+      const saved = JSON.parse(item.JsonData||'{}');
+      if(saved.xp!==undefined) playerStats = {...playerStats,...saved};
+    }
+  }catch(e){
+    console.warn('Gebruikersstats laden mislukt:',e);
+    const saved=JSON.parse(localStorage.getItem('dl_stats')||'{}');
+    if(saved.xp!==undefined) playerStats={...playerStats,...saved};
+  }
+}
+
+async function spSaveUserStats(){
+  localStorage.setItem('dl_stats',JSON.stringify(playerStats));
+  if(!spReady) return;
+  const key = spUserKey();
+  if(!key) return;
+  try{
+    const digest = await spGetDigest();
+    const jsonStr = JSON.stringify(playerStats);
+    if(spUserItemId){
+      await spPatch(`web/lists/getbytitle('${SP_LIST_NAME}')/items(${spUserItemId})`,{
+        '__metadata':{'type':`SP.Data.${SP_LIST_NAME.replace(/\s/g,'')}ListItem`},
+        'JsonData': jsonStr
+      }, digest);
+    } else {
+      const result = await spPost(`web/lists/getbytitle('${SP_LIST_NAME}')/items`,{
+        '__metadata':{'type':`SP.Data.${SP_LIST_NAME.replace(/\s/g,'')}ListItem`},
+        'Title': key,
+        'JsonData': jsonStr
+      }, digest);
+      if(result) spUserItemId = result.Id;
+    }
+  }catch(e){
+    console.warn('Gebruikersstats opslaan mislukt:',e);
+  }
+}
+
+// ════ POLLING ════
+function spStartPolling(){
+  if(spSyncTimer)clearInterval(spSyncTimer);
+  spSyncTimer=setInterval(()=>{if(!spSyncing)spLoadLibrary();},SP_SYNC_INTERVAL);
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible'&&spReady&&!spSyncing) spLoadLibrary();
+  });
+}
+
+// ════ OFFLINE FALLBACK ════
+function spGoOffline(msg){
+  spReady=false;
+  library=JSON.parse(localStorage.getItem('dl_lib')||'[]');
+  const saved=JSON.parse(localStorage.getItem('dl_stats')||'{}');
+  if(saved.xp!==undefined) playerStats={...playerStats,...saved};
+  document.getElementById('spOfflineDot').style.display='block';
+  document.getElementById('userChip').style.display='flex';
+  document.getElementById('userName').textContent='Offline';
+  showSync('offline','⚠️ SharePoint niet bereikbaar — lokale modus'+(msg?' ('+msg.substring(0,60)+')':''),6000);
+  renderSidebarLib();
+}
+
+// ════ saveStats — schrijft naar SP én localStorage ════
+function saveStats(){
+  localStorage.setItem('dl_stats',JSON.stringify(playerStats));
+  if(saveStats._t)clearTimeout(saveStats._t);
+  saveStats._t=setTimeout(spSaveUserStats,3000); // debounce
+}
+
+// ════ APP START ════
+async function appStart(){
+  library=JSON.parse(localStorage.getItem('dl_lib')||'[]'); // toon lokale data meteen
+  renderSidebarLib();
+  await spInit(); // daarna SP laden (overschrijft met meest recente)
+}
+
+// ════ MODE ════
+function selectMode(mode){
+  currentMode=mode;
+  document.getElementById('modeScreen').classList.add('hidden');
+  const mb=document.getElementById('modeBadge');
+  mb.textContent=mode==='teacher'?'👩‍🏫 Docent':'🎓 Leerling';
+  mb.className='mode-badge '+mode;
+  if(mode==='student'){
+    document.getElementById('xpWidget').style.display='block';
+    document.getElementById('xpPillHeader').style.display='flex';
+    document.getElementById('heroTitle').innerHTML='Oefen met <em>Deutschen Texten</em>';
+    document.getElementById('heroSubtitle').textContent='Open teksten uit de bibliotheek en maak CITO-stijl opgaven.';
+    document.getElementById('heroEyebrow').textContent='Leerlingenmodus · ERK Oefenen';
+    document.getElementById('inputPanel').style.display='none';
+    checkStreak();renderBadges();renderMissions();updateXPDisplay();
+    setTimeout(()=>switchView('bibliotheek',document.getElementById('navBib')),300);
+  } else {
+    document.getElementById('xpWidget').style.display='none';
+    document.getElementById('xpPillHeader').style.display='none';
+    document.getElementById('workflowBlock').style.display='none';
+    document.getElementById('heroEyebrow').textContent='Docentenmodus · ERK Analyse + LLE';
+    document.getElementById('heroTitle').innerHTML='Analyseer & classificeer<br><em>Deutsche Texte</em>';
+    document.getElementById('heroSubtitle').textContent='Upload teksten of screenshots, analyseer het ERK-niveau via AI én LLE, en genereer CITO-stijl opgaven.';
+    document.getElementById('inputPanelTitle').textContent='Tekst toevoegen';
+    document.getElementById('inputPanelSub').textContent='AI + LLE + Screenshot';
+    document.getElementById('quickSaveBtn').style.display='none';
+  }
+  renderSidebarLib();
+}
+
+// ════ VIEWS ════
+function switchView(name,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  else{const i={analyse:0,bibliotheek:1,referentie:2}[name];document.querySelectorAll('nav button')[i]?.classList.add('active');}
+  if(name==='bibliotheek')renderLibPage();
+  if(name==='referentie')renderErkCards();
+}
+
+// ════ UTILS ════
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function updateWordCount(){const c=(document.getElementById('textInput').value.trim().match(/\S+/g)||[]).length;document.getElementById('wordCount').textContent=c+' woorden';}
+function spawnXPFloat(amount,x,y){const el=document.createElement('div');el.className='xp-float';el.textContent='+'+amount+' XP';el.style.left=(x-20)+'px';el.style.top=(y-20)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),1500);}
+
+// ════ IMAGE UPLOAD ════
+const imgZone=document.getElementById('imgUploadZone');
+imgZone.addEventListener('dragover',e=>{e.preventDefault();imgZone.style.borderColor='var(--b1)';});
+imgZone.addEventListener('dragleave',()=>imgZone.style.borderColor='rgba(46,109,164,0.3)');
+imgZone.addEventListener('drop',e=>{e.preventDefault();imgZone.style.borderColor='rgba(46,109,164,0.3)';const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImageFile(f);});
+function handleImageUpload(e){const f=e.target.files[0];if(f)loadImageFile(f);}
+function loadImageFile(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    uploadedImageData=ev.target.result;
+    document.getElementById('imgPreview').src=uploadedImageData;
+    document.getElementById('imgPreviewBox').style.display='block';
+    document.getElementById('imgStatus').textContent='Klik op Analyseer om tekst te lezen';
+  };
+  r.readAsDataURL(file);
+}
+function clearImage(){
+  uploadedImageData=null;
+  document.getElementById('imgPreviewBox').style.display='none';
+  document.getElementById('imgPreview').src='';
+  document.getElementById('imgInput').value='';
+}
+
+// ════ FILE UPLOAD ════
+const zone=document.getElementById('uploadZone');
+zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('dragover');});
+zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('dragover');readFile(e.dataTransfer.files[0]);});
+function handleFile(e){readFile(e.target.files[0]);}
+function readFile(f){
+  if(!f)return;
+  if(!f.name.endsWith('.txt')){showToast('Alleen .txt bestanden');return;}
+  const r=new FileReader();
+  r.onload=ev=>{document.getElementById('textInput').value=ev.target.result;updateWordCount();showToast('✓ Geladen: '+f.name);};
+  r.readAsText(f);
+}
+
+// ════ LLE ════
+function openLLE(){window.open('https://lle.l-pub.com/#/analysis','_blank');}
+function copyTextForLLE(){
+  const txt=currentText||document.getElementById('textInput').value.trim();
+  if(!txt){showToast('Analyseer eerst een tekst');return;}
+  navigator.clipboard.writeText(txt).then(()=>showToast('✓ Gekopieerd! Plak in LLE.')).catch(()=>showToast('Selecteer tekst handmatig'));
+}
+function goToWorkflowStep(step){
+  [1,2,3].forEach(n=>{
+    const b=document.getElementById('wBlock'+n);
+    const p=document.getElementById('wfStep'+n);
+    if(b)b.style.display=n===step?'block':'none';
+    if(p){p.classList.remove('active','done');if(n===step)p.classList.add('active');else if(n<step)p.classList.add('done');}
+  });
+  setTimeout(()=>{const wb=document.getElementById('workflowBlock');if(wb)wb.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+}
+function pickLLENiveau(niveau,btn){
+  lleSelectedNiveau=niveau;
+  document.querySelectorAll('#lleNiveauBtns .niveau-pick-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setTimeout(()=>confirmLLEAndNext(),400);
+}
+function confirmLLEAndNext(){
+  if(!lleSelectedNiveau)return;
+  goToWorkflowStep(2);
+  const box=document.getElementById('lleCompareBox');box.style.display='flex';
+  document.getElementById('lleNiveauBadge2').style.background=LC[lleSelectedNiveau];
+  document.getElementById('lleNiveauBadge2').textContent=lleSelectedNiveau;
+  document.getElementById('lleNiveauLabel2').textContent=LN[lleSelectedNiveau];
+  setFinalNiveau(lleSelectedNiveau,document.querySelector('.niveau-final-btn[data-lvl="'+lleSelectedNiveau+'"]'));
+}
+function skipToStep2(){
+  lleSelectedNiveau=null;
+  goToWorkflowStep(2);
+  document.getElementById('lleCompareBox').style.display='none';
+  if(currentLevel)setFinalNiveau(currentLevel,document.querySelector('.niveau-final-btn[data-lvl="'+currentLevel+'"]'));
+}
+function setFinalNiveau(niveau,btn){
+  finalNiveau=niveau;currentLevel=niveau;
+  document.querySelectorAll('.niveau-final-btn').forEach(b=>{b.classList.remove('selected');b.style.opacity='0.65';});
+  if(btn){btn.classList.add('selected');btn.style.opacity='1';}
+  const conf=document.getElementById('finalNiveauConfirm');conf.style.display='flex';
+  document.getElementById('finalBadge').style.background=LC[niveau];
+  document.getElementById('finalBadge').textContent=niveau;
+  document.getElementById('finalNiveauLabel').textContent=niveau+' — '+LN[niveau];
+  const src=lleSelectedNiveau&&lleSelectedNiveau===niveau?'LLE Deutsch + AI bevestigd':lleSelectedNiveau?'Afwijkend van LLE ('+lleSelectedNiveau+') — handmatig':'AI-analyse';
+  document.getElementById('finalSource').textContent=src;
+  const s=document.getElementById('btnSaveLib');const n=document.getElementById('btnNaarStap3');
+  s.disabled=false;s.style.opacity='1';s.style.cursor='pointer';
+  n.disabled=false;n.style.opacity='1';
+}
+function saveToLibraryFinal(){
+  if(!currentText||!finalNiveau){showToast('Kies eerst een niveau');return;}
+  const bronLabel=lleSelectedNiveau?'LLE: '+lleSelectedNiveau+(lleSelectedNiveau!==finalNiveau?' → definitief: '+finalNiveau:''):'AI-analyse';
+  const e={id:Date.now(),niveau:finalNiveau,tekst:currentText,titel:currentText.split(/[.!?\n]/)[0].trim().substring(0,72)||'Naamloze tekst',datum:new Date().toLocaleDateString('nl-NL'),analysis:currentAnalysis,bron:bronLabel,vragen:currentQuestions.length>0?currentQuestions:null};
+  library.unshift(e);spSaveLibrary();
+  renderSidebarLib();updateXPDisplay();
+  showToast('✓ Opgeslagen als '+finalNiveau+(currentQuestions.length>0?' + '+currentQuestions.length+' opgaven':''));
+  document.getElementById('btnSaveLib').textContent='✓ Opgeslagen!';document.getElementById('btnSaveLib').disabled=true;
+}
+function goToStep3(){
+  if(!finalNiveau){showToast('Kies eerst een niveau in stap 2');return;}
+  goToWorkflowStep(3);
+  document.getElementById('step3Badge').style.background=LC[finalNiveau];document.getElementById('step3Badge').textContent=finalNiveau;
+  const src=lleSelectedNiveau?'(LLE: '+lleSelectedNiveau+(lleSelectedNiveau!==finalNiveau?', definitief: '+finalNiveau:'')+')':'(AI-analyse)';
+  document.getElementById('step3Info').textContent='Opgaven op niveau '+finalNiveau+' '+src+'. AI analyseert eerst de inhoud van de tekst.';
+}
+function quickSave(){
+  const lvl=finalNiveau||currentLevel;
+  if(!currentText||!lvl){showToast('Analyseer en kies een niveau eerst');return;}
+  const e={id:Date.now(),niveau:lvl,tekst:currentText,titel:currentText.split(/[.!?\n]/)[0].trim().substring(0,72)||'Naamloze tekst',datum:new Date().toLocaleDateString('nl-NL'),analysis:currentAnalysis,bron:'Snel opgeslagen',vragen:currentQuestions.length>0?currentQuestions:null};
+  library.unshift(e);spSaveLibrary();
+  renderSidebarLib();updateXPDisplay();showToast('✓ Opgeslagen als '+lvl);
+}
+function saveWithQuestions(){
+  const lvl=finalNiveau||currentLevel;
+  if(!currentText||!lvl){showToast('Analyseer en kies een niveau eerst');return;}
+  if(!currentQuestions||currentQuestions.length===0){showToast('Genereer eerst opgaven');return;}
+  const existing=library.find(e=>e.tekst===currentText);
+  if(existing){existing.vragen=currentQuestions;existing.niveau=lvl;spSaveLibrary();renderSidebarLib();showToast('✓ Opgaven bijgewerkt in bibliotheek');}
+  else{
+    const bronLabel=lleSelectedNiveau?'LLE: '+lleSelectedNiveau+(lleSelectedNiveau!==lvl?' → definitief: '+lvl:''):'AI-analyse';
+    const e={id:Date.now(),niveau:lvl,tekst:currentText,titel:currentText.split(/[.!?\n]/)[0].trim().substring(0,72)||'Naamloze tekst',datum:new Date().toLocaleDateString('nl-NL'),analysis:currentAnalysis,bron:bronLabel,vragen:currentQuestions};
+    library.unshift(e);spSaveLibrary();renderSidebarLib();updateXPDisplay();
+    showToast('✓ Opgeslagen met '+currentQuestions.length+' opgaven · '+lvl);
+  }
+  const btn=document.getElementById('saveWithQBtn');if(btn){btn.textContent='✓ Opgeslagen!';btn.style.background='var(--a1)';btn.disabled=true;}
+  const s2=document.getElementById('btnSaveLib');if(s2){s2.textContent='✓ Opgeslagen!';s2.disabled=true;}
+}
+
+// ════ ANALYSE ════
+async function startAnalyse(){
+  if(uploadedImageData){await analyseImageText();return;}
+  const text=document.getElementById('textInput').value.trim();
+  if((text.match(/\S+/g)||[]).length<5){showToast('Voer minimaal 5 woorden in');return;}
+  currentText=text;
+  const btn=document.getElementById('analyseBtn');
+  btn.innerHTML='<div class="spinner"></div><span>Analyseren…</span>';
+  btn.disabled=true;
+  document.getElementById('questionsPanel').classList.remove('visible');
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:buildERKPrompt(text)}]})});
+    const d=await r.json();
+    currentAnalysis=JSON.parse(d.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+  }catch(e){currentAnalysis=demoAnalysis(text);}
+  displayResult(currentAnalysis,text);
+  if(currentMode==='teacher'){playerStats.totalAnalyses=(playerStats.totalAnalyses||0)+1;playerStats.analysesToday=(playerStats.analysesToday||0)+1;saveStats();}
+  btn.innerHTML='<span>🔍 Analyseer ERK-niveau</span>';btn.disabled=false;
+}
+
+function buildERKPrompt(text){
+  return 'Je bent ERK/CEFR-expert voor Duits. Geef UITSLUITEND JSON zonder preamble of backticks:\n{"niveau":"B2","betrouwbaarheid":84,"kansen":{"A1":1,"A2":3,"B1":12,"B2":53,"C1":24,"C2":7},"woordenschat":"gevorderd","zinsbouw":"complex","woordenAantal":87,"gemZinlengte":14,"vreemdeWoorden":["Infrastruktur"],"toelichting":"Toelichting."}\n\nTEKST:\n"""\n'+text.substring(0,3000)+'\n"""';
+}
+function demoAnalysis(text){return{niveau:"B1",betrouwbaarheid:72,kansen:{A1:2,A2:9,B1:48,B2:30,C1:9,C2:2},woordenschat:"gemiddeld",zinsbouw:"matig complex",woordenAantal:(text.match(/\S+/g)||[]).length,gemZinlengte:12,vreemdeWoorden:[],toelichting:"Demo-resultaat."};}
+
+async function analyseImageText(){
+  const btn=document.getElementById('analyseBtn');
+  btn.innerHTML='<div class="spinner"></div><span>Tekst lezen uit afbeelding…</span>';
+  btn.disabled=true;
+  document.getElementById('imgStatus').textContent='AI leest tekst…';
+  document.getElementById('questionsPanel').classList.remove('visible');
+  try{
+    const base64=uploadedImageData.split(',')[1];
+    const mtype=uploadedImageData.split(';')[0].split(':')[1];
+    const r1=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2000,
+        messages:[{role:"user",content:[
+          {type:"image",source:{type:"base64",media_type:mtype,data:base64}},
+          {type:"text",text:"Lees alle tekst uit deze afbeelding letterlijk terug. Inclusief alle alinea's en titels. Alleen de tekst, geen commentaar."}
+        ]}]})});
+    const d1=await r1.json();
+    const extractedText=d1.content.map(i=>i.text||'').join('').trim();
+    if(!extractedText||extractedText.length<10){showToast('Geen tekst gevonden in afbeelding');btn.innerHTML='<span>🔍 Analyseer ERK-niveau</span>';btn.disabled=false;return;}
+    document.getElementById('textInput').value=extractedText;
+    updateWordCount();
+    document.getElementById('imgStatus').textContent='✓ Tekst gelezen: '+(extractedText.match(/\S+/g)||[]).length+' woorden';
+    showToast('✓ Tekst gelezen uit afbeelding');
+    currentText=extractedText;
+    btn.innerHTML='<div class="spinner"></div><span>ERK-niveau analyseren…</span>';
+    const r2=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:buildERKPrompt(extractedText)}]})});
+    const d2=await r2.json();
+    currentAnalysis=JSON.parse(d2.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+  }catch(e){console.error(e);currentAnalysis=demoAnalysis(document.getElementById('textInput').value||'demo');}
+  displayResult(currentAnalysis,currentText);
+  if(currentMode==='teacher'){playerStats.totalAnalyses=(playerStats.totalAnalyses||0)+1;playerStats.analysesToday=(playerStats.analysesToday||0)+1;saveStats();}
+  btn.innerHTML='<span>🔍 Analyseer ERK-niveau</span>';btn.disabled=false;
+}
+
+function displayResult(r,text){
+  currentLevel=r.niveau;const col=LC[r.niveau];
+  document.getElementById('resultBadge').textContent=r.niveau;document.getElementById('resultBadge').style.background=col;
+  document.getElementById('resultTitle').textContent='Niveau '+r.niveau+' — '+LN[r.niveau];
+  document.getElementById('resultSubtitle').textContent=LD[r.niveau];
+  document.getElementById('confPct').textContent=r.betrouwbaarheid+'%';
+  setTimeout(()=>{const f=document.getElementById('confFill');f.style.width=r.betrouwbaarheid+'%';f.style.background=col;},80);
+  const pg=document.getElementById('probGrid');pg.innerHTML='';
+  Object.entries(r.kansen).forEach(([lv,pct])=>{const row=document.createElement('div');row.className='prob-row';row.innerHTML='<span class="prob-label" style="color:'+LC[lv]+'">'+lv+'</span><div class="prob-bar"><div class="prob-fill" style="background:'+LC[lv]+'" data-w="'+pct+'"></div></div><span class="prob-pct">'+pct+'%</span>';pg.appendChild(row);});
+  setTimeout(()=>pg.querySelectorAll('.prob-fill').forEach(el=>el.style.width=el.dataset.w+'%'),100);
+  document.getElementById('statsGrid').innerHTML='<div class="stat-card"><div class="stat-val">'+r.woordenAantal+'</div><div class="stat-label">Woorden</div></div><div class="stat-card"><div class="stat-val">'+r.gemZinlengte+'</div><div class="stat-label">Gem. zinlengte</div></div><div class="stat-card"><div class="stat-val" style="font-size:11px;padding-top:5px">'+r.woordenschat+'</div><div class="stat-label">Woordenschat</div></div><div class="stat-card"><div class="stat-val" style="font-size:11px;padding-top:5px">'+r.zinsbouw+'</div><div class="stat-label">Zinsbouw</div></div>';
+  document.getElementById('explanationText').textContent=r.toelichting;
+  let preview=text.substring(0,600);
+  (r.vreemdeWoorden||[]).forEach(w=>{preview=preview.replace(new RegExp('\\b'+w+'\\b','g'),'<span class="highlight-hard" title="'+w+'">'+w+'</span>');});
+  document.getElementById('textPreview').innerHTML=preview+(text.length>600?'…':'');
+  document.getElementById('resultSection').classList.add('visible');
+  if(currentMode==='teacher'){
+    document.getElementById('workflowBlock').style.display='block';
+    document.getElementById('aiNiveauBadge').style.background=LC[r.niveau];document.getElementById('aiNiveauBadge').textContent=r.niveau;
+    document.getElementById('aiNiveauLabel').textContent=LN[r.niveau];
+    lleSelectedNiveau=null;finalNiveau=null;
+    document.querySelectorAll('.niveau-pick-btn').forEach(b=>b.classList.remove('selected'));
+    document.querySelectorAll('.niveau-final-btn').forEach(b=>{b.classList.remove('selected');b.style.opacity='0.65';});
+    document.getElementById('finalNiveauConfirm').style.display='none';
+    document.getElementById('btnSaveLib').disabled=true;document.getElementById('btnSaveLib').style.opacity='0.4';document.getElementById('btnSaveLib').textContent='📚 Opslaan in bibliotheek';
+    document.getElementById('btnNaarStap3').disabled=true;document.getElementById('btnNaarStap3').style.opacity='0.4';
+    goToWorkflowStep(1);
+  } else if(currentMode==='student'){
+    document.getElementById('quickSaveBtn').style.display='block';
+  }
+  document.getElementById('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ════ CITO PROMPTS ════
+function getNiveauInstructies(niveau){
+  const map={
+    A1:"Niveau A1 — BEGINNER: schrijf ALLE vragen in eenvoudig Nederlands. Korte simpele zinnen. Vragen gaan over concrete zichtbare informatie: wie, wat, waar. Geen abstracte begrippen.",
+    A2:"Niveau A2 — ELEMENTAIR: vragen in Nederlands, opties mogen deels Duits zijn. Concrete feiten en eenvoudige verbanden. Vragen over beschreven situaties en personen.",
+    B1:"Niveau B1 — DREMPEL: mix NL/Duits (50/50). Vragen over redenen, gevolgen, meningen. Gebruik: 'Wat wordt duidelijk uit alinea X?', 'Warum...' Opties zijn parafrasen.",
+    B2:"Niveau B2 — ZELFSTANDIG (HAVO-stijl): vragen GROTENDEELS in het Duits. Gebruik echte HAVO-formuleringen: 'Welche Aussage stimmt mit dem X. Absatz überein?', 'Was wird aus dem X. Absatz deutlich?', 'Wie verhält sich [A] zu [B]?' met opties Begründung/Konkretisierung/Relativierung/Steigerung/Widerlegung. Open vragen in het Nederlands beantwoorden.",
+    C1:"Niveau C1 — GEVORDERD (VWO-stijl): alle vragen in het Duits. Geavanceerde formuleringen: 'Wie schließen sich diese Zeilen an den vorangehenden Abschnitt an?', 'Was spricht aus diesen Worten?' met opties Ironie/Enttäuschung/Skepsis/Zuversicht/Kritik. 'Welcher Titel passt am besten zum X. Absatz?'",
+    C2:"Niveau C2 — VAARDIG: alle vragen in academisch Duits. Focus op impliciete betekenis, toon, stijl, tekstfuncties en subtiele nuances."
+  };
+  return map[niveau]||map['B1'];
+}
+
+// ════ URL IMPORT ════
+async function importURL(){
+  const urlEl=document.getElementById('urlInput');
+  const url=(urlEl?.value||'').trim();
+  if(!url){showToast('Voer een URL in');return;}
+  if(!url.startsWith('http')){showToast('Voer een geldige URL in (begin met http)');return;}
+  const btn=document.getElementById('urlImportBtn');
+  btn.textContent='⏳ Bezig…';btn.disabled=true;
+  try{
+    // Step 1: ask Claude to fetch the URL via web_search
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:4000,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:'Bezoek deze URL en haal de volledige leestekst op (geen menu, geen links, geen advertenties, alleen de hoofdtekst): '+url}]
+      })
+    });
+    const d=await resp.json();
+    // Collect all text blocks (including after tool use)
+    const allText=d.content.filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    if(allText&&allText.length>80){
+      document.getElementById('textInput').value=allText;
+      updateWordCount();
+      if(urlEl)urlEl.value='';
+      showToast('✓ Tekst geïmporteerd ('+allText.split(/\s+/).length+' woorden)');
+    } else {
+      // If model used tool but no text came back, try a direct approach
+      const resp2=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',max_tokens:3000,
+          messages:[{role:'user',content:'Ga naar '+url+' en kopieer de volledige leestekst van de pagina. Geef ALLEEN de tekst terug, geen uitleg, geen HTML, geen links.'}]
+        })
+      });
+      const d2=await resp2.json();
+      const tekst2=d2.content.filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+      if(tekst2&&tekst2.length>80){
+        document.getElementById('textInput').value=tekst2;
+        updateWordCount();
+        if(urlEl)urlEl.value='';
+        showToast('✓ Tekst geïmporteerd ('+tekst2.split(/\s+/).length+' woorden)');
+      } else {
+        showToast('⚠️ Kon geen tekst ophalen. Kopieer de tekst handmatig en plak die hieronder.');
+      }
+    }
+  }catch(e){
+    console.error('URL import mislukt:',e);
+    showToast('⚠️ Importeren mislukt. Kopieer de tekst handmatig.');
+  }
+  btn.textContent='Importeer';btn.disabled=false;
+}
+
+function buildAnalysePrompt(text){
+  const instrStr = [
+    'Lees de volgende Duitstalige tekst volledig. Analyseer de ECHTE inhoud.',
+    'Stuur UITSLUITEND geldige JSON terug zonder preamble of backticks.',
+    '',
+    'Vereiste velden:',
+    '- teksttype: artikel/interview/verhaal/recept/reportage/opiniestuk/brief',
+    '- onderwerp_exact: een concrete zin met PRECIES het onderwerp, namen en plaatsen',
+    '- alineas: array met per alinea: nr, eerste_zin (letterlijk!), kerninhoud (namen/feiten/acties), interessant_citaat (letterlijke zin), citaat_betekenis',
+    '- personages: array met naam en rol van personen/organisaties in de tekst',
+    '- concrete_feiten_juist: 4-6 beweringen die LETTERLIJK in de tekst staan (met alineanummer)',
+    '- bewust_foute_beweringen: 4-6 beweringen die NIET kloppen (bijna-juist, omgekeerd, of verkeerd toegeschreven)',
+    '- zinnen_voor_volgorde: 3-4 letterlijke zinnen uit dezelfde alinea in JUISTE volgorde',
+    '- invulwoorden: array met zin_met_gat (zin met [___]), juiste_woord, foute_opties (2 woorden)',
+    '- toon: toon van de tekst met een letterlijke voorbeeldzin',
+    '',
+    'TEKST:',
+    '"""'
+  ].join('\n');
+  return instrStr + '\n' + text.substring(0,3800) + '\n"""';
+}
+
+function buildVragenPrompt(text,analyse,niveau,count){
+  const niv=getNiveauInstructies(niveau);
+  const parts=[
+    'Je bent een ervaren maker van CITO-eindexamens voor het schoolvak Duits in Nederland (VMBO/HAVO/VWO).',
+    '',
+    '== NIVEAU ==',
+    niv,
+    '',
+    '== REGELS ==',
+    '1. Elke vraag gaat over CONCRETE inhoud: namen, getallen, citaten of alineanummers uit DEZE tekst.',
+    '2. Wie de tekst NIET heeft gelezen kan de vraag NIET beantwoorden.',
+    '3. mc-opties zijn gebaseerd op echte tekstinhoud, foute opties zijn subtiele verdraaiingen.',
+    '4. Bewering-items verwijzen elk naar een specifieke alinea, mix wel/niet.',
+    '5. Bij citeer: antwoord staat WOORDELIJK in de tekst.',
+    '6. VERBODEN: algemene vragen over het onderwerp zonder tekstverwijzing.',
+    '',
+    '== VRAAGTYPES ==',
+    'mc: 4 opties A/B/C/D, vraag in het Duits',
+    'bewering: 4-6 beweringen, leerling noteert wel of niet',
+    'citeer: leerling schrijft exact woord of woordgroep uit tekst',
+    'aansluit: hoe sluit zin X aan bij zin Y? opties: Begründung/Konkretisierung/Relativierung/Steigerung/Widerlegung',
+    'invul: welk woord past op de open plek? 3 opties',
+    'open: antwoord in het Nederlands, max 2 zinnen',
+    '',
+    '== INHOUDSANALYSE ==',
+    JSON.stringify(analyse),
+    '',
+    '== TEKST ==',
+    text.substring(0,3500),
+    '',
+    'Maak nu '+count+' opgaven. Geef UITSLUITEND een geldige JSON-array, geen preamble, geen backticks, geen uitleg buiten de array.',
+    'Elk object: {type, punten, context, vraag, antwoord, uitleg} plus opties[] voor mc/aansluit/invul, beweringen[] voor bewering, items[] voor volgorde.'
+  ];
+  return parts.join('\n');
+}
+
+function buildVragenFallback(text,niveau,count){
+  const parts=[
+    'Je bent CITO-examenmaker voor het schoolvak Duits, niveau '+niveau+'.',
+    getNiveauInstructies(niveau),
+    '',
+    'Lees de tekst VOLLEDIG. Maak '+count+' opgaven over SPECIFIEKE inhoud van de tekst.',
+    'VERPLICHT: noem alineanummers, namen, citaten of getallen uit de tekst.',
+    'VERBODEN: algemene vragen zonder tekstverwijzing.',
+    'Types: mc (4 opties A-D), bewering (wel/niet per alinea), citeer (exact woord), open (antwoord NL).',
+    'Geef UITSLUITEND een geldige JSON-array, geen preamble, geen backticks.',
+    '',
+    'TEKST:',
+    text.substring(0,3500)
+  ];
+  return parts.join('\n');
+}
+
+function demoCITO(niveau){
+  return [{type:'mc',punten:1,context:'Alinea 1',vraag:'Welche Aussage stimmt mit dem 1. Absatz überein?',opties:['A Een bewering die BIJNA klopt','B De correcte bewering (gebaseerd op tekst)','C Een onjuiste bewering die aannemelijk klinkt','D Een bewering over de verkeerde persoon'],antwoord:'B',uitleg:'Demo-vraag. Kies na het lezen van de tekst de optie die het beste klopt.'},
+  {type:'bewering',punten:3,vraag:"Geef van elk van de volgende beweringen aan of deze overeenkomt met de tekst. Noteer 'wel' of 'niet'.",context:'',beweringen:[{tekst:'Bewering 1 (gebaseerd op alinea 1)',antwoord:'wel',alinea:1},{tekst:'Bewering 2 die net iets anders zegt dan de tekst',antwoord:'niet',alinea:2},{tekst:'Bewering 3 (gebaseerd op alinea 2)',antwoord:'wel',alinea:2}],uitleg:''},
+  {type:'citeer',punten:1,context:'Alinea 1',vraag:'Schrijf het woord op uit alinea 1 waaruit blijkt wat het onderwerp is.',antwoord:'[Zoek het kernwoord in alinea 1]',uitleg:''},
+  {type:'open',punten:2,context:'',vraag:'Welk concreet feit noemt de auteur in alinea 1 ter onderbouwing van het standpunt?',antwoord:'Modelantwoord: gebaseerd op de tekst.',uitleg:''}];
+}
+
+// ════ GENERATE QUESTIONS ════
+async function generateQuestions(){
+  if(!currentText){showToast('Analyseer eerst een tekst');return;}
+  const niveau=finalNiveau||currentLevel||'B1';
+  const count=parseInt(document.getElementById('qCount').value)||6;
+  const btn=document.getElementById('genQBtn');
+  btn.innerHTML='<div class="spinner"></div><span>Tekst analyseren… (1/2)</span>';
+  btn.disabled=true;
+
+  // Stap 1: inhoud analyseren
+  let tekstAnalyse=null;
+  try{
+    const r1=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2500,messages:[{role:"user",content:buildAnalysePrompt(currentText)}]})
+    });
+    if(!r1.ok){const err=await r1.text();console.warn('Stap 1 HTTP fout:',r1.status,err);}
+    else{
+      const d1=await r1.json();
+      if(d1.error){console.warn('Stap 1 API fout:',d1.error);}
+      else{
+        const raw1=d1.content.map(i=>i.text||'').join('').replace(/```json[\s\S]*?```|```/g,'').trim();
+        const s1=raw1.indexOf('{'),e1=raw1.lastIndexOf('}');
+        if(s1>=0&&e1>s1){try{tekstAnalyse=JSON.parse(raw1.substring(s1,e1+1));}catch(pe){console.warn('Stap 1 parse fout:',pe);}}
+      }
+    }
+  }catch(e){console.warn('Stap 1 fetch fout:',e);}
+
+  // Stap 2: opgaven genereren (ook als stap 1 mislukte)
+  btn.innerHTML='<div class="spinner"></div><span>Opgaven maken… (2/2)</span>';
+  let raw2='';
+  let parseOk=false;
+  try{
+    const prompt=tekstAnalyse
+      ?buildVragenPrompt(currentText,tekstAnalyse,niveau,count)
+      :buildVragenFallback(currentText,niveau,count);
+    const r2=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,messages:[{role:"user",content:prompt}]})
+    });
+    if(!r2.ok){
+      const errTxt=await r2.text();
+      console.error('Stap 2 HTTP fout:',r2.status,errTxt);
+      throw new Error('HTTP '+r2.status);
+    }
+    const d2=await r2.json();
+    if(d2.error){throw new Error(d2.error.message||'API fout: '+JSON.stringify(d2.error));}
+    raw2=d2.content.map(i=>i.text||'').join('');
+    // Schoon JSON op: verwijder code-fence en preamble
+    raw2=raw2.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    // Vind array
+    const a=raw2.indexOf('['),b=raw2.lastIndexOf(']');
+    if(a>=0&&b>a){
+      raw2=raw2.substring(a,b+1);
+      currentQuestions=JSON.parse(raw2);
+      if(Array.isArray(currentQuestions)&&currentQuestions.length>0)parseOk=true;
+    }
+    if(!parseOk)throw new Error('Geen geldige array gevonden. Begin: '+raw2.substring(0,120));
+  }catch(e){
+    console.error('Vragen genereren mislukt:',e.message,'Raw:',raw2.substring(0,300));
+    // Fallback: demo-vragen tonen zodat de UI niet leeg blijft
+    currentQuestions=demoCITO(niveau);
+    showToast('⚠️ AI-genereren mislukt — demo-vragen getoond. Probeer opnieuw.');
+  }
+
+  renderCITO(currentQuestions,'questionsBody','questionsPanel',niveau);
+  // Zorg dat het panel écht zichtbaar is
+  const qp=document.getElementById('questionsPanel');
+  if(qp){qp.classList.add('visible');setTimeout(()=>qp.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+  const saveBtn=document.getElementById('saveWithQBtn');
+  if(saveBtn){saveBtn.style.display='inline-flex';saveBtn.textContent='📚 Bewaar in bibliotheek';saveBtn.style.background='var(--b1)';saveBtn.disabled=false;}
+  btn.innerHTML='<span>🔍 Analyseer &amp; genereer opgaven</span>';btn.disabled=false;
+}
+
+// ════ RENDER CITO ════
+function renderCITO(questions,bodyId,panelId,niveau){
+  const body=document.getElementById(bodyId);
+  const xpMult=LEVEL_XP[niveau||'B1'];
+  const totalPunten=questions.reduce((a,q)=>a+(q.punten||1),0);
+  let html='';
+  if(currentMode==='student'){
+    html+='<div class="xp-banner"><div><h3>⚡ XP te verdienen</h3><p>'+totalPunten+' punten · niveau '+niveau+' · '+xpMult+'× multiplier</p></div><div class="xp-chips"><span class="xp-chip">Tot '+Math.round(totalPunten*10*xpMult)+' XP</span><span class="xp-chip">'+questions.length+' opgaven</span></div></div>';
+  }
+  const typeLabel={mc:'Meerkeuze',bewering:'Beweringen',citeer:'Citeer',aansluit:'Tekstrelatie',invul:'Invulvraag',volgorde:'Volgorde',open:'Open vraag'};
+  questions.forEach((q,i)=>{
+    const ctxHTML=q.context&&q.context.trim()?'<div class="cito-context"><div class="cito-context-label">Context</div>'+q.context+'</div>':'';
+    const hasCtx=!!ctxHTML;
+    const tl=typeLabel[q.type]||q.type;
+    let inner='';
+    if(q.type==='mc'||q.type==='aansluit'||q.type==='invul'){
+      const opts=(q.opties||[]).map((o,j)=>{const L=['A','B','C','D'][j];return'<div class="answer-option" onclick="selectOpt(this,\''+bodyId+'\','+i+',\''+L+'\')" data-opt="'+L+'"><span class="opt-key">'+L+'</span>'+o.replace(/^[A-D][\s.]+/,'')+'</div>';}).join('');
+      inner='<div class="answer-options">'+opts+'</div>';
+    } else if(q.type==='bewering'){
+      const rows=(q.beweringen||[]).map((b,bi)=>'<div class="bewering-row"><div class="bewering-cell">'+(bi+1)+'&nbsp;'+b.tekst+'</div><div class="bewering-cell right"><button class="bew-btn" onclick="selectBew(this,\''+bodyId+'\','+i+','+bi+',\'wel\')">wel</button><button class="bew-btn" onclick="selectBew(this,\''+bodyId+'\','+i+','+bi+',\'niet\')">niet</button></div></div>').join('');
+      inner='<div class="bewering-table"><div class="bewering-row header"><div class="bewering-cell" style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);">Bewering</div><div class="bewering-cell right" style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);">wel/niet</div></div>'+rows+'</div>';
+    } else if(q.type==='citeer'){
+      inner='<div class="answer-options"><input class="citeer-box" type="text" placeholder="Schrijf hier het woord of de woordgroep uit de tekst…" id="'+bodyId+'-citeer-'+i+'"><div class="feedback-box" id="'+bodyId+'-citeerfb-'+i+'"></div></div>';
+    } else if(q.type==='volgorde'){
+      const items=q.items||[];
+      const opts2=items.map((_,j)=>'<option value="'+['a','b','c','d'][j]+'">'+['a','b','c','d'][j]+'</option>').join('');
+      const rows2=items.map((item,j)=>'<div class="volgorde-row"><span class="volgorde-label">'+['a','b','c','d'][j]+'</span><div class="volgorde-text">'+item+'</div><select class="volgorde-select" id="'+bodyId+'-vol-'+i+'-'+j+'"><option value="">—</option>'+opts2+'</select></div>').join('');
+      inner='<div class="volgorde-items">'+rows2+'<div class="feedback-box" id="'+bodyId+'-volfb-'+i+'"></div></div>';
+    } else {
+      inner='<div class="answer-options"><textarea class="open-answer-box" rows="3" placeholder="Schrijf hier jouw antwoord (in het Nederlands)…" id="'+bodyId+'-open-'+i+'"></textarea><div class="feedback-box" id="'+bodyId+'-openfb-'+i+'"></div></div>';
+    }
+    html+=ctxHTML+'<div class="question-item'+(hasCtx?' has-context':'')+'" id="'+bodyId+'-qi-'+i+'" data-chosen="" data-type="'+q.type+'"><div class="question-header"><div class="q-meta"><span class="q-num">'+(i+1)+(q.punten>1?'–'+(i+q.punten):'')+'p</span><span class="q-pts">'+(q.punten||1)+' punt'+(q.punten>1?'en':'')+'</span><span class="q-type-badge '+q.type+'">'+tl+'</span></div><div class="q-text">'+q.vraag+'</div></div>'+inner+'<div class="feedback-box" id="'+bodyId+'-fb-'+i+'"></div></div>';
+  });
+  body.innerHTML=html;
+  if(panelId){document.getElementById(panelId).classList.add('visible');setTimeout(()=>document.getElementById(panelId).scrollIntoView({behavior:'smooth',block:'start'}),80);}
+  if(bodyId==='modalQuestionsBody'&&document.getElementById('modalCheckWrap'))document.getElementById('modalCheckWrap').style.display='block';
+}
+
+function selectOpt(el,bodyId,qIdx,val){
+  el.closest('.answer-options').querySelectorAll('.answer-option').forEach(o=>o.classList.remove('selected','correct','wrong','reveal'));
+  el.classList.add('selected');
+  document.getElementById(bodyId+'-qi-'+qIdx).dataset.chosen=val;
+}
+function selectBew(btn,bodyId,qIdx,bIdx,val){
+  btn.closest('.bewering-row').querySelectorAll('.bew-btn').forEach(b=>b.className='bew-btn');
+  btn.classList.add(val==='wel'?'sel-j':'sel-n');
+  const qi=document.getElementById(bodyId+'-qi-'+qIdx);
+  const ch=JSON.parse(qi.dataset.chosen||'{}');ch[bIdx]=val;
+  qi.dataset.chosen=JSON.stringify(ch);
+}
+
+// ════ CHECK ════
+function checkAllAnswers(){doCheck('questionsBody',currentQuestions,'scoreDisplay',currentLevel);}
+function checkModalAnswers(){doCheck('modalQuestionsBody',modalQuestions,null,modalEntry?.niveau);}
+async function doCheck(bodyId,questions,scoreId,niveau){
+  if(!questions||!questions.length)return;
+  let score=0,total=0;const xpMult=LEVEL_XP[niveau||'B1'];
+  for(let i=0;i<questions.length;i++){
+    const q=questions[i];total+=q.punten||1;
+    const qi=document.getElementById(bodyId+'-qi-'+i);const fb=document.getElementById(bodyId+'-fb-'+i);
+    if(q.type==='mc'||q.type==='aansluit'||q.type==='invul'){
+      const chosen=(qi?.dataset.chosen||'').trim();const correct=(q.antwoord||'').trim().charAt(0).toUpperCase();const ok=chosen===correct;
+      qi?.querySelectorAll('.answer-option').forEach(o=>{o.style.pointerEvents='none';if((o.dataset.opt||'').charAt(0).toUpperCase()===correct)o.classList.add('reveal');});
+      if(ok)score+=q.punten||1;
+      const wEl=qi?.querySelector('[data-opt="'+chosen+'"]');if(wEl&&!ok)wEl.classList.add('wrong');
+      if(fb){fb.className='feedback-box show '+(ok?'correct-fb':'wrong-fb');fb.textContent=ok?'✓ Correct! '+q.uitleg:'✗ Juist antwoord: '+correct+'. '+q.uitleg;}
+    } else if(q.type==='bewering'){
+      const chosen=JSON.parse(qi?.dataset.chosen||'{}');let pts=0;
+      (q.beweringen||[]).forEach((b,bi)=>{
+        const uc=chosen[bi];const correct=b.antwoord;const ok=uc===correct;if(ok)pts++;
+        const row=qi?.querySelectorAll('.bewering-row')[bi+1];
+        if(row){row.querySelectorAll('.bew-btn').forEach(btn=>{btn.style.pointerEvents='none';const isWel=btn.textContent.trim()==='wel';const isCorrect=(correct==='wel'&&isWel)||(correct==='niet'&&!isWel);if(isCorrect){btn.style.background=correct==='wel'?'var(--a1)':'var(--accent)';btn.style.color='white';}if(uc&&!ok&&((isWel&&uc==='wel')||(!isWel&&uc==='niet')))btn.classList.add('wrong-choice');});}
+      });
+      score+=pts;if(fb){fb.className='feedback-box show partial-fb';fb.textContent='Score: '+pts+'/'+(q.beweringen||[]).length+' correct. '+(q.uitleg||'');}
+    } else if(q.type==='citeer'){
+      const cEl=document.getElementById(bodyId+'-citeer-'+i);const ans=(cEl?.value||'').trim().toLowerCase();const correct=(q.antwoord||'').toLowerCase().replace(/\[.*?\]/,'').trim();
+      const ok=correct&&ans&&(ans.includes(correct.substring(0,15))||correct.includes(ans.substring(0,15)));
+      if(cEl)cEl.disabled=true;const cFb=document.getElementById(bodyId+'-citeerfb-'+i)||fb;
+      if(cFb){cFb.className='feedback-box show '+(ok?'correct-fb':'wrong-fb');cFb.textContent=ok?'✓ Correct citaat!':'✗ Modelantwoord: „'+q.antwoord+'" '+q.uitleg;}
+      if(ok)score+=q.punten||1;
+    } else if(q.type==='volgorde'){
+      const correctArr=(q.antwoord||'').split(',').map(s=>s.trim());const items=q.items||[];let pts=0;
+      const vFb=document.getElementById(bodyId+'-volfb-'+i)||fb;const userOrder=items.map((_,j)=>(document.getElementById(bodyId+'-vol-'+i+'-'+j)?.value||''));
+      const ok=JSON.stringify(userOrder)===JSON.stringify(correctArr);if(ok){pts=q.punten||2;}else{userOrder.forEach((v,j)=>{if(v===correctArr[j])pts+=0.5;});}
+      score+=pts;items.forEach((_,j)=>{const sel=document.getElementById(bodyId+'-vol-'+i+'-'+j);if(sel)sel.disabled=true;});
+      if(vFb){vFb.className='feedback-box show '+(ok?'correct-fb':'partial-fb');vFb.textContent=ok?'✓ Juiste volgorde!':'Juiste volgorde: '+correctArr.join(' → ')+'. '+q.uitleg;}
+    } else if(q.type==='open'){
+      const oEl=document.getElementById(bodyId+'-open-'+i);const ans=(oEl?.value||'').trim();const oFb=document.getElementById(bodyId+'-openfb-'+i)||fb;
+      if(!ans){if(oFb){oFb.className='feedback-box show wrong-fb';oFb.textContent='Geen antwoord ingevuld.';}continue;}
+      if(oEl)oEl.disabled=true;if(oFb){oFb.className='feedback-box show partial-fb';oFb.textContent='⏳ Nakijken…';}
+      try{
+        const r2=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:160,messages:[{role:"user",content:'Beoordeel in max 2 zinnen Nederlands. Begin met "✓ Goed:", "~ Gedeeltelijk:" of "✗ Verbetering:". Geef modelantwoord als onjuist.\nVraag: '+q.vraag+'\nModelantwoord: '+q.antwoord+'\nLeerlingantwoord: '+ans}]})});
+        const d2=await r2.json();const ft=d2.content.map(x=>x.text||'').join('');
+        if(oFb){oFb.className='feedback-box show '+(ft.startsWith('✓')?'correct-fb':ft.startsWith('~')?'partial-fb':'wrong-fb');oFb.textContent=ft;}
+        if(ft.startsWith('✓'))score+=q.punten||1;else if(ft.startsWith('~'))score+=(q.punten||1)/2;
+      }catch(e){if(oFb){oFb.className='feedback-box show partial-fb';oFb.textContent='Modelantwoord: '+q.antwoord;}score+=(q.punten||1)/2;}
+    }
+  }
+  const pct=total>0?score/total:0;const baseXP=Math.round(pct*total*10*xpMult);const bonusXP=pct>=1?Math.round(20*xpMult):pct>=0.8?Math.round(10*xpMult):0;const earnedXP=baseXP+bonusXP;
+  const pctVal=Math.round(pct*100);const col=pctVal>=80?'var(--a1)':pctVal>=60?'var(--b1)':'var(--accent)';
+  const sumEl=document.createElement('div');sumEl.className='score-summary';
+  sumEl.innerHTML='<div><div class="score-big" style="color:'+col+'">'+Math.round(score)+'/'+total+'</div><div style="font-size:11px;color:var(--muted);">'+pctVal+'%'+(pct>=1?' · Perfect! 🎉':'')+'</div></div><div style="flex:1;min-width:120px;"><div style="font-size:10px;color:var(--muted);margin-bottom:3px;">'+(pct>=0.8?'Uitstekend!':pct>=0.6?'Goed bezig!':'Blijf oefenen!')+'</div><div class="score-bar-track"><div class="score-bar-fill" style="width:'+pctVal+'%;background:'+col+'"></div></div></div>'+(currentMode==='student'?'<div class="xp-earned-pill">⚡ +'+earnedXP+' XP'+(bonusXP?' (+'+bonusXP+' bonus)':'')+'</div>':'');
+  const pb=document.getElementById(bodyId);const ex=pb.querySelector('.score-summary');if(ex)ex.replaceWith(sumEl);else pb.insertBefore(sumEl,pb.firstChild);
+  if(currentMode==='student'){
+    playerStats.totalQuestions=(playerStats.totalQuestions||0)+questions.reduce((a,q)=>a+(q.punten||1),0);
+    playerStats.questionsToday=(playerStats.questionsToday||0)+questions.reduce((a,q)=>a+(q.punten||1),0);
+    if(['B2','C1','C2'].includes(niveau)){playerStats.hardTextToday=(playerStats.hardTextToday||0)+1;if(playerStats.hardTextToday===1)addXP(DAILY_MISSIONS[2].xpReward,window.innerWidth/2,300);}
+    if(playerStats.questionsToday>=5)addXP(DAILY_MISSIONS[1].xpReward,window.innerWidth/2,300);
+    if(!playerStats.levelsAttempted)playerStats.levelsAttempted=[];
+    if(!playerStats.levelsAttempted.includes(niveau))playerStats.levelsAttempted.push(niveau);
+    if(pct>=1)playerStats.perfectScores=(playerStats.perfectScores||0)+1;
+    addXP(earnedXP,window.innerWidth/2,window.innerHeight/2);
+  }
+  if(scoreId){const sd=document.getElementById(scoreId);if(sd){sd.style.display='inline';sd.textContent=Math.round(score)+'/'+total+' p';}}
+  showToast((currentMode==='student'?'⚡ +'+earnedXP+' XP · ':'')+'Score: '+Math.round(score)+'/'+total);
+}
+
+// ════ LIBRARY ════
+function renderSidebarLib(){
+  const filtered=libFilter==='alle'?library:library.filter(e=>e.niveau===libFilter);
+  const el=document.getElementById('libList');document.getElementById('libCount').textContent=library.length;
+  if(!filtered.length){el.innerHTML='<div class="empty-lib"><span class="empty-icon">'+(library.length?'🔍':'📚')+'</span><p>'+(library.length?'Geen teksten op dit niveau.':'Nog geen teksten opgeslagen.')+'</p></div>';return;}
+  el.innerHTML=filtered.slice(0,4).map(e=>'<div class="text-card" onclick="openModal('+e.id+')"><div class="text-card-top"><h4>'+e.titel+'</h4><span class="mini-badge" style="background:'+LC[e.niveau]+'">'+e.niveau+'</span></div><p>'+e.tekst.substring(0,80)+'…</p><div style="margin-top:4px;font-size:9px;color:var(--muted);display:flex;justify-content:space-between;"><span>'+DIFF_STR[e.niveau]+' <span style="color:#d4a843;font-weight:700;">'+XP_LABELS[e.niveau]+'</span></span><button onclick="event.stopPropagation();delEntry('+e.id+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:9px;">✕</button></div></div>').join('');
+}
+function filterLib(lvl,btn){libFilter=lvl;document.querySelectorAll('#view-analyse .lib-filter .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderSidebarLib();}
+function delEntry(id){
+  if(currentMode!=='teacher'){showToast('Alleen docenten kunnen teksten verwijderen');return;}
+  library=library.filter(x=>x.id!==id);spSaveLibrary();renderSidebarLib();renderLibPage();updateXPDisplay();
+}
+function renderLibPage(){
+  const q=(document.getElementById('libSearch')?.value||'').toLowerCase();
+  let f=libPageFilter==='alle'?[...library]:library.filter(e=>e.niveau===libPageFilter);
+  if(q)f=f.filter(e=>e.titel.toLowerCase().includes(q)||e.tekst.toLowerCase().includes(q));
+  const g=document.getElementById('libGrid');
+  if(!f.length){g.innerHTML='<div class="lib-empty"><span class="empty-icon">📚</span><h3>'+(library.length?'Geen resultaten':'Bibliotheek leeg')+'</h3><p>'+(library.length?'Pas filters aan.':'Docenten kunnen teksten toevoegen via de Analyse pagina.')+'</p></div>';return;}
+  g.innerHTML=f.map(e=>{const xpR=Math.round(10*LEVEL_XP[e.niveau]);return '<div class="lib-card" onclick="openModal('+e.id+')"><div class="lib-card-top"><span class="lib-card-badge" style="background:'+LC[e.niveau]+'">'+e.niveau+' · '+LN[e.niveau]+'</span><h3>'+e.titel+'</h3><p>'+e.tekst.substring(0,150)+'…</p><div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;"><div class="diff-stars">'+Array.from({length:5},(_,i)=>'<div class="diff-star '+(i<(DIFF_STARS[e.niveau]||1)?'on':'')+'"></div>').join('')+'</div><span class="xp-pill-sm">⚡ Tot +'+(xpR*4)+' XP'+(e.vragen?` · ${e.vragen.length} opgaven`:'')+'</span></div></div><div class="lib-card-bottom"><span class="lib-card-meta">'+e.datum+' · '+(e.tekst.match(/\S+/g)||[]).length+' woorden'+(e.bron?' · '+e.bron:'')+'</span><div class="lib-card-actions"><button onclick="event.stopPropagation();openModal('+e.id+')">📖 Oefenen</button>'+(currentMode==='teacher'?'<button class="del-btn" onclick="event.stopPropagation();delEntry('+e.id+')">🗑</button>':'')+'</div></div></div>';}).join('');
+}
+function filterLibPage(lvl,btn){libPageFilter=lvl;document.querySelectorAll('#view-bibliotheek .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderLibPage();}
+
+// ════ MODAL ════
+function openModal(id){
+  const e=library.find(x=>x.id===id);if(!e)return;
+  modalEntry=e;currentModalId=e.id;
+  document.getElementById('modalBadge').textContent=e.niveau;document.getElementById('modalBadge').style.background=LC[e.niveau];
+  document.getElementById('modalTitle').textContent=e.titel;
+  // Load text with markings
+  const body=document.getElementById('modalTextBody');
+  if(e.markeringen)body.innerHTML=e.markeringen;
+  else body.innerHTML=e.tekst.split('\n').filter(Boolean).map(p=>'<p>'+p+'</p>').join('');
+  const xpR=Math.round(10*LEVEL_XP[e.niveau]);
+  document.getElementById('modalXpInfo').textContent='Niveau '+e.niveau+' · '+DIFF_STR[e.niveau]+' · Verdien tot +'+(xpR*6)+' XP';
+  // Load saved questions if any
+  if(e.vragen&&e.vragen.length>0){
+    modalQuestions=e.vragen;
+    renderCITO(modalQuestions,'modalQuestionsBody',null,e.niveau);
+    document.getElementById('modalCheckWrap').style.display='block';
+    document.getElementById('modalGenQBtn').innerHTML='<span>↺ Nieuwe opgaven genereren</span>';
+    document.getElementById('tabVragen').textContent='📝 Opgaven ('+e.vragen.length+')';
+  } else {
+    modalQuestions=[];
+    document.getElementById('modalQuestionsBody').innerHTML='<div style="text-align:center;padding:36px 14px;color:var(--muted);"><p style="font-size:26px;margin-bottom:7px;">📝</p><p style="font-size:12px;">Ga naar <strong>Lezen</strong> en klik op <strong>Genereer CITO-opgaven</strong>.</p></div>';
+    document.getElementById('modalCheckWrap').style.display='none';
+    document.getElementById('modalGenQBtn').innerHTML='<span>📝 Genereer CITO-opgaven</span>';
+    document.getElementById('tabVragen').textContent='📝 Opgaven';
+  }
+  document.getElementById('modalGenQBtn').disabled=false;
+  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tabLezen').classList.add('active');
+  document.getElementById('modal-lezen').classList.add('active');
+  document.getElementById('readerModal').classList.add('open');
+}
+function closeModal(){document.getElementById('readerModal').classList.remove('open');modalEntry=null;}
+document.getElementById('readerModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+function switchModalTab(name,btn){
+  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');document.getElementById('modal-'+name).classList.add('active');
+}
+async function generateModalQuestions(){
+  if(!modalEntry)return;
+  const btn=document.getElementById('modalGenQBtn');
+  btn.innerHTML='<div class="spinner"></div><span>Tekst analyseren… (1/2)</span>';btn.disabled=true;
+  let tekstAnalyse=null;
+  try{
+    const r1=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2500,messages:[{role:"user",content:buildAnalysePrompt(modalEntry.tekst)}]})
+    });
+    if(r1.ok){
+      const d1=await r1.json();
+      if(!d1.error){
+        const raw1=d1.content.map(i=>i.text||'').join('').replace(/```json[\s\S]*?```|```/g,'').trim();
+        const s1=raw1.indexOf('{'),e1=raw1.lastIndexOf('}');
+        if(s1>=0&&e1>s1){try{tekstAnalyse=JSON.parse(raw1.substring(s1,e1+1));}catch(pe){console.warn('Modal analyse parse fout:',pe);}}
+      }
+    }
+  }catch(e){console.warn('Modal analyse stap 1 mislukt:',e);}
+  btn.innerHTML='<div class="spinner"></div><span>Opgaven maken… (2/2)</span>';
+  let raw2='';
+  let parseOk=false;
+  try{
+    const prompt=tekstAnalyse
+      ?buildVragenPrompt(modalEntry.tekst,tekstAnalyse,modalEntry.niveau,6)
+      :buildVragenFallback(modalEntry.tekst,modalEntry.niveau,6);
+    const r2=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,messages:[{role:"user",content:prompt}]})
+    });
+    if(!r2.ok){const errTxt=await r2.text();throw new Error('HTTP '+r2.status+': '+errTxt.substring(0,100));}
+    const d2=await r2.json();
+    if(d2.error)throw new Error(d2.error.message||'API fout: '+JSON.stringify(d2.error));
+    raw2=d2.content.map(i=>i.text||'').join('').replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    const a=raw2.indexOf('['),b=raw2.lastIndexOf(']');
+    if(a>=0&&b>a){
+      raw2=raw2.substring(a,b+1);
+      modalQuestions=JSON.parse(raw2);
+      if(Array.isArray(modalQuestions)&&modalQuestions.length>0)parseOk=true;
+    }
+    if(!parseOk)throw new Error('Geen geldige array. Begin: '+raw2.substring(0,120));
+  }catch(e){
+    console.error('Modal vragen mislukt:',e.message,'Raw:',raw2.substring(0,300));
+    modalQuestions=demoCITO(modalEntry.niveau);
+    showToast('⚠️ AI-genereren mislukt — demo-vragen getoond. Probeer opnieuw.');
+  }
+  renderCITO(modalQuestions,'modalQuestionsBody',null,modalEntry.niveau);
+  document.getElementById('modalCheckWrap').style.display='block';
+  const entry=library.find(x=>x.id===modalEntry.id);
+  if(entry){entry.vragen=modalQuestions;spSaveLibrary();}
+  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tabVragen').classList.add('active');document.getElementById('tabVragen').textContent='📝 Opgaven ('+modalQuestions.length+')';
+  document.getElementById('modal-vragen').classList.add('active');
+  btn.innerHTML='<span>↺ Vernieuw opgaven</span>';btn.disabled=false;
+}
+
+// ════ MARKING ════
+function setMarkColor(color,btn){
+  activeMarkColor=color;
+  document.querySelectorAll('.mark-btn').forEach(b=>b.classList.remove('mark-active'));
+  if(btn)btn.classList.add('mark-active');
+}
+function handleTextSelection(){
+  const sel=window.getSelection();
+  if(!sel||sel.isCollapsed||!sel.toString().trim())return;
+  const range=sel.getRangeAt(0);
+  const container=document.getElementById('modalTextBody');
+  if(!container||!container.contains(range.commonAncestorContainer))return;
+  if(activeMarkColor==='erase'){
+    document.querySelectorAll('#modalTextBody mark').forEach(m=>{if(sel.containsNode(m,true)){const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);}});
+  } else {
+    try{const mark=document.createElement('mark');mark.className='hl-'+activeMarkColor;range.surroundContents(mark);}catch(e){}
+  }
+  sel.removeAllRanges();
+  if(currentModalId){const entry=library.find(x=>x.id===currentModalId);if(entry){entry.markeringen=container.innerHTML;spSaveLibrary();}}
+}
+
+// ════ XP / GAMIFICATION ════
+// saveStats defined above in SP section
+function checkStreak(){
+  const today=new Date().toDateString();if(playerStats.lastActiveDay===today)return;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  playerStats.streak=playerStats.lastActiveDay===yesterday?(playerStats.streak||0)+1:1;
+  playerStats.maxStreak=Math.max(playerStats.maxStreak||0,playerStats.streak);
+  playerStats.lastActiveDay=today;
+  if(playerStats.dailyMissionsDate!==today){playerStats.analysesToday=0;playerStats.questionsToday=0;playerStats.hardTextToday=0;playerStats.dailyMissionsDate=today;}
+  saveStats();
+}
+function addXP(amount,eventX,eventY){
+  playerStats.xp=(playerStats.xp||0)+amount;saveStats();updateXPDisplay();
+  if(eventX&&eventY)spawnXPFloat(amount,eventX,eventY);
+  checkBadges();renderMissions();
+}
+function getPlayerLevel(){let lv=PLAYER_LEVELS[0];for(const l of PLAYER_LEVELS){if(playerStats.xp>=l.xpNeeded)lv=l;}return lv;}
+function updateXPDisplay(){
+  if(currentMode!=='student')return;
+  const lv=getPlayerLevel();const next=PLAYER_LEVELS.find(l=>l.lv===lv.lv+1);
+  const xpIn=playerStats.xp-lv.xpNeeded;const xpNeed=next?(next.xpNeeded-lv.xpNeeded):1;
+  const pct=next?Math.min(100,Math.round(xpIn/xpNeed*100)):100;
+  document.getElementById('headerXP').textContent=playerStats.xp+' XP';document.getElementById('headerLevel').textContent='Lv '+lv.lv;
+  document.getElementById('playerLevelDisplay').textContent='Lv '+lv.lv;document.getElementById('playerTitle').textContent=lv.title;
+  document.getElementById('levelBadgeWidget').textContent=lv.title;
+  document.getElementById('xpCurrent').textContent=playerStats.xp+' XP';
+  document.getElementById('xpNext').textContent=next?'→ '+(next.xpNeeded-playerStats.xp)+' XP voor Lv '+(lv.lv+1):'MAX!';
+  document.getElementById('xpBarFill').style.width=pct+'%';
+  document.getElementById('statTexten').textContent=library.length;document.getElementById('statOpgaven').textContent=playerStats.totalQuestions||0;
+  document.getElementById('statStreak').textContent=(playerStats.streak||0)+'🔥';
+  const hl=playerStats.levelsAttempted?.length?playerStats.levelsAttempted.slice(-1)[0]:'—';document.getElementById('statHighLevel').textContent=hl;
+  const days=['Ma','Di','Wo','Do','Vr','Za','Zo'];const todayIdx=(new Date().getDay()+6)%7;
+  document.getElementById('streakRow').innerHTML=days.map((d,i)=>{const diff=i-todayIdx;const isPast=diff<0&&diff>=-((playerStats.streak||1)-1);const isToday=diff===0;return '<div class="streak-day '+(isToday?'today':isPast||isToday?'done':'')+'">'+d+'</div>';}).join('');
+  document.getElementById('levelRoad').innerHTML=PLAYER_LEVELS.map(l=>'<div class="road-item'+(l.lv===lv.lv?' current':'')+'"><div class="road-dot" style="background:'+(l.lv<=lv.lv?'#d4a843':'rgba(255,255,255,0.12)')+'"></div><div class="road-name" style="'+(l.lv>lv.lv?'color:rgba(255,255,255,0.3)':'')+'">Lv '+l.lv+' · '+l.title+'</div><div class="road-lvl">'+(l.lv<=lv.lv?'✓':l.lv===lv.lv+1?'next':l.xpNeeded+' XP')+'</div></div>').join('');
+}
+function checkBadges(){
+  let nb=false;for(const b of BADGES){if(!(playerStats.earnedBadges||[]).includes(b.id)&&b.condition(playerStats)){playerStats.earnedBadges=[...(playerStats.earnedBadges||[]),b.id];playerStats.xp+=b.xp;saveStats();setTimeout(()=>{const p=document.getElementById('achievementPopup');document.getElementById('achIcon').textContent=b.icon;document.getElementById('achName').textContent=b.name;document.getElementById('achXp').textContent='+'+b.xp+' XP';p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3500);},500);nb=true;}}
+  renderBadges();if(nb)updateXPDisplay();
+}
+function renderBadges(){const bs=document.getElementById('badgeShelf');if(!bs)return;bs.innerHTML=BADGES.map(b=>'<div class="badge '+((playerStats.earnedBadges||[]).includes(b.id)?'':'locked')+'">'+b.icon+'<span class="badge-tt">'+b.name+'</span></div>').join('');}
+function renderMissions(){const mc=document.getElementById('missionsContainer');if(!mc)return;const today=new Date().toDateString();if(playerStats.dailyMissionsDate!==today){playerStats.analysesToday=0;playerStats.questionsToday=0;playerStats.hardTextToday=0;playerStats.dailyMissionsDate=today;}mc.innerHTML=DAILY_MISSIONS.map(m=>{const val=playerStats[m.key]||0;const pct=Math.min(100,Math.round(val/m.target*100));const done=val>=m.target;return '<div class="mission-item'+(done?' done':'')+'"><div class="mission-top"><span style="font-size:14px;">'+m.icon+'</span><div style="flex:1;"><div class="mission-name">'+m.name+'</div><div class="mission-desc">'+m.desc+' ('+Math.min(val,m.target)+'/'+m.target+')</div></div><div class="mission-reward">+'+m.xpReward+' XP</div></div><div class="mission-bar"><div class="mission-bar-fill" style="width:'+pct+'%"></div></div></div>';}).join('');}
+
+// ════ ERK CARDS ════
+function renderErkCards(){const el=document.getElementById('erkCards');if(el.innerHTML.trim())return;el.innerHTML=Object.entries(ERK_INFO).map(([lv,i])=>'<div style="background:white;border:1px solid var(--border);border-radius:9px;overflow:hidden;"><div style="background:'+LC[lv]+';padding:14px 18px;color:white;"><div style="font-family:\'DM Serif Display\',serif;font-size:26px;margin-bottom:2px;">'+lv+'</div><div style="font-size:15px;font-weight:600;">'+i.name+'</div><div style="font-size:11px;opacity:0.78;">'+i.de+'</div></div><div style="padding:14px 18px;"><p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">Wat kan de leerling?</p><p style="font-size:12px;line-height:1.55;margin-bottom:11px;">'+i.can+'</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px;"><div style="background:var(--cream);padding:8px 10px;border-radius:5px;"><div style="font-size:9px;color:var(--muted);margin-bottom:1px;text-transform:uppercase;">Woordenschat</div><div style="font-weight:600;font-size:11px;">'+i.vocab+'</div></div><div style="background:var(--cream);padding:8px 10px;border-radius:5px;"><div style="font-size:9px;color:var(--muted);margin-bottom:1px;text-transform:uppercase;">Grammatica</div><div style="font-size:10px;line-height:1.4;">'+i.gram+'</div></div></div><p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">Voorbeeldzin</p><div style="background:var(--paper);border-left:3px solid '+LC[lv]+';padding:7px 11px;border-radius:0 4px 4px 0;font-size:11px;font-style:italic;line-height:1.6;">'+i.ex+'</div></div></div>').join('');}
+
+// ════ INIT ════
+renderErkCards();
+appStart();
+</script>
+</body>
+</html>
+<!--
+════════════════════════════════════════════════════════════
+  INSTALLATIEGIDS — DeutschLevel SharePoint (REST versie)
+  Geen Azure, geen IT-beheerder nodig. Alleen een gewoon
+  Microsoft 365 schoolaccount met toegang tot SharePoint.
+════════════════════════════════════════════════════════════
+
+STAP 1 — VIND JE SHAREPOINT-SITE URL
+──────────────────────────────────────
+Open SharePoint via office.com → klik op 'SharePoint' → open de site die je wilt
+gebruiken (of maak een nieuwe aan). De URL ziet er zo uit:
+  https://jouwschool.sharepoint.com/sites/duits
+
+Kopieer deze URL.
+
+STAP 2 — PAS HET BESTAND AAN
+──────────────────────────────
+Open DeutschLevel_SharePoint.html in Kladblok of Notepad++.
+Zoek bovenaan:
+  const SP_SITE_URL = "JOUW_SHAREPOINT_SITE_URL";
+Vervang dat door jouw URL:
+  const SP_SITE_URL = "https://jouwschool.sharepoint.com/sites/duits";
+Sla op.
+
+STAP 3 — UPLOAD HET BESTAND NAAR SHAREPOINT
+─────────────────────────────────────────────
+- Ga naar jouw SharePoint-site → klik op 'Documents' in de zijbalk
+- Klik op '+ New' → 'Folder' → noem de map: DeutschLevel
+- Open die map → klik 'Upload' → kies het HTML-bestand
+- Klik op de drie puntjes (...) naast het bestand → 'Copy link'
+  (of kopieer de URL uit de adresbalk als je het bestand hebt geopend)
+
+STAP 4 — OPEN HET BESTAND EN TEST
+────────────────────────────────────
+Open de gekopieerde link in de browser. Omdat je al ingelogd bent in
+Microsoft 365, werkt de authenticatie automatisch. De tool maakt
+zelf een SharePoint-lijst aan genaamd 'DeutschLevel' bij eerste gebruik.
+
+STAP 5 — DELEN MET LEERLINGEN EN COLLEGA'S
+─────────────────────────────────────────────
+Stuur de directe link naar het HTML-bestand door. Iedereen die de link
+opent en toegang heeft tot de SharePoint-site ziet dezelfde bibliotheek.
+
+TEAMS-TABBLAD (optioneel):
+- Ga in Teams naar een kanaal → klik op '+' (tabbladen)
+- Kies 'Website' → plak de link → geef het tabblad een naam
+
+RECHTEN INSTELLEN:
+Zorg dat leerlingen en collega's 'Contribute' rechten hebben op de
+SharePoint-site (of minimaal op de map DeutschLevel).
+Dit stel je in via: Site instellingen → Site permissions.
+
+VEELVOORKOMENDE PROBLEMEN:
+- "Access denied" bij opslaan → leerling/docent heeft geen schrijfrechten
+- Lijst wordt niet aangemaakt → je hebt geen rechten om lijsten aan te maken
+  → maak de lijst 'DeutschLevel' handmatig aan via Site Contents → New → List
+  → voeg daarna een kolom 'JsonData' toe (type: Multiple lines of text)
+- Tool laadt maar bibliotheek blijft leeg → SP_SITE_URL is niet correct ingevuld
+
+════════════════════════════════════════════════════════════
+-->
