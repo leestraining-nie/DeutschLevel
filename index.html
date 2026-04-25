@@ -939,6 +939,8 @@ let activeMarkColor='yellow',currentModalId=null;
 let jbSyncing=false;
 let jbSyncTimer=null;
 let jbReady=false;
+// Bijhouden welke IDs de docent heeft verwijderd (zodat ze ook voor leerlingen verdwijnen)
+let deletedIds=JSON.parse(localStorage.getItem('dl_deleted')||'[]');
 
 // ════ SYNC BAR ════
 let _syncBarTimer=null;
@@ -959,7 +961,14 @@ async function jbLoad(){
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
     const data = await r.json();
-    library = Array.isArray(data.library) ? data.library : (Array.isArray(data) ? data : []);
+    // Laad verwijderde IDs zodat verwijderingen voor iedereen gelden
+    const remoteDeleted=Array.isArray(data.deleted)?data.deleted:[];
+    deletedIds=Array.from(new Set([...deletedIds,...remoteDeleted]));
+    localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
+    const deletedSet=new Set(deletedIds);
+    const raw = Array.isArray(data.library) ? data.library : (Array.isArray(data) ? data : []);
+    // Filter verwijderde teksten eruit
+    library = raw.filter(x=>!deletedSet.has(x.id));
     localStorage.setItem('dl_lib',JSON.stringify(library));
     renderSidebarLib();
     renderLibPage();
@@ -980,19 +989,29 @@ async function jbSave(){
   try{
     // Laad eerst nieuwste versie om conflicts te voorkomen
     let remote=[];
+    let remoteDeleted=[];
     try{
       const r0=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}});
-      if(r0.ok){const d0=await r0.json();remote=Array.isArray(d0.library)?d0.library:(Array.isArray(d0)?d0:[]);}
+      if(r0.ok){
+        const d0=await r0.json();
+        remote=Array.isArray(d0.library)?d0.library:(Array.isArray(d0)?d0:[]);
+        remoteDeleted=Array.isArray(d0.deleted)?d0.deleted:[];
+      }
     }catch(e){}
-    // Merge: items van remote die niet in local zitten, toevoegen
+    // Merge verwijderde IDs: combineer lokale en remote deletedIds
+    const allDeleted=Array.from(new Set([...deletedIds,...remoteDeleted]));
+    deletedIds=allDeleted;
+    localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
+    // Merge: items van remote toevoegen ALLEEN als ze niet verwijderd zijn
     const localIds=new Set(library.map(x=>x.id));
-    const merged=[...library,...remote.filter(x=>!localIds.has(x.id))];
+    const deletedSet=new Set(deletedIds);
+    const merged=[...library,...remote.filter(x=>!localIds.has(x.id)&&!deletedSet.has(x.id))];
     library=merged;
 
     const r=await fetch(JSONBIN_URL,{
       method:'PUT',
       headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
-      body:JSON.stringify({library:library})
+      body:JSON.stringify({library:library,deleted:deletedIds})
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
     localStorage.setItem('dl_lib',JSON.stringify(library));
@@ -1072,44 +1091,90 @@ function loginStudent(){
   selectMode('student');
 }
 
-function saveStudentStats(){
-  if(!playerNaam) return;
+// ════ LEADERBOARD VIA JSONBIN ════
+let lbSyncing=false;
+let lbSyncTimer=null;
+
+async function lbSave(){
+  if(!playerNaam||lbSyncing) return;
+  lbSyncing=true;
   const key='dl_student_'+playerKlas+'_'+(playerGebruikersnaam||playerNaam.toLowerCase());
   localStorage.setItem(key,JSON.stringify(playerStats));
-  // Sla ook in leaderboard op
-  const lbKey='dl_leaderboard_'+playerKlas;
-  let lb=[];
-  try{lb=JSON.parse(localStorage.getItem(lbKey)||'[]');}catch(e){}
-  const entry=lb.find(e=>e.naam===playerNaam);
-  if(entry){entry.xp=playerStats.xp;entry.level=getPlayerLevel().lv;entry.opgaven=playerStats.totalQuestions||0;}
-  else{lb.push({naam:playerNaam,klas:playerKlas,gebruikersnaam:playerGebruikersnaam||playerNaam,xp:playerStats.xp,level:getPlayerLevel().lv,opgaven:playerStats.totalQuestions||0});}
-  lb.sort((a,b)=>b.xp-a.xp);
-  localStorage.setItem(lbKey,JSON.stringify(lb));
-  renderLeaderboard();
+  try{
+    const r0=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}});
+    let currentData={library:library,deleted:deletedIds,leaderboard:[]};
+    if(r0.ok){currentData=await r0.json();}
+    let lb=Array.isArray(currentData.leaderboard)?currentData.leaderboard:[];
+    const lv=getPlayerLevel();
+    const entry=lb.find(e=>e.gebruikersnaam===playerGebruikersnaam);
+    if(entry){
+      entry.xp=playerStats.xp;entry.level=lv.lv;entry.title=lv.title;
+      entry.opgaven=playerStats.totalQuestions||0;entry.klas=playerKlas;entry.naam=playerNaam;
+      entry.streak=playerStats.streak||0;
+    } else {
+      lb.push({naam:playerNaam,klas:playerKlas,gebruikersnaam:playerGebruikersnaam,
+        xp:playerStats.xp,level:lv.lv,title:lv.title,
+        opgaven:playerStats.totalQuestions||0,streak:playerStats.streak||0});
+    }
+    lb.sort((a,b)=>b.xp-a.xp);
+    currentData.leaderboard=lb;
+    await fetch(JSONBIN_URL,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body:JSON.stringify(currentData)
+    });
+    localStorage.setItem('dl_leaderboard',JSON.stringify(lb));
+    renderLeaderboard(lb);
+  }catch(e){
+    console.warn('Leaderboard opslaan mislukt:',e);
+    const lb=JSON.parse(localStorage.getItem('dl_leaderboard')||'[]');
+    renderLeaderboard(lb);
+  }
+  lbSyncing=false;
 }
 
-function renderLeaderboard(){
-  const lb=[];
+async function lbLoad(){
   try{
-    const lbKey='dl_leaderboard_'+playerKlas;
-    const data=JSON.parse(localStorage.getItem(lbKey)||'[]');
-    data.forEach(e=>lb.push(e));
-  }catch(e){}
+    const r=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    const lb=Array.isArray(data.leaderboard)?data.leaderboard:[];
+    localStorage.setItem('dl_leaderboard',JSON.stringify(lb));
+    renderLeaderboard(lb);
+  }catch(e){
+    console.warn('Leaderboard laden mislukt:',e);
+    renderLeaderboard(JSON.parse(localStorage.getItem('dl_leaderboard')||'[]'));
+  }
+}
+
+function lbStartPolling(){
+  if(lbSyncTimer)clearInterval(lbSyncTimer);
+  lbSyncTimer=setInterval(()=>{if(!lbSyncing)lbLoad();},SYNC_INTERVAL);
+}
+
+function saveStudentStats(){
+  if(!playerNaam) return;
+  lbSave();
+}
+
+function renderLeaderboard(lb){
+  if(!lb) lb=JSON.parse(localStorage.getItem('dl_leaderboard')||'[]');
   lb.sort((a,b)=>b.xp-a.xp);
   const el=document.getElementById('leaderboardList');
   const lbLabel=document.getElementById('lbKlasLabel');
-  if(lbLabel) lbLabel.textContent='Klas '+playerKlas;
+  const klasLb=lb.filter(e=>e.klas===playerKlas);
+  if(lbLabel) lbLabel.textContent='Klas '+playerKlas+' · '+klasLb.length+' leerlingen';
   if(!el) return;
-  if(!lb.length){el.innerHTML='<p style="font-size:11px;color:var(--muted);text-align:center;padding:8px 0;">Nog geen klasgenoten</p>';return;}
+  if(!klasLb.length){el.innerHTML='<p style="font-size:11px;color:var(--muted);text-align:center;padding:8px 0;">Nog geen klasgenoten ingelogd</p>';return;}
   const medals=['🥇','🥈','🥉'];
-  el.innerHTML=lb.slice(0,10).map((e,i)=>{
-    const isMe=e.naam===playerNaam;
+  el.innerHTML=klasLb.slice(0,10).map((e,i)=>{
+    const isMe=e.gebruikersnaam===playerGebruikersnaam;
     const medal=i<3?medals[i]:'<span style="font-size:10px;color:var(--muted);">'+(i+1)+'</span>';
     return '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:5px;background:'+(isMe?'rgba(212,168,67,0.12)':'var(--cream)')+';border:1px solid '+(isMe?'rgba(212,168,67,0.3)':'var(--border)')+';">'
       +'<span style="width:20px;text-align:center;font-size:14px;">'+medal+'</span>'
       +'<div style="flex:1;min-width:0;">'
         +'<div style="font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+e.naam+(isMe?' <span style="font-size:9px;color:#d4a843;font-weight:700;">jij</span>':'')+'</div>'
-        +'<div style="font-size:10px;color:var(--muted);">Lv '+e.level+' · '+e.opgaven+' opgaven</div>'
+        +'<div style="font-size:10px;color:var(--muted);">Lv '+e.level+(e.title?' · '+e.title:'')+(e.streak>1?' · 🔥'+e.streak:'')+'</div>'
       +'</div>'
       +'<div style="font-size:12px;font-weight:700;color:#d4a843;white-space:nowrap;">'+e.xp+' XP</div>'
     +'</div>';
@@ -1134,7 +1199,8 @@ function selectMode(mode){
     document.getElementById('leaderboardPanel').style.display='block';
     const nd=document.getElementById('playerNameDisplay');
     if(nd) nd.textContent=playerNaam+' · '+playerKlas;
-    checkStreak();renderBadges();renderMissions();updateXPDisplay();renderLeaderboard();
+    checkStreak();renderBadges();renderMissions();updateXPDisplay();
+    lbLoad();lbStartPolling();
     setTimeout(()=>switchView('bibliotheek',document.getElementById('navBib')),300);
   } else {
     document.getElementById('xpWidget').style.display='none';
@@ -1802,7 +1868,12 @@ function renderSidebarLib(){
 function filterLib(lvl,btn){libFilter=lvl;document.querySelectorAll('#view-analyse .lib-filter .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderSidebarLib();}
 function delEntry(id){
   if(currentMode!=='teacher'){showToast('Alleen docenten kunnen teksten verwijderen');return;}
-  library=library.filter(x=>x.id!==id);jbSave();renderSidebarLib();renderLibPage();updateXPDisplay();
+  // Sla verwijderd ID op zodat leerlingen het ook niet meer zien
+  if(!deletedIds.includes(id)){deletedIds.push(id);}
+  localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
+  library=library.filter(x=>x.id!==id);
+  jbSave();renderSidebarLib();renderLibPage();updateXPDisplay();
+  showToast('🗑 Tekst verwijderd — voor alle gebruikers');
 }
 function renderLibPage(){
   const q=(document.getElementById('libSearch')?.value||'').toLowerCase();
@@ -1947,6 +2018,8 @@ function addXP(amount,eventX,eventY){
   playerStats.xp=(playerStats.xp||0)+amount;saveStats();updateXPDisplay();
   if(eventX&&eventY)spawnXPFloat(amount,eventX,eventY);
   checkBadges();renderMissions();
+  // Sync leaderboard na XP-winst
+  if(currentMode==='student') lbSave();
 }
 function getPlayerLevel(){let lv=PLAYER_LEVELS[0];for(const l of PLAYER_LEVELS){if(playerStats.xp>=l.xpNeeded)lv=l;}return lv;}
 function updateXPDisplay(){
