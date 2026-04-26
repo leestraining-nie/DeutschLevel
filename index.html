@@ -945,11 +945,11 @@ let currentQuestions=[],modalQuestions=[],modalEntry=null;
 let lleSelectedNiveau=null,finalNiveau=null;
 let activeMarkColor='yellow',currentModalId=null;
 
-// ════ JSONBIN STATE ════
+// ════ GITHUB OPSLAG STATE ════
 let jbSyncing=false;
 let jbSyncTimer=null;
 let jbReady=false;
-// Bijhouden welke IDs de docent heeft verwijderd (zodat ze ook voor leerlingen verdwijnen)
+let ghFileSha=null;
 let deletedIds=JSON.parse(localStorage.getItem('dl_deleted')||'[]');
 
 // ════ SYNC BAR ════
@@ -963,36 +963,39 @@ function showSync(type,msg,ms=0){
 }
 function hideSync(){document.getElementById('syncBar').classList.remove('show');}
 
-// ════ JSONBIN API ════
+// ════ GITHUB API ════
 async function jbLoad(){
   try{
-    const controller = new AbortController();
-        const timeout = setTimeout(()=>controller.abort(), 5000);
-        const r = await fetch(JSONBIN_URL+'/latest',{
-          headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'},
-          signal: controller.signal
-        });
-        clearTimeout(timeout);
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),8000);
+    const r=await fetch(GITHUB_API,{
+      headers:{'Authorization':'token '+GITHUB_TOKEN,'Accept':'application/vnd.github.v3+json'},
+      signal:controller.signal
+    });
+    clearTimeout(timeout);
     if(!r.ok) throw new Error('HTTP '+r.status);
-    const data = await r.json();
-    // Laad verwijderde IDs zodat verwijderingen voor iedereen gelden
+    const meta=await r.json();
+    ghFileSha=meta.sha;
+    const data=JSON.parse(atob(meta.content.replace(/\n/g,'')));
     const remoteDeleted=Array.isArray(data.deleted)?data.deleted:[];
     deletedIds=Array.from(new Set([...deletedIds,...remoteDeleted]));
     localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
     const deletedSet=new Set(deletedIds);
-    const raw = Array.isArray(data.library) ? data.library : (Array.isArray(data) ? data : []);
-    // Filter verwijderde teksten eruit
-    library = raw.filter(x=>!deletedSet.has(x.id));
+    const raw=Array.isArray(data.library)?data.library:[];
+    library=raw.filter(x=>!deletedSet.has(x.id));
     localStorage.setItem('dl_lib',JSON.stringify(library));
     renderSidebarLib();
     renderLibPage();
     updateXPDisplay();
     jbReady=true;
   }catch(e){
-    console.warn('JSONBin laden mislukt:',e);
+    console.warn('GitHub laden mislukt:',e);
     library=JSON.parse(localStorage.getItem('dl_lib')||'[]');
     document.getElementById('spOfflineDot').style.display='block';
     showSync('err','⚠️ Sync mislukt — lokale modus',4000);
+    jbReady=true;
+    renderSidebarLib();
+    renderLibPage();
   }
 }
 
@@ -1001,69 +1004,46 @@ async function jbSave(){
   jbSyncing=true;
   showSync('syncing','🔄 Opslaan…');
   try{
-    // Laad eerst nieuwste versie om conflicts te voorkomen
-    let remote=[];
-    let remoteDeleted=[];
-    try{
-      const r0=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}});
-      if(r0.ok){
-        const d0=await r0.json();
-        remote=Array.isArray(d0.library)?d0.library:(Array.isArray(d0)?d0:[]);
-        remoteDeleted=Array.isArray(d0.deleted)?d0.deleted:[];
-      }
-    }catch(e){}
-    // Merge verwijderde IDs: combineer lokale en remote deletedIds
-    const allDeleted=Array.from(new Set([...deletedIds,...remoteDeleted]));
-    deletedIds=allDeleted;
-    localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
-    // Merge: items van remote toevoegen ALLEEN als ze niet verwijderd zijn
-    const localIds=new Set(library.map(x=>x.id));
-    const deletedSet=new Set(deletedIds);
-    const merged=[...library,...remote.filter(x=>!localIds.has(x.id)&&!deletedSet.has(x.id))];
-    library=merged;
-
-    const r=await fetch(JSONBIN_URL,{
+    const r0=await fetch(GITHUB_API,{
+      headers:{'Authorization':'token '+GITHUB_TOKEN,'Accept':'application/vnd.github.v3+json'}
+    });
+    if(r0.ok){
+      const meta0=await r0.json();
+      ghFileSha=meta0.sha;
+      try{
+        const remote=JSON.parse(atob(meta0.content.replace(/\n/g,'')));
+        const remoteLib=Array.isArray(remote.library)?remote.library:[];
+        const remoteDeleted=Array.isArray(remote.deleted)?remote.deleted:[];
+        const allDeleted=Array.from(new Set([...deletedIds,...remoteDeleted]));
+        deletedIds=allDeleted;
+        localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
+        const localIds=new Set(library.map(x=>x.id));
+        const deletedSet=new Set(deletedIds);
+        const merged=[...library,...remoteLib.filter(x=>!localIds.has(x.id)&&!deletedSet.has(x.id))];
+        library=merged;
+      }catch(e){}
+    }
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify({library:library,deleted:deletedIds},null,2))));
+    const body={message:'Bibliotheek update',content:content};
+    if(ghFileSha) body.sha=ghFileSha;
+    const r=await fetch(GITHUB_API,{
       method:'PUT',
-      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
-      body:JSON.stringify({library:library,deleted:deletedIds})
+      headers:{'Authorization':'token '+GITHUB_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
+    const result=await r.json();
+    ghFileSha=result.content.sha;
     localStorage.setItem('dl_lib',JSON.stringify(library));
     showSync('ok','✓ Opgeslagen & gesynchroniseerd',2000);
   }catch(e){
-    console.error('JSONBin opslaan mislukt:',e);
+    console.error('GitHub opslaan mislukt:',e);
     localStorage.setItem('dl_lib',JSON.stringify(library));
     showSync('err','⚠️ Opslaan mislukt — lokaal gecacht',4000);
   }
   jbSyncing=false;
 }
-function exportLibrary(){
-  const data = JSON.stringify({library:library, deleted:deletedIds}, null, 2);
-  const blob = new Blob([data], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'DeutschLevel_bibliotheek_'+new Date().toISOString().slice(0,10)+'.json';
-  a.click();
-}
 
-async function importLibrary(event){
-  const file = event.target.files[0];
-  if(!file) return;
-  try{
-    const text = await file.text();
-    const data = JSON.parse(text);
-    const imported = Array.isArray(data.library) ? data.library : (Array.isArray(data) ? data : []);
-    const existingIds = new Set(library.map(x=>x.id));
-    const nieuwen = imported.filter(x=>!existingIds.has(x.id));
-    library = [...nieuwen, ...library];
-    await jbSave();
-    renderLibPage();
-    renderSidebarLib();
-    showToast('✓ '+nieuwen.length+' teksten geïmporteerd');
-  }catch(e){
-    showToast('⚠️ Importeren mislukt — controleer het bestand');
-  }
-}
 function jbStartPolling(){
   if(jbSyncTimer)clearInterval(jbSyncTimer);
   jbSyncTimer=setInterval(()=>{if(!jbSyncing)jbLoad();},SYNC_INTERVAL);
