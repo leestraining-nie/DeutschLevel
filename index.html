@@ -960,9 +960,13 @@ function hideSync(){document.getElementById('syncBar').classList.remove('show');
 // ════ JSONBIN API ════
 async function jbLoad(){
   try{
-    const r = await fetch(JSONBIN_URL+'/latest',{
-      headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}
-    });
+    const controller = new AbortController();
+        const timeout = setTimeout(()=>controller.abort(), 5000);
+        const r = await fetch(JSONBIN_URL+'/latest',{
+          headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'},
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
     if(!r.ok) throw new Error('HTTP '+r.status);
     const data = await r.json();
     // Laad verwijderde IDs zodat verwijderingen voor iedereen gelden
