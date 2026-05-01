@@ -969,7 +969,7 @@ async function jbLoad(){
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),8000);
     const r=await fetch(GITHUB_API,{
-      headers:{'Authorization':'token '+GITHUB_TOKEN,'Accept':'application/vnd.github.v3+json'},
+    headers:{'Accept':'application/vnd.github.v3+json'},
       signal:controller.signal
     });
     clearTimeout(timeout);
