@@ -1207,6 +1207,8 @@ function selectMode(mode){
   const mb=document.getElementById('modeBadge');
   mb.textContent=mode==='teacher'?'👩‍🏫 Docent':'🎓 '+playerNaam;
   mb.className='mode-badge '+mode;
+  document.getElementById('btnExport').style.display=mode==='teacher'?'':'none';
+  document.getElementById('btnImport').style.display=mode==='teacher'?'':'none';
   if(mode==='student'){
     document.getElementById('xpWidget').style.display='block';
     document.getElementById('xpPillHeader').style.display='flex';
