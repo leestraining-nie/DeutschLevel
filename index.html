@@ -977,9 +977,14 @@ async function jbLoad(){
         });
     clearTimeout(timeout);
     if(!r.ok) throw new Error('HTTP '+r.status);
-    const meta=await r.json();
-    ghFileSha=meta.sha;
-    const data=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    let data;
+    if(currentMode==='teacher'){
+      const meta=await r.json();
+      ghFileSha=meta.sha;
+      data=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    }else{
+      data=await r.json();
+    }
     const remoteDeleted=Array.isArray(data.deleted)?data.deleted:[];
     deletedIds=Array.from(new Set([...deletedIds,...remoteDeleted]));
     localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
