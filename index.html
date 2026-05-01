@@ -968,10 +968,13 @@ async function jbLoad(){
   try{
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),8000);
-    const r=await fetch(GITHUB_API,{
-    headers:{'Accept':'application/vnd.github.v3+json'},
-      signal:controller.signal
-    });
+    const rawUrl='https://raw.githubusercontent.com/leestraining-nie/DeutschLevel/main/bibliotheek.json';
+        const fetchUrl=currentMode==='teacher'?GITHUB_API:rawUrl;
+        const fetchHeaders=currentMode==='teacher'?{'Authorization':'token '+GITHUB_TOKEN,'Accept':'application/vnd.github.v3+json'}:{};
+        const r=await fetch(fetchUrl,{
+          headers:fetchHeaders,
+          signal:controller.signal
+        });
     clearTimeout(timeout);
     if(!r.ok) throw new Error('HTTP '+r.status);
     const meta=await r.json();
