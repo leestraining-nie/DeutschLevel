@@ -797,8 +797,8 @@ footer{margin-top:48px;padding:20px 0;border-top:1px solid var(--border);text-al
     <button class="filter-btn c2" onclick="filterLibPage('C2',this)">C2</button>
   </div>
   <div style="display:flex;gap:8px;margin-bottom:16px;">
-    <button class="btn-sm" onclick="exportLibrary()" style="background:var(--a1);color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">⬇️ Exporteer bibliotheek</button>
-    <label class="btn-sm" style="background:var(--surface2);color:var(--fg);border:1px solid var(--border);padding:8px 14px;border-radius:6px;cursor:pointer;">⬆️ Importeer bibliotheek<input type="file" accept=".json" onchange="importLibrary(event)" style="display:none;"></label>
+    <button class="btn-sm" onclick="exportLibrary()" style="background:var(--a1);color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;display:none;" id="btnExport">⬇️ Exporteer bibliotheek</button>
+    <label class="btn-sm" style="background:var(--surface2);color:var(--fg);border:1px solid var(--border);padding:8px 14px;border-radius:6px;cursor:pointer;display:none;" id="btnImport">⬆️ Importeer bibliotheek<input type="file" accept=".json" onchange="importLibrary(event)" style="display:none;"></label>
   </div>
   <div class="lib-grid" id="libGrid"></div>
 </div>
