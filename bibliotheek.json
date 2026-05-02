@@ -1,6 +1,113 @@
 {
   "library": [
     {
+      "id": 1777732212950,
+      "niveau": "B2",
+      "tekst": "Jeff Bezos’ Raumfahrtfirma Blue Origin muss eine Raketenpause einlegen. Die US-Flugaufsichtsbehörde hat nach einer Panne eine Untersuchung angeordnet. Das könnte auch Pläne der Nasa zurückwerfen.\n\nDie US-Luftfahrtbehörde FAA hat am Montag das Raumfahrtunternehmen Blue Origin des Milliardärs Jeff Bezos angewiesen, die Fehlfunktion seiner New-Glenn-Rakete bei einem missglückten Satellitenstart zu untersuchen.\n\nDer Zwischenfall ereignete sich am Sonntag beim dritten Flug der riesigen Trägerrakete und dem zweiten für einen zahlenden Kunden. Die wiederverwendbare Unterstufe der Rakete startete zwar erfolgreich von Cape Canaveral in Florida und landete sicher wieder auf der Erde. Doch die Oberstufe konnte einen Kommunikationssatelliten nicht in die vorgesehene Umlaufbahn befördern. Dies bedeutet einen Rückschlag für Blue Origin im Bestreben, mit der Firma SpaceX von Elon Musk zu konkurrieren.\n\nAuch die Raumfahrtbehörde Nasa könne dies in ihrem Mondfahrtprogramm Artemis zurückwerfen, wie die »New York Times«  schrieb. Die Nasa hat sowohl Blue Origin als auch SpaceX beauftragt, eine Landefähre zu bauen, die ab 2028 Astronauten auf den Mond bringen kann. Bereits im kommenden Jahr sollen Astronauten bei der Mission Artemis III in Erdnähe Andockmanöver mit dem Gefährt testen. Beide Firmen liegen hinter dem Zeitplan zurück.\n\nBlue Origin will noch in diesem Sommer ein kleineres Landegefährt namens Mark 1 auf den Mond bringen, um Technik für die größere Landefähre Mark 2 zu testen, die für Artemis vorgesehen ist. Dazu jedoch muss New Glenn erneut starten.\n\nNicht genügend Schub\nGemäß der Anweisung der FAA muss Blue Origin eine Untersuchung des Zwischenfalls durchführen und die Genehmigung der Behörde für den Abschlussbericht sowie alle Korrekturmaßnahmen einholen, bevor der Betrieb mit New Glenn wieder aufgenommen werden darf. Dies könne einige Monate dauern, sagten Experten laut dem »Times«-Bericht.\n\nErste Daten deuten darauf hin, dass eines der beiden BE-3U-Triebwerke, die die Oberstufe nach der Trennung von der Unterstufe der Rakete antreiben, »nicht genügend Schub erzeugte, um unsere Zielumlaufbahn zu erreichen«, erklärte Blue-Origin-Chef Dave Limp am Montag in einer Stellungnahme auf X. Man werde unter Aufsicht der FAA aus den Daten lernen und den Flugbetrieb schnellstmöglich wieder aufnehmen.\n\nDer Satellit »BlueBird 7«, der zu einem Projekt für ein weltraumgestütztes Mobilfunknetz ähnlich dem Leo-System von Amazon oder der Starlink-Konstellation von SpaceX gehörte, trat am Montag wieder in die Erdatmosphäre ein. Er verglühte vermutlich harmlos über der Erde.",
+      "titel": "Problem mit Bezos-Rakete wird zum Risiko für die Mondlandung",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 367,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: B2",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was wird aus dem 1. Absatz deutlich?",
+          "opties": [
+            "A Jeff Bezos’ Raumfahrtfirma Blue Origin muss eine Raketenpause einlegen.",
+            "B Die US-Flugaufsichtsbehörde hat nach einer Panne eine Untersuchung angeordnet.",
+            "C Das könnte auch Pläne der Nasa zurückwerfen.",
+            "D Jeff Bezos’ Raumfahrtfirma Blue Origin muss eine Raketenpause einlegen."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 1,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Die US-Luftfahrtbehörde FAA hat am Montag das Raumfahrtunternehmen Blue Origin des Milliardärs Jeff Bezos angewiesen, die Fehlfunktion seiner New-Glenn-Rakete bei einem missglückten Satellitenstart zu untersuchen.",
+              "antwoord": "wel",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "„Die wiederverwendbare Unterstufe der Rakete startete zwar erfolgreich von Cape Canaveral in Florida und landete sicher wieder auf der Erde.“ (3. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als schlussfolgerung.",
+            "B als begründung.",
+            "C als gegensatz.",
+            "D als konkretisierung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "Was wird aus dem 5. Absatz deutlich?",
+          "opties": [
+            "A Blue Origin will noch in diesem Sommer ein kleineres Landegefährt namens Mark 1 auf den Mond bringen, um Technik für die größere Landefähre Mark 2 zu testen, die für Artemis vorgesehen ist.",
+            "B Dazu jedoch muss New Glenn erneut starten.",
+            "C Blue Origin will noch in diesem Sommer ein kleineres Landegefährt namens Mark 1 auf den Mond bringen, um Technik für die größere Landefähre Mark 2 zu testen, die für Artemis vorgesehen ist.",
+            "D Blue Origin will noch in diesem Sommer ein kleineres Landegefährt namens Mark 1 auf den Mond bringen, um Technik für die größere Landefähre Mark 2 zu testen, die für Artemis vorgesehen ist."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "toon",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "„Dies könne einige Monate dauern, sagten Experten laut dem »Times«-Bericht.“ (6. Absatz)\nWas spricht aus diesem Satz?",
+          "opties": [
+            "A Erleichterung",
+            "B Kritik",
+            "C Ironie",
+            "D Enttäuschung"
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 2,
+          "context": "Absatz 7",
+          "vraag": "Welke twee redenen worden er in alinea 7 gegeven? Beantwoord in het Nederlands.",
+          "antwoord": "Erste Daten deuten darauf hin, dass eines der beiden BE-3U-Triebwerke, die die Oberstufe nach der Trennung von der Unterstufe der Rakete antreiben, »nicht genügend Schub erzeugte, um unsere Zielumlaufbahn zu erreichen«, erklärte Blue-Origin-Chef Dave Limp am Montag in einer Stellungnahme auf X. Man werde unter Aufsicht der FAA aus den Daten lernen und den Flugbetrieb schnel.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777732035653,
       "niveau": "B2",
       "tekst": "Großbritannien hofft auf das Heranwachsen einer rauchfreien Generation. Auch in anderen Ländern gibt es Bemühungen, Zigaretten zu verbannen - aus Sicht der WHO muss allerdings mehr passieren.\n\nDie Weltgesundheitsorganisation sieht das in Großbritannien beschlossene Tabakverbot als Schritt in die richtige Richtung. «Aus Sicht der WHO ist das ein starkes Signal: Tabakkontrolle lässt sich langfristig denken, jenseits kurzfristiger politischer Zyklen», sagt Rüdiger Krech, Gesundheitsexperte und Direktor für Umweltfragen bei der WHO, auf Anfrage der Deutschen Presse-Agentur. «Es könnten in Deutschland viele Menschenleben gerettet werden, wenn die verantwortlichen Politikerinnen und Politiker bei der Tabakkontrolle von Großbritannien lernen würden.»\n\nEin Gesetz, das den Verkauf von Tabak verbietet, nahm am Dienstag die letzte Hürde im britischen Parlament. Nun braucht es nur noch die förmliche Zustimmung des Königs. Das Gesetz sieht eine schrittweise Anhebung des Alters vor, ab dem Tabakprodukte legal gekauft werden dürfen. Wer nach dem 1. Januar 2009 geboren wurde, soll dadurch niemals die Möglichkeit haben, Zigaretten und ähnliche Produkte legal zu erwerben. Das Rauchen selbst wird allerdings nicht verboten.\n\nUnd im Rest der Welt?\nAm 1. November 2025 wurden die Malediven das erste Land, das ein solches Gesetz umgesetzt hat. Dort kann niemand, der seit dem 1.1.2007 geboren ist, mehr legal Tabakprodukte kaufen. In Neuseeland war ein ähnliches Gesetz noch vor der vollen Umsetzung 2024 wieder gekippt worden.\n\nIn Sachen rauchfreie Gesellschaft gilt auch Schweden oft als Vorbild. Hier ist die Zahl der Menschen, die täglich Tabak rauchen, drastisch zurückgegangen. 2024 gaben nur 5 Prozent aller Schweden über 16 Jahren an, zu rauchen. Allerdings konsumieren die Schweden stattdessen deutlich mehr Nikotinbeutel. «Snus» konsumiert fast jeder vierte Mann in dem skandinavischen Land täglich, unter den Frauen war es 2024 jede Zehnte. Auch zu E-Zigaretten greifen die Schweden häufiger als früher.\n\nIn der EU ist der Verkauf von Snus in fast allen Ländern verboten - mit Ausnahme von Schweden. Vor allem der weiße Snus - tabakfreie Nikotinbeutel - ist zum schwedischen Exportschlager avanciert. Sein Geschäft damit will Schweden unbedingt beschützen. Nationale Verbote sind dem Land deshalb ein Dorn im Auge.\n\nEine Untersuchung der EU-Kommission hielt zuletzt fest, dass neue Tabak- und Nikotinprodukte wie Tabakerhitzer, E-Zigaretten und Nikotinbeutel die Gesundheitssysteme vor Herausforderungen stellen. «Neben den direkten Gesundheitsrisiken können diese Produkte als Einstieg in die Nikotinsucht und den Konsum/das Rauchen traditioneller Tabakprodukte dienen», warnten die Behördenmitarbeiter in ihrer Evaluierung der bestehenden Regeln.\n\n\nSie kritisierten unterschiedliche nationale Vorschriften etwa zu Aromen in Einweg-E-Zigaretten und E-Zigaretten. Marketing über soziale Medien, oft durch Influencer, verschärfe das Problem. Die bisherigen rechtlichen Vorgaben würden dem nicht gerecht.\n\nWHO: Deutschland hinkt hinterher\nDie WHO hat einen Maßnahmenkatalog zum Kampf gegen Tabak entwickelt und prüft regelmäßig, wie weit Länder bei der Umsetzung sind. Deutschland hinkte Stand 2024 vielfach hinterher, etwa bei der Besteuerung. Sie empfiehlt, dass Steuern mindestens 75 Prozent des Preises ausmachen sollen. Auch bei der Umsetzung von Werbeverboten und Hilfen bei der Entwöhnung sah sie noch Luft nach oben.\n\nAktuell plant Deutschland mit einer Erhöhung der Tabaksteuer noch in diesem Jahr. Die Einnahmen sollen aber nicht der Prävention oder dem Gesundheitswesen zugutekommen, sondern nach Plänen der Koalition die Steuerbefreiung einer geplanten Prämie für Beschäftigte finanzieren. Die vom Bundesgesundheitsministerium eingesetzte Expertenkommission zum Stabilisieren der Krankenkassen hatte zuletzt Steuererhöhungen für Zigaretten vorgeschlagen. Konkret sollte die durchschnittliche Steuerlast für Fabrikzigaretten von 2027 bis 2031 jedes Jahr angehoben werden.\n\n«Die Tabakepidemie ist eine der größten Bedrohungen der öffentlichen Gesundheit, die die Welt je erlebt hat», schreibt die WHO. Mehr als sieben Millionen Menschen sterben nach ihren Angaben jedes Jahr weltweit durch Tabakkonsum, 80.000 davon durch Passivrauchen, also das unfreiwillige Einatmen von Tabakrauch aus ihrer Umgebung. In der EU beziffert sie die Zahl der Toten durch Tabakkonsum auf eine halbe Million.",
