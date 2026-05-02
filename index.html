@@ -1059,7 +1059,33 @@ function jbStartPolling(){
     if(document.visibilityState==='visible'&&!jbSyncing) jbLoad();
   });
 }
+function exportLibrary(){
+  const data = JSON.stringify({library:library, deleted:deletedIds}, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'DeutschLevel_bibliotheek_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
 
+async function importLibrary(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const imported = Array.isArray(data.library) ? data.library : (Array.isArray(data) ? data : []);
+    const existingIds = new Set(library.map(x=>x.id));
+    const nieuwen = imported.filter(x=>!existingIds.has(x.id));
+    library = [...nieuwen, ...library];
+    await jbSave();
+    renderLibPage();
+    renderSidebarLib();
+    showToast('✓ '+nieuwen.length+' teksten geïmporteerd');
+  }catch(e){
+    showToast('⚠️ Importeren mislukt — controleer het bestand');
+  }
+}
 // saveStats — lokaal (XP is per apparaat)
 function saveStats(){
   localStorage.setItem('dl_stats',JSON.stringify(playerStats));
