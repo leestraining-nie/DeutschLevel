@@ -1129,9 +1129,14 @@ async function lbSave(){
   const key='dl_student_'+playerKlas+'_'+(playerGebruikersnaam||playerNaam.toLowerCase());
   localStorage.setItem(key,JSON.stringify(playerStats));
   try{
-    const r0=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}});
+    const r0=await fetch(GITHUB_API,{headers:{'Accept':'application/vnd.github.v3+json'}});
     let currentData={library:library,deleted:deletedIds,leaderboard:[]};
-    if(r0.ok){currentData=await r0.json();}
+    let sha=null;
+    if(r0.ok){
+      const meta=await r0.json();
+      sha=meta.sha;
+      currentData=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    }
     let lb=Array.isArray(currentData.leaderboard)?currentData.leaderboard:[];
     const lv=getPlayerLevel();
     const entry=lb.find(e=>e.gebruikersnaam===playerGebruikersnaam);
@@ -1146,10 +1151,13 @@ async function lbSave(){
     }
     lb.sort((a,b)=>b.xp-a.xp);
     currentData.leaderboard=lb;
-    await fetch(JSONBIN_URL,{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(currentData,null,2))));
+    const body={message:'Leaderboard update',content:content};
+    if(sha) body.sha=sha;
+    await fetch(GITHUB_API,{
       method:'PUT',
-      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
-      body:JSON.stringify(currentData)
+      headers:{'Authorization':'token '+GITHUB_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
     });
     localStorage.setItem('dl_leaderboard',JSON.stringify(lb));
     renderLeaderboard(lb);
@@ -1163,9 +1171,10 @@ async function lbSave(){
 
 async function lbLoad(){
   try{
-    const r=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':'false'}});
+    const r=await fetch(GITHUB_API,{headers:{'Accept':'application/vnd.github.v3+json'}});
     if(!r.ok) throw new Error('HTTP '+r.status);
-    const data=await r.json();
+    const meta=await r.json();
+    const data=JSON.parse(atob(meta.content.replace(/\n/g,'')));
     const lb=Array.isArray(data.leaderboard)?data.leaderboard:[];
     localStorage.setItem('dl_leaderboard',JSON.stringify(lb));
     renderLeaderboard(lb);
