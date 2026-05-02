@@ -1,6 +1,123 @@
 {
   "library": [
     {
+      "id": 1777732410665,
+      "niveau": "C1",
+      "tekst": "War das Attentat auf Donald Trump inszeniert? Wer selbst Verschwörungstheorien verbreitet, braucht sich nicht zu wundern, wenn er ihnen zum Opfer fällt.\n\nOhne Donald Trump wäre die Welt um einige bahnbrechende Erkenntnisse ärmer. Er fand als Erster heraus, dass Barack Obama nicht in den USA geboren wurde und deshalb wohl auch niemals Präsident der USA hätte werden dürfen. Er klärte uns darüber auf, dass die Migranten in Springfield, Ohio, Katzen und Hunde und auch sonst allerhand Haustiere verspeisen. Dank Trump wissen wir auch, dass Windräder krebserregend sind, was Milliarden Menschen nun die Möglichkeit bietet, sich und ihr Leben zu schützen. Gerade als Journalist finde ich es wichtig, dass auch die unbequeme Wahrheit ans Tageslicht kommt. In dieser Hinsicht haben wir Trump eine Menge zu verdanken.\n\nEcht ärgerlich ist es da, dass Trump nun selbst eine riesige Schweinerei nachgewiesen wurde. Erinnern Sie sich noch, wie im Juli 2024, mitten im US-Wahlkampf in Butler, Pennsylvania, auf Donald Trump geschossen wurde? Wie er sich mit blutverschmiertem Ohr wieder aufrappelte, die Faust ballte und »Fight, Fight, Fight« skandierte? Diese ikonische Szene hatte einen gewissen Anteil an Trumps Wiederwahl. Viele seiner Anhänger und Trump selbst erklärten danach, nun sei erwiesen, dass Gott persönlich einen Präsidenten Trump wolle – und die Kugel noch umgelenkt habe.\n\nAlles nur inszeniert?\nJetzt aber kam raus: Es gab gar kein Attentat, alles war inszeniert. Auf der Aufklärungsplattform X des renommierten Wahrheitsforschers Elon Musk kommt nun die nackte Wahrheit ans Licht. Zum Beispiel in Form einer schonungslosen Ohranalyse. Der Verlauf des Blutes auf Trumps Ohr wird da als eindeutig widernatürlich entlarvt. Dass hier mit Theaterblut gearbeitet wurde, liegt auf der Hand. Führende Bildforensiker auf X haben neue Aufnahmen entdeckt, auf denen das angebliche Opferohr gar kein Einschussloch aufweist.\n\nAlles ist unwahr\nDie neuen Erkenntnisse verbreiteten sich über die Show von Tucker Carlson, der Trump lange Zeit verehrte und sich nun dafür entschuldigt. Die Ex-Kongressabgeordnete und Ex-Trump-Unterstützerin Marjorie Taylor Greene hat ebenfalls zur Vernunft gefunden und zweifelt das Attentat nun massiv an. Endlich ist die MAGA-Bewegung also aufgewacht und erzählt die Wahrheit über jenen Mann, dem sie selbst ins Amt half.\n\nOkay, Schluss jetzt. Damit es auch der letzte Verschwörungspoldi merkt: Keine der bislang in dieser Kolumne verbreiteten Aussagen ist wahr. Alle Äußerungen von Trump sowie alle Äußerungen über Trump sind kompletter Mumpitz. Es handelt sich ausschließlich um Verschwörungsmythen. Zum Trump-Attentat gab es eine Untersuchung des Kongresses, die die Vorgänge bestätigte.\n\nSo falsch die Anschuldigungen, Trump habe das Attentat auf ihn nur inszeniert auch sind, sie sorgen immerhin für Gerechtigkeit. Es hat jedenfalls eine gewisse Komik, dass jener Mann, der auf Verschwörungsmythen ins Amt spazierte, nun selbst deren Opfer wird. Die Verschwörungsgeister, die er rief, fallen nun über ihn her. Die Revolution frisst ihren Gründer. Oder ihren Opa.",
+      "titel": "Die Revolution frisst ihren Opa",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 456,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: C1",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was wird aus dem 1. Absatz deutlich?",
+          "opties": [
+            "A War das Attentat auf Donald Trump inszeniert?",
+            "B Wer selbst Verschwörungstheorien verbreitet, braucht sich nicht zu wundern, wenn er ihnen zum Opfer fällt.",
+            "C War das Attentat auf Donald Trump inszeniert?",
+            "D War das Attentat auf Donald Trump inszeniert?"
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Ohne Donald Trump wäre die Welt um einige bahnbrechende Erkenntnisse ärmer.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Er fand als Erster heraus, dass Barack Obama nicht in den USA geboren wurde und deshalb wohl auch niemals Präsident der USA hätte werden dürfen.",
+              "antwoord": "niet",
+              "alinea": 2
+            },
+            {
+              "tekst": "Er klärte uns darüber auf, dass die Migranten in Springfield, Ohio, Katzen und Hunde und auch sonst allerhand Haustiere verspeisen.",
+              "antwoord": "wel",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "„Erinnern Sie sich noch, wie im Juli 2024, mitten im US-Wahlkampf in Butler, Pennsylvania, auf Donald Trump geschossen wurde?“ (3. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als gegensatz.",
+            "B als steigerung.",
+            "C als schlussfolgerung.",
+            "D als verallgemeinerung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "Welche Aussage stimmt mit dem 4. Absatz überein?",
+          "opties": [
+            "A Alles nur inszeniert?",
+            "B Jetzt aber kam raus: Es gab gar kein Attentat, alles war inszeniert.",
+            "C Auf der Aufklärungsplattform X des renommierten Wahrheitsforschers Elon Musk kommt nun die nackte Wahrheit ans Licht.",
+            "D Zum Beispiel in Form einer schonungslosen Ohranalyse."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "toon",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "„Die Ex-Kongressabgeordnete und Ex-Trump-Unterstützerin Marjorie Taylor Greene hat ebenfalls zur Vernunft gefunden und zweifelt das Attentat nun massiv an.“ (5. Absatz)\nWas spricht aus diesem Satz?",
+          "opties": [
+            "A Staunen",
+            "B Kritik",
+            "C Zuversicht",
+            "D Humor"
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "Hoe reageert de auteur in alinea 6? Beantwoord in het Nederlands.",
+          "antwoord": "Okay, Schluss jetzt. Damit es auch der letzte Verschwörungspoldi merkt: Keine der bislang in dieser K.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777732212950,
       "niveau": "B2",
       "tekst": "Jeff Bezos’ Raumfahrtfirma Blue Origin muss eine Raketenpause einlegen. Die US-Flugaufsichtsbehörde hat nach einer Panne eine Untersuchung angeordnet. Das könnte auch Pläne der Nasa zurückwerfen.\n\nDie US-Luftfahrtbehörde FAA hat am Montag das Raumfahrtunternehmen Blue Origin des Milliardärs Jeff Bezos angewiesen, die Fehlfunktion seiner New-Glenn-Rakete bei einem missglückten Satellitenstart zu untersuchen.\n\nDer Zwischenfall ereignete sich am Sonntag beim dritten Flug der riesigen Trägerrakete und dem zweiten für einen zahlenden Kunden. Die wiederverwendbare Unterstufe der Rakete startete zwar erfolgreich von Cape Canaveral in Florida und landete sicher wieder auf der Erde. Doch die Oberstufe konnte einen Kommunikationssatelliten nicht in die vorgesehene Umlaufbahn befördern. Dies bedeutet einen Rückschlag für Blue Origin im Bestreben, mit der Firma SpaceX von Elon Musk zu konkurrieren.\n\nAuch die Raumfahrtbehörde Nasa könne dies in ihrem Mondfahrtprogramm Artemis zurückwerfen, wie die »New York Times«  schrieb. Die Nasa hat sowohl Blue Origin als auch SpaceX beauftragt, eine Landefähre zu bauen, die ab 2028 Astronauten auf den Mond bringen kann. Bereits im kommenden Jahr sollen Astronauten bei der Mission Artemis III in Erdnähe Andockmanöver mit dem Gefährt testen. Beide Firmen liegen hinter dem Zeitplan zurück.\n\nBlue Origin will noch in diesem Sommer ein kleineres Landegefährt namens Mark 1 auf den Mond bringen, um Technik für die größere Landefähre Mark 2 zu testen, die für Artemis vorgesehen ist. Dazu jedoch muss New Glenn erneut starten.\n\nNicht genügend Schub\nGemäß der Anweisung der FAA muss Blue Origin eine Untersuchung des Zwischenfalls durchführen und die Genehmigung der Behörde für den Abschlussbericht sowie alle Korrekturmaßnahmen einholen, bevor der Betrieb mit New Glenn wieder aufgenommen werden darf. Dies könne einige Monate dauern, sagten Experten laut dem »Times«-Bericht.\n\nErste Daten deuten darauf hin, dass eines der beiden BE-3U-Triebwerke, die die Oberstufe nach der Trennung von der Unterstufe der Rakete antreiben, »nicht genügend Schub erzeugte, um unsere Zielumlaufbahn zu erreichen«, erklärte Blue-Origin-Chef Dave Limp am Montag in einer Stellungnahme auf X. Man werde unter Aufsicht der FAA aus den Daten lernen und den Flugbetrieb schnellstmöglich wieder aufnehmen.\n\nDer Satellit »BlueBird 7«, der zu einem Projekt für ein weltraumgestütztes Mobilfunknetz ähnlich dem Leo-System von Amazon oder der Starlink-Konstellation von SpaceX gehörte, trat am Montag wieder in die Erdatmosphäre ein. Er verglühte vermutlich harmlos über der Erde.",
