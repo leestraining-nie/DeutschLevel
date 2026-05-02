@@ -1032,8 +1032,7 @@ async function jbSave(){
       }catch(e){}
     }
   const jsonStr=JSON.stringify({library:library,deleted:deletedIds},null,2);
-        const bytes=new TextEncoder().encode(jsonStr);
-        const content=btoa(String.fromCharCode(...bytes));
+        const content=btoa(unescape(encodeURIComponent(jsonStr)));
     const body={message:'Bibliotheek update',content:content};
     if(ghFileSha) body.sha=ghFileSha;
     const r=await fetch(GITHUB_API,{
