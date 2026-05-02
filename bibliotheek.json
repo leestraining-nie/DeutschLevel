@@ -1,6 +1,123 @@
 {
   "library": [
     {
+      "id": 1777732035653,
+      "niveau": "B2",
+      "tekst": "Großbritannien hofft auf das Heranwachsen einer rauchfreien Generation. Auch in anderen Ländern gibt es Bemühungen, Zigaretten zu verbannen - aus Sicht der WHO muss allerdings mehr passieren.\n\nDie Weltgesundheitsorganisation sieht das in Großbritannien beschlossene Tabakverbot als Schritt in die richtige Richtung. «Aus Sicht der WHO ist das ein starkes Signal: Tabakkontrolle lässt sich langfristig denken, jenseits kurzfristiger politischer Zyklen», sagt Rüdiger Krech, Gesundheitsexperte und Direktor für Umweltfragen bei der WHO, auf Anfrage der Deutschen Presse-Agentur. «Es könnten in Deutschland viele Menschenleben gerettet werden, wenn die verantwortlichen Politikerinnen und Politiker bei der Tabakkontrolle von Großbritannien lernen würden.»\n\nEin Gesetz, das den Verkauf von Tabak verbietet, nahm am Dienstag die letzte Hürde im britischen Parlament. Nun braucht es nur noch die förmliche Zustimmung des Königs. Das Gesetz sieht eine schrittweise Anhebung des Alters vor, ab dem Tabakprodukte legal gekauft werden dürfen. Wer nach dem 1. Januar 2009 geboren wurde, soll dadurch niemals die Möglichkeit haben, Zigaretten und ähnliche Produkte legal zu erwerben. Das Rauchen selbst wird allerdings nicht verboten.\n\nUnd im Rest der Welt?\nAm 1. November 2025 wurden die Malediven das erste Land, das ein solches Gesetz umgesetzt hat. Dort kann niemand, der seit dem 1.1.2007 geboren ist, mehr legal Tabakprodukte kaufen. In Neuseeland war ein ähnliches Gesetz noch vor der vollen Umsetzung 2024 wieder gekippt worden.\n\nIn Sachen rauchfreie Gesellschaft gilt auch Schweden oft als Vorbild. Hier ist die Zahl der Menschen, die täglich Tabak rauchen, drastisch zurückgegangen. 2024 gaben nur 5 Prozent aller Schweden über 16 Jahren an, zu rauchen. Allerdings konsumieren die Schweden stattdessen deutlich mehr Nikotinbeutel. «Snus» konsumiert fast jeder vierte Mann in dem skandinavischen Land täglich, unter den Frauen war es 2024 jede Zehnte. Auch zu E-Zigaretten greifen die Schweden häufiger als früher.\n\nIn der EU ist der Verkauf von Snus in fast allen Ländern verboten - mit Ausnahme von Schweden. Vor allem der weiße Snus - tabakfreie Nikotinbeutel - ist zum schwedischen Exportschlager avanciert. Sein Geschäft damit will Schweden unbedingt beschützen. Nationale Verbote sind dem Land deshalb ein Dorn im Auge.\n\nEine Untersuchung der EU-Kommission hielt zuletzt fest, dass neue Tabak- und Nikotinprodukte wie Tabakerhitzer, E-Zigaretten und Nikotinbeutel die Gesundheitssysteme vor Herausforderungen stellen. «Neben den direkten Gesundheitsrisiken können diese Produkte als Einstieg in die Nikotinsucht und den Konsum/das Rauchen traditioneller Tabakprodukte dienen», warnten die Behördenmitarbeiter in ihrer Evaluierung der bestehenden Regeln.\n\n\nSie kritisierten unterschiedliche nationale Vorschriften etwa zu Aromen in Einweg-E-Zigaretten und E-Zigaretten. Marketing über soziale Medien, oft durch Influencer, verschärfe das Problem. Die bisherigen rechtlichen Vorgaben würden dem nicht gerecht.\n\nWHO: Deutschland hinkt hinterher\nDie WHO hat einen Maßnahmenkatalog zum Kampf gegen Tabak entwickelt und prüft regelmäßig, wie weit Länder bei der Umsetzung sind. Deutschland hinkte Stand 2024 vielfach hinterher, etwa bei der Besteuerung. Sie empfiehlt, dass Steuern mindestens 75 Prozent des Preises ausmachen sollen. Auch bei der Umsetzung von Werbeverboten und Hilfen bei der Entwöhnung sah sie noch Luft nach oben.\n\nAktuell plant Deutschland mit einer Erhöhung der Tabaksteuer noch in diesem Jahr. Die Einnahmen sollen aber nicht der Prävention oder dem Gesundheitswesen zugutekommen, sondern nach Plänen der Koalition die Steuerbefreiung einer geplanten Prämie für Beschäftigte finanzieren. Die vom Bundesgesundheitsministerium eingesetzte Expertenkommission zum Stabilisieren der Krankenkassen hatte zuletzt Steuererhöhungen für Zigaretten vorgeschlagen. Konkret sollte die durchschnittliche Steuerlast für Fabrikzigaretten von 2027 bis 2031 jedes Jahr angehoben werden.\n\n«Die Tabakepidemie ist eine der größten Bedrohungen der öffentlichen Gesundheit, die die Welt je erlebt hat», schreibt die WHO. Mehr als sieben Millionen Menschen sterben nach ihren Angaben jedes Jahr weltweit durch Tabakkonsum, 80.000 davon durch Passivrauchen, also das unfreiwillige Einatmen von Tabakrauch aus ihrer Umgebung. In der EU beziffert sie die Zahl der Toten durch Tabakkonsum auf eine halbe Million.",
+      "titel": "Tabakverbot in Großbritannien: WHO lobt «starkes Signal»",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 605,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: B2",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was ist die Kernaussage des 1. Absatzes?",
+          "opties": [
+            "A Großbritannien hofft auf das Heranwachsen einer rauchfreien Generation.",
+            "B Auch in anderen Ländern gibt es Bemühungen, Zigaretten zu verbannen - aus Sicht der WHO muss allerdings mehr passieren.",
+            "C Großbritannien hofft auf das Heranwachsen einer rauchfreien Generation.",
+            "D Großbritannien hofft auf das Heranwachsen einer rauchfreien Generation."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Die Weltgesundheitsorganisation sieht das in Großbritannien beschlossene Tabakverbot als Schritt in die richtige Richtung.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "«Aus Sicht der WHO ist das ein starkes Signal: Tabakkontrolle lässt sich langfristig denken, jenseits kurzfristiger politischer Zyklen», sagt Rüdiger Krech, Gesundheitsexperte und Direktor für Umweltfragen bei der WHO, auf Anfrage der Deutschen Presse-Agentur.",
+              "antwoord": "niet",
+              "alinea": 2
+            },
+            {
+              "tekst": "«Es könnten in Deutschland viele Menschenleben gerettet werden, wenn die verantwortlichen Politikerinnen und Politiker bei der Tabakkontrolle von Großbritannien lernen würden.",
+              "antwoord": "wel",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "„Am 1.“ (4. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als schlussfolgerung.",
+            "B als widerlegung.",
+            "C als gegensatz.",
+            "D als relativierung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "Welche Aussage stimmt mit dem 6. Absatz überein?",
+          "opties": [
+            "A In der EU ist der Verkauf von Snus in fast allen Ländern verboten - mit Ausnahme von Schweden.",
+            "B Vor allem der weiße Snus - tabakfreie Nikotinbeutel - ist zum schwedischen Exportschlager avanciert.",
+            "C Sein Geschäft damit will Schweden unbedingt beschützen.",
+            "D Nationale Verbote sind dem Land deshalb ein Dorn im Auge."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "toon",
+          "punten": 1,
+          "context": "Absatz 8",
+          "vraag": "„Sie kritisierten unterschiedliche nationale Vorschriften etwa zu Aromen in Einweg-E-Zigaretten und E-Zigaretten.“ (8. Absatz)\nWas spricht aus diesem Satz?",
+          "opties": [
+            "A Gleichgültigkeit",
+            "B Skepsis",
+            "C Erleichterung",
+            "D Ablehnung"
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 10",
+          "vraag": "Hoe reageert de auteur in alinea 10? Beantwoord in het Nederlands.",
+          "antwoord": "Aktuell plant Deutschland mit einer Erhöhung der Tabaksteuer noch in diesem Jahr. Die Einnahmen sollen aber nicht der Prävention oder dem Gesundheitswesen zugutek.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777731899194,
       "niveau": "C1",
       "tekst": "Stein oder nicht Stein? In der Welt der Uhrmacherkunst suchen Uhrenliebhaber:innen oft nach Zeitmessern, die sich nicht nur durch ihre Mechanik, sondern auch durch ihre Ästhetik auszeichnen. Die Verwendung von Zifferblättern aus Edelsteinen ist nun ein beliebtes Mittel der Distinktion. Wir stellen die schönsten Modelle vor.\n\n\"Gem Dials\", also Zifferblätter aus geschliffenen Edelsteinscheiben, sind in diesem Jahr ein deutlicher Trend der Watches and Wonders 2026. Zeit für einen Überblick.\n\nManchmal braucht es eben einfach ein bisschen Magie. Und der Trick eines Zauberers besteht darin, die Realität zumindest für eine kurze Zeit verschwinden zu lassen. So oder so ähnlich könnte man das diesjährige Treffen der Uhrenbranche verstehen, das in der vergangenen Woche Genf für ein paar Tage in den Nabel der Zeit verwandelte. Die Watches and Wonders 2026, die größte Uhrenmesse der Welt, wurde erneut zur Bühne für ausgefeilte Uhrmacher- und Handwerkskunst, für wertvolle Materialien und magische Momente. Und obwohl es aktuell allen Anlass dazu gäbe, waren die 65 ausstellenden Uhrenmarken der Watches and Wonders 2026 nicht hier, um zu klagen, sondern um zu zeigen, wozu sie fähig sind. Während Sorgen also hinter den Kulissen blieben, rückten Dinge ins Rampenlicht, die zwar geheimnisvoll anmuten, aber doch reell sind: Savoir-faire, Kreativität, Leidenschaft ­– und etwas, dem man sich ansonsten eher in der Schmuckbranche widmet: Edelsteine.\n\nIn diesem Jahr wurden sie nicht nur zu einem zierenden Beiwerk, sondern vermehrt zu einem essenziellen Bestandteil einer Uhr, nämlich zu ihrem Zifferblatt, das man auch liebevoll als das Gesicht eines Zeitmessers bezeichnet. Edelsteine verleihen einer Uhr aber nicht nur einen farbigen Hintergrund, sie können noch mehr als das: Sie changieren im Licht und verfügen über eine Maserung, eine Struktur, Einschlüsse und die Fähigkeit, uns zu begeistern. Und weil jeder Edelstein wie auch jedes Antlitz ein Unikat ist, wird auch jede Uhr mit einem sogenannten \"Gem Dial\" zu einem Einzelstück. Vorhang auf für sechs fabelhafte Modelle.\n\nDas sind die drei schönsten Uhren der Watches and Wonders mit \"Gem Dials\":\n#1 Bulgari \"Serpenti Tubogas Studs\"\nDie Schlange ist ein faszinierendes Tier und eines der ältesten Motive der Schmuckgeschichte. Auch bei der römischen Haute Joaillerie-Marke Bulgari ist sie – egal ob bei den Uhren oder beim Schmuck – seit den 1940er-Jahren fester Bestandteil einer jeden Kollektion. Auch in diesem Jahr hat sich das Reptil wieder gehäutet, um in neuem Gewand zu erscheinen: Die limitierte \"Serpenti Tubogas Studs\" glänzt nun durch die Vereinigung aus Gold und Stahl und den drei Gestaltungselementen Serpenti (eine Bulgari-Ikone), Tubogas (seit den 1970er-Jahren Markenzeichen des Hauses) und \"Clou\"-Nieten (entliehen aus dem Schmuckvokabular des Juweliers). Auf diese Weise treten Schmuck- und Industriedesign in einen Dialog, für den auch Edelstein-Zifferblätter aus schimmerndem weißem Perlmutt, dunkelrotem Karneol, leuchtend grünem Malachit und, wie hier abgebildet, tiefblauem Sodalith zum Einsatz kommen.\n\n#2 Audemars Piguet \"Royal Oak Selfwinding\"\nWenn es um das Gebiet der Edelstein-Zifferblätter geht, hat Audemars Piguet im Vergleich zu anderen reinen Uhrenmarken einen gewissen Vorsprung: Bereits in den 1960er-Jahren hatte das Haus mit Steinzifferblättern auf seinen ultraflachen Dresswatches und 1988 mit einer \"Royal Oak\"-Referenz aus Platin mit Lapislazuli-Zifferblatt experimentiert. Im Jahr 2023 brachte die Marke schließlich eine \"Royal Oak\" in Gelbgold mit Zifferblatt aus Türkis auf den Markt. Ganz in dieser Tradition präsentierte Audemars Piguet nun also zwei \"Royal Oak\" Automatik-Modelle in 37-mm- und 41-mm-Gehäusen aus 750er-Gelbgold, deren Zifferblätter aus dem glasartig glänzenden Malachit gefertigt sind. Die charakteristische streifige Maserung des intensiv grünen Edelsteins lässt jede einzelne Uhr zu einem einzigartigen Exemplar werden.\n\n#3 Van Cleef & Arpels \"Midnight Jour Nuit Phase de Lune\"\nIn himmlische Sphären katapultiert uns in diesem Jahr die Marke Van Cleef & Arpels mit der Uhr \"Midnight Jour Nuit Phase de Lune\". Sie ist eine Erweiterung der 2008 lancierten und 2024 neu aufgelegte Kollektion \"Jour Nuit\" und ehrt den Mond als langjährige Quelle der Inspiration. Die Uhr verfügt über zwei sich überlagernde Komplikationen, die im 42 mm großen Gehäuse aus 750er-Weißgold untergebracht sind. Die erste belebt die Tag-/Nachtanzeige, während die zweite die aktuelle Mondphase anzeigt, eine Funktion, die 1929 in die Uhrmachergeschichte von Van Cleef & Arpels eingegangen ist. Poetisch ist aber nicht nur ihre Technik, sondern auch das rotierende Zifferblatt aus glitzerndem Murano-Aventuringlas: Im Laufe des Tages weicht eine guillochierte goldene Sonne allmählich einem Mond aus weißem Perlmutt. So erscheinen und verschwinden die beiden Himmelskörper an einem Horizont aus guillochiertem, schwarz lackiertem Perlmutt, das zu den Schmucksteinen zählt. Für Ungeduldige ist das Schauspiel, das normalerweise 24 Stunden in Anspruch nimmt, aber auch mittels Animation auf Knopfdruck am Gehäuserand verfügbar: Löst man sie aus, dreht sich das Zifferblatt etwa 10 Sekunden lang um 360 Grad – geradezu märchenhaft, genau wie die Geschichte der Maison Van Cleef & Arpels.",
