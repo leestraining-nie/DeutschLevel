@@ -1178,7 +1178,8 @@ async function lbSave(){
     }
     lb.sort((a,b)=>b.xp-a.xp);
     currentData.leaderboard=lb;
-    const content=btoa(unescape(encodeURIComponent(JSON.stringify(currentData,null,2))));
+    const jsonStr=JSON.stringify(currentData,null,2);
+const content=btoa(encodeURIComponent(jsonStr).replace(/%([0-9A-F]{2})/g,(m,p)=>String.fromCharCode('0x'+p)));
     const body={message:'Leaderboard update',content:content};
     if(sha) body.sha=sha;
     await fetch(GITHUB_API,{
