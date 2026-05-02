@@ -1,6 +1,117 @@
 {
   "library": [
     {
+      "id": 1777731051351,
+      "niveau": "A2",
+      "tekst": "Nudeln sind auf der ganzen Welt beliebt und spielen in vielen Kulturen eine wichtige Rolle. DEIN SPIEGEL hat sich angesehen, wie sie hergestellt werden.\n\nie gehören bei den meisten Kindern zum Lieblingsessen, mit Tomatensoße und einem Berg Parmesan darüber. Oder in Bolognese ertränkt oder mit Fäden ziehender Käse­soße: Nudeln. Es gibt sie in Schmetterlingsform, als Muscheln oder Buchstaben in der Suppe. Spaghetti, Penne, Makkaroni – im Supermarktregal reihen sich etliche Sorten nebeneinander.\n\nNudeln werden auf der ganzen Welt gegessen. In Japan gibt es Ramen oder Udon, in Mexiko Fideos mit Tomaten und Chili. In Italien isst man Pasta, in Vietnam Glasnudeln, und in Russland wird Lapsha in der Suppe serviert. Mit den Ländern wechseln nicht nur Namen und Formen, sondern auch die Grundzutaten. Je nach Region bestehen sie aus Weizen, Reis, Mungbohnen oder Buchweizen.\n\nAllen ist gemein, dass sie aus einem einfachen Teig bestehen: Mehl oder Grieß wird mit Wasser vermengt, manchmal kommen Eier dazu. Nach dem Formen können sie in der Regel getrocknet werden. Das macht Nudeln zu einem sehr praktischen Lebens­mittel. Sie sind günstig, lassen sich gut lagern und schnell zubereiten.\n\nWer sie erfunden hat, lässt sich nicht genau sagen. Wahrscheinlich entwickel­ten Menschen unterschiedliche Versionen unabhängig voneinander an verschiedenen Orten – und das schon vor Tausenden Jahren. Bei Ausgrabungen in China entdeckten Forschende einen Tontopf aus der Jungsteinzeit. Darin fanden sie dünne Teigfäden, etwa einen halben Meter lang. Der Topf wurde bei einer Naturkatastrophe begraben, vermutlich einem Erdbeben oder einer Überschwemmung. Er lag unter einer so dicken Schicht aus Erde und Lehm, dass keine Luft in das Gefäß kam.\n\nOhne Sauerstoff verrotten Essensreste viel langsamer. So überstand die Mahlzeit rund 4000 Jahre. Beim Öffnen des Topfs zerfielen die Teigstränge zwar zu Staub, der aber noch untersucht werden konnte. Das Ergebnis: Schon damals kneteten Menschen einen Teig aus Getreide und Wasser und formten ihn zu langen Fäden, also einer Art Steinzeit-Spaghetti.\n\nWeil Nudeln im Vergleich zu anderen Lebensmitteln lange haltbar sind, begann man früh damit, sie in großen Mengen herzustellen und zu verkaufen. In Gragnano, einer Stadt in Süditalien, passte man im 19. Jahrhundert sogar die Stadtplanung an die Pasta-Produktion an. Die Straße wurde verbreitert, sodass es weniger Schatten gab und der Wind besser hindurchwehen konnte. Die langen Nudeln hingen wie Vorhänge auf Wäscheständern, trockneten schnell und konnten in andere Länder verkauft werden.\n\nVor etwa 120 Jahren entstanden die ersten Fabriken mit Maschinen und Trockner-Automaten. Formen von Hand war nicht mehr nötig. Alles ging schneller, die Mengen wurden größer. Heute produzieren die Länder der Europäischen Union jährlich mehr als sechs Millionen Tonnen Nudeln. Das sind so viele, dass man damit etwa 6100 olympische Schwimmbecken füllen könnte.",
+      "titel": "Besuch in einer Nudelfabrik: Makkaroni vom Fließband",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 437,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: A2",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welche Aussage stimmt mit dem 1. Absatz überein?",
+          "opties": [
+            "A Nudeln sind auf der ganzen Welt beliebt und spielen in vielen Kulturen eine wichtige Rolle.",
+            "B DEIN SPIEGEL hat sich angesehen, wie sie hergestellt werden.",
+            "C Nudeln sind auf der ganzen Welt beliebt und spielen in vielen Kulturen eine wichtige Rolle.",
+            "D Nudeln sind auf der ganzen Welt beliebt und spielen in vielen Kulturen eine wichtige Rolle."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 2",
+          "vraag": "Was wird aus dem 2. Absatz deutlich?",
+          "opties": [
+            "A ie gehören bei den meisten Kindern zum Lieblingsessen, mit Tomatensoße und einem Berg Parmesan darüber.",
+            "B Oder in Bolognese ertränkt oder mit Fäden ziehender Käse­soße: Nudeln.",
+            "C Es gibt sie in Schmetterlingsform, als Muscheln oder Buchstaben in der Suppe.",
+            "D Spaghetti, Penne, Makkaroni – im Supermarktregal reihen sich etliche Sorten nebeneinander."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 3",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 3.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Nudeln werden auf der ganzen Welt gegessen.",
+              "antwoord": "wel",
+              "alinea": 3
+            },
+            {
+              "tekst": "In Japan gibt es Ramen oder Udon, in Mexiko Fideos mit Tomaten und Chili.",
+              "antwoord": "niet",
+              "alinea": 3
+            },
+            {
+              "tekst": "In Italien isst man Pasta, in Vietnam Glasnudeln, und in Russland wird Lapsha in der Suppe serviert.",
+              "antwoord": "wel",
+              "alinea": 3
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "„Wahrscheinlich entwickel­ten Menschen unterschiedliche Versionen unabhängig voneinander an verschiedenen Orten – und das schon vor Tausenden Jahren.“ (5. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als beispiel.",
+            "B als widerlegung.",
+            "C als einräumung.",
+            "D als begründung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 6 die de hoofdgedachte weergeeft.",
+          "antwoord": "So überstand",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 7",
+          "vraag": "Wat wordt duidelijk uit alinea 7? Beantwoord in het Nederlands.",
+          "antwoord": "Weil Nudeln im Vergleich zu anderen Lebensmitteln lange haltbar sind, begann man früh damit, sie in großen Mengen herzustellen und zu verkaufen. In Gragnano, einer Stadt in Süditalien, passte man im 19.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777730886410,
       "niveau": "B1",
       "tekst": "Sowohl Tiger als auch Leoparden schleichen sich bei der Jagd an ihre Beute heran. Doch während die eine Raubkatze dies im Streifen-Look tut, setzt die andere auf Fleckenmuster. Wie kommt das? DEIN SPIEGEL erklärt’s.\n\nTiger und Leoparden gehören zu den Großkatzen, haben scharfe Zähne und sind darin geübt, sich heimlich an ihre Beute anzupirschen. Eine optische Besonderheit unterscheidet die beiden: Tiger haben Streifen, Leoparden Flecken.\n\nUm zu verstehen, warum das so ist, muss man sich die Jagdgebiete der beiden Großkatzen ansehen: Tiger jagen im Dschungel oder schleichen sich in hohem Gras an ihre Beute heran. Ihre von oben nach unten verlaufenden Streifen helfen ihnen, dabei nicht entdeckt zu werden. Der Hell-Dunkel-Kontrast der schwarzen Streifen auf hellerem Fell ahmt die Umgebung nach: dunkle, Schatten spendende Bäume und helles Licht, das dazwischen hindurchfällt.\n\nAuch Leoparden sind sogenannte Lauer- und Anschleichjäger, die sich leise nähern, um dann direkt anzugreifen. Auf längeren Distanzen sind sie Beutetieren wie Gazellen in Bezug auf die Schnelligkeit nämlich unterlegen.\n\nIm Gegensatz zu Tigern jagen sie jedoch in sehr unterschiedlichen Lebensräumen – von der Savanne über Wälder bis zu Gebirgen. Dank ihrer Flecken fallen sie in einer Umgebung voller Büsche, Laub und Felsen kaum auf. Es gibt aber auch schwarze Leoparden, besser bekannt als Panther. Mit ihrem dunklen Fell sind sie perfekt an die Jagd in der Nacht angepasst.",
