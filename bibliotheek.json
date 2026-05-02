@@ -1,6 +1,117 @@
 {
   "library": [
     {
+      "id": 1777733065413,
+      "niveau": "B1",
+      "tekst": "US-Präsident Trump hat für die Insel Grönland große Pläne. Es gibt allerdings einige Leute, die etwas dagegen haben. Für Kinder erklärt hier Mirko Drotschmann, auch bekannt als MrWissen2go, worum es in dem Streit geht.\n\nüße bunte Häuser, freundliche Menschen und jede Menge Eis: Das ist Grönland, eine riesige Insel ganz im Norden auf der Erdkugel. Grönland ist ungefähr sechsmal so groß wie Deutschland, hat aber nur knapp 57.000 Einwohner. Tatsächlich leben deutlich mehr Robben auf der Insel als Menschen.\n\nDas alles ist faszinierend. Genauso wie die Geschichte der Insel, die seit rund 5000 Jahren von Menschen bewohnt wird und auf der auch schon mal die Wikinger gelebt haben. Aber Urlaub machen oder sogar dorthin ziehen möchte kaum jemand. Dafür ist Grönland einfach zu weit weg und zu kalt.\n\nDie Insel hat allerdings einen berühmten Fan – nämlich den Präsidenten der USA, Donald Trump. Der findet Grönland so wichtig, dass er sagt: Ich möchte diese Insel kaufen. Nicht für sich persönlich, sondern für die USA.\n\nAber wie kommt er auf so eine Idee? Für Donald Trump hat Grönland viele Vorteile. Zum ­einen könnte er mit der Insel sein Land und damit sein Einflussgebiet deutlich vergrößern, um rund 20 Prozent. Außerdem ist Grönland reich an Bodenschätzen. Es gibt dort unter anderem sogenannte seltene Erden, also wichtige Metalle, die man beispielsweise für die Herstellung von Smartphones braucht. Auch Öl und Gas sollen dort zu finden sein.\n\nUnd dann gibt es noch etwas, das Donald Trump wichtig ist: Grönland ist ein guter Standort für seine Armee, die hier schon einen Stützpunkt hat, um von da aus zum Beispiel zu beobachten, was Länder wie Russland oder China machen. Für Donald Trump ist deshalb klar, dass Amerika Grönland ­haben muss. Das Problem ist nur: Die Insel gehört schon zu einem anderen Land, nämlich zu Dänemark – und das seit mehr als 200 Jahren.\n\nInzwischen können die Grönländer zwar viele Dinge selbst bestimmen, aber offiziell sind sie dänische Staatsbürger. Und die Regierung Dänemarks ist überhaupt nicht begeistert von den Plänen des US-Präsidenten. Genauso wie die Grönländer. 85 Prozent der Menschen auf der Insel sind dagegen, dass ihr Land Teil der USA wird.\n\nIst Donald Trump davon beeindruckt? Nicht unbedingt. Er bleibt bei seinen Plänen – sagt aber auch, dass nichts gegen den Willen der Grönländer passieren soll. Ob er sich an diese Aussage wirklich hält, ist schwer zu sagen. Aber wie auch immer es ausgeht: Zumindest den Robben dürfte es egal sein, wer sie künftig regiert.",
+      "titel": "Warum will Donald Trump Grönland kaufen?",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 409,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: B1",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welche Aussage stimmt mit dem 1. Absatz überein?",
+          "opties": [
+            "A US-Präsident Trump hat für die Insel Grönland große Pläne.",
+            "B Es gibt allerdings einige Leute, die etwas dagegen haben.",
+            "C Für Kinder erklärt hier Mirko Drotschmann, auch bekannt als MrWissen2go, worum es in dem Streit geht.",
+            "D US-Präsident Trump hat für die Insel Grönland große Pläne."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 2",
+          "vraag": "Welche Aussage stimmt mit dem 2. Absatz überein?",
+          "opties": [
+            "A üße bunte Häuser, freundliche Menschen und jede Menge Eis: Das ist Grönland, eine riesige Insel ganz im Norden auf der Erdkugel.",
+            "B Grönland ist ungefähr sechsmal so groß wie Deutschland, hat aber nur knapp 57.",
+            "C 000 Einwohner.",
+            "D Tatsächlich leben deutlich mehr Robben auf der Insel als Menschen."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 3",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 3.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Das alles ist faszinierend.",
+              "antwoord": "wel",
+              "alinea": 3
+            },
+            {
+              "tekst": "Genauso wie die Geschichte der Insel, die seit rund 5000 Jahren von Menschen bewohnt wird und auf der auch schon mal die Wikinger gelebt haben.",
+              "antwoord": "niet",
+              "alinea": 3
+            },
+            {
+              "tekst": "Aber Urlaub machen oder sogar dorthin ziehen möchte kaum jemand.",
+              "antwoord": "wel",
+              "alinea": 3
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "„Für Donald Trump hat Grönland viele Vorteile.“ (5. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als verallgemeinerung.",
+            "B als relativierung.",
+            "C als widerlegung.",
+            "D als konkretisierung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 6 die de hoofdgedachte weergeeft.",
+          "antwoord": "Für Donald",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 7",
+          "vraag": "Hoe reageert de auteur in alinea 7? Beantwoord in het Nederlands.",
+          "antwoord": "Inzwischen können die Grönländer zwar viele Dinge selbst bestimmen, aber offiziell sind sie dänische Staatsbürger. Und die Regierung Dänemarks ist überhaupt nicht begeistert von den Plänen des US.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777732891155,
       "niveau": "B1",
       "tekst": "Als Professorin für Entwicklungspsychologie erforscht Eva Wunderer TikTok, Instagram und Co. Dabei hat sie herausgefunden, wann zu viel Social Media schädlich für Menschen wird.\n\n»Bevor es das Internet gab, haben Menschen ihr Aussehen vor allem mit den Bildern von Models verglichen. Damals war deutlicher, dass dahinter viel Arbeit steckte, etwa von Profi-Fotografinnen und Make-up-Artisten. Heute kann hingegen jede Person mit dem Handy tolle Fotos von sich machen, sie in Apps bearbeiten und auf Social Media hochladen. Deswegen vergleichen sich viele nicht mehr bloß mit Models, sondern auch mit Leuten von nebenan. Das kann einen noch mehr unter Druck setzen. Man denkt vielleicht: Wenn das Mädchen oder der Junge aus meiner Schule so schön aussieht, muss ich das auch, oder?\n\nVor einigen Jahren haben wir zu diesem Thema geforscht. Wir wollten wissen, welche Auswirkungen soziale Medien auf junge Menschen haben. Vor allem untersuchten wir, was Plattformen wie Instagram mit Menschen machen, die an Essstörungen leiden. Also mit Leuten, die ohnehin schon Schwierigkeiten damit haben, ihren Körper zu mögen.\n\nUnsere Forschung zeigte, dass soziale Netzwerke schnell gefährlich werden können. Das kann so ablaufen: Zuerst nehme ich ein Bild von mir auf und stelle fest, dass ich darauf nicht so aussehe wie andere auf Social Media. Also bearbeite ich das Bild, etwa mit einem Filter, der die Haut glatter, das Gesicht schmaler macht. Und wenn das noch nicht reicht, verändere ich womöglich etwas im echten Leben: vielleicht meine Ernährung, mein Bewegungs- oder Sportpensum, weil ich durch Instagram oder TikTok das Gefühl bekommen habe, anders aussehen zu müssen.\n\nDas heißt nicht, dass soziale Medien allein zu Essstörungen führen. Aber die Plattformen können dazu beitragen. Bei Filtern ist es ähnlich. Sie müssen nicht zwingend etwas Schlechtes sein. Es gibt auch lustige Filter, die das Gesicht verzerren oder Katzenohren machen. Aber viele andere sorgen für unrealistische Schönheitsbilder.\n\nInsgesamt lassen uns Soziale Medien häu­figer über unseren Körper nachdenken und ihn mit anderen vergleichen. Das kann krank machen. Daher wäre es sinnvoll, weniger Zeit auf den Plattformen zu verbringen. Aber so einfach ist das nicht. Die kurzen Videos, Bilder und Musikschnipsel sorgen dafür, dass unser Gehirn Dopamin ausschüttet. Das ist ein Botenstoff, der uns Spaß und Spannung empfinden lässt. Seinetwegen ist es so schwierig, die Apps nach dem Öffnen wieder zu schließen. Sie können süchtig machen.\n\nGleichzeitig haben soziale Medien positive Aspekte. Man kann sich auf ihnen über Hobbys austauschen und mit Leuten verbinden, die weit entfernt leben. Aber die Plattformen können eben auch extrem schädlich sein. Etwa, wenn ihre Algorithmen uns Inhalte anzeigen, die uns traurig oder ängstlich machen. So etwas kommt immer wieder mal vor. In Australien wurde daher ein Social-Media-Verbot für unter 16-Jährige eingeführt. Ich finde, das brauchen wir in Deutschland auch.«",
