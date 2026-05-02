@@ -1,6 +1,117 @@
 {
   "library": [
     {
+      "id": 1777731266462,
+      "niveau": "B1",
+      "tekst": "Seit 25 Jahren reist der belgische Künstler Francis Alÿs durch alle Welt. Er fotografiert und filmt Kinder, die spielen – von Afghanistan bis Mexiko. Warum macht er das?\n\nDEIN SPIEGEL: Gibt es etwas, das alle Kinder auf der Welt spielen?\nAlÿs: Ja, zum Beispiel »Himmel und Hölle« – das ist ein Hüpfspiel. Man malt Kästchen auf den Boden und springt von Feld zu Feld. In jedem Land sieht das Muster etwas anders aus – mal ist es eine Spirale, mal ein Quadrat. Aber die Idee ist überall ähnlich: Man hüpft von der Erde in den Himmel und wieder zurück.\n\nDEIN SPIEGEL: Also spielen alle Kinder gleich?\nAlÿs: Ja und nein. Alle Kinder spielen gern – das ist überall so. Und sie sind gut darin, sich tolle Sachen auszudenken. Oft verwandeln sie sogar schwierige Situationen in etwas Leichtes – wie während der Coronazeit, als viele aus dem Spiel »Fangen« eine Variante machten, bei der man sich »ansteckt«. Aber: Kinder verbringen ihre Zeit an ganz unterschiedlichen Orten – auf dem Land, in der Stadt, drinnen, draußen. Und je nachdem, wo sie sind, spielen sie auch anders. In der Schweiz zum Beispiel bewerfen sich Kinder gegenseitig mit Schneebällen, und in Belgien lassen sie Schnecken um die Wette kriechen.\n\nDEIN SPIEGEL: Spielen Kinder heute anders als früher?\nAlÿs: Ich habe beobachtet, dass Kinder immer weniger draußen spielen. In Städten gibt es heute weniger Platz, um sich frei zu bewegen. Die Straßen sind voller Autos, und viele bleiben lieber drinnen, weil sie am Handy oder am Computer sitzen. Ein wichtiger Grund ist aber auch, dass viele Eltern Angst haben, ihre Kinder allein draußen spielen zu lassen. Ich finde, Erwachsene sollten ihren Kindern wieder mehr zutrauen. Genau das will ich mit meinem Projekt zeigen.\n\nDEIN SPIEGEL: Wie sind Sie auf diese Idee gekommen?\nAlÿs: Als Künstler reise ich viel. Früher habe ich Kinder auf meinen Reisen nur nebenbei für andere Projekte gefilmt. Aber dann habe ich gemerkt: Wenn man ihnen beim Spielen zuschaut, kann man viel über den Alltag und die Gewohnheiten der Menschen an diesem Ort lernen. Ich habe viele Kinder in verschiedenen Ländern getroffen, mit ihnen gespielt – und miterlebt, wie sehr die Erfahrungen eines Kindes davon abhängen, in welchem Land es aufwächst. Ich erinnere mich an das Jahr 2017, da war ich in Mossul im Irak. Kurz vorher war die Stadt vom IS befreit worden, einer Terrororganisation. Plötzlich wurde geschossen. Die Kinder, die bei mir waren, haben sofort gemerkt, dass es gefährlich wird. Sie wussten, wo es sicher ist, und haben mich schnell dorthin gebracht.\n\nDEIN SPIEGEL: Was haben Sie früher am liebsten gespielt?\nAlÿs: Ich bin auf dem Land aufgewachsen, weit weg von anderen Kindern. Deshalb habe ich mich oft allein beschäftigt – zum Beispiel mit einem Magneten, mit dem ich Metall gesucht habe. Wenn ich Freunde getroffen habe, haben wir oft »Fangen« gespielt.",
+      "titel": "Springen, klatschen, rennen: Wie sich Kinder auf der Welt die Zeit vertreiben",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 472,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: A2 → definitief: B1",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welche Aussage stimmt mit dem 1. Absatz überein?",
+          "opties": [
+            "A Seit 25 Jahren reist der belgische Künstler Francis Alÿs durch alle Welt.",
+            "B Er fotografiert und filmt Kinder, die spielen – von Afghanistan bis Mexiko.",
+            "C Warum macht er das?",
+            "D Seit 25 Jahren reist der belgische Künstler Francis Alÿs durch alle Welt."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 2",
+          "vraag": "Was ist der Kerninhalt des 2. Absatzes?",
+          "opties": [
+            "A DEIN SPIEGEL: Gibt es etwas, das alle Kinder auf der Welt spielen?",
+            "B Alÿs: Ja, zum Beispiel »Himmel und Hölle« – das ist ein Hüpfspiel.",
+            "C Man malt Kästchen auf den Boden und springt von Feld zu Feld.",
+            "D In jedem Land sieht das Muster etwas anders aus – mal ist es eine Spirale, mal ein Quadrat."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 3",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 3.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "DEIN SPIEGEL: Also spielen alle Kinder gleich?",
+              "antwoord": "wel",
+              "alinea": 3
+            },
+            {
+              "tekst": "Alÿs: Ja und nein.",
+              "antwoord": "niet",
+              "alinea": 3
+            },
+            {
+              "tekst": "Alle Kinder spielen gern – das ist überall so.",
+              "antwoord": "wel",
+              "alinea": 3
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "„Alÿs: Ich habe beobachtet, dass Kinder immer weniger draußen spielen.“ (4. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als relativierung.",
+            "B als verallgemeinerung.",
+            "C als schlussfolgerung.",
+            "D als gegensatz."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 5 die de hoofdgedachte weergeeft.",
+          "antwoord": "DEIN SPIEGEL:",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "Hoe reageert de auteur in alinea 6? Beantwoord in het Nederlands.",
+          "antwoord": "DEIN SPIEGEL: Was haben Sie früher am liebsten gespielt?. Alÿs: Ich bin auf dem Land aufgewachsen, weit weg von anderen Kindern.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777731051351,
       "niveau": "A2",
       "tekst": "Nudeln sind auf der ganzen Welt beliebt und spielen in vielen Kulturen eine wichtige Rolle. DEIN SPIEGEL hat sich angesehen, wie sie hergestellt werden.\n\nie gehören bei den meisten Kindern zum Lieblingsessen, mit Tomatensoße und einem Berg Parmesan darüber. Oder in Bolognese ertränkt oder mit Fäden ziehender Käse­soße: Nudeln. Es gibt sie in Schmetterlingsform, als Muscheln oder Buchstaben in der Suppe. Spaghetti, Penne, Makkaroni – im Supermarktregal reihen sich etliche Sorten nebeneinander.\n\nNudeln werden auf der ganzen Welt gegessen. In Japan gibt es Ramen oder Udon, in Mexiko Fideos mit Tomaten und Chili. In Italien isst man Pasta, in Vietnam Glasnudeln, und in Russland wird Lapsha in der Suppe serviert. Mit den Ländern wechseln nicht nur Namen und Formen, sondern auch die Grundzutaten. Je nach Region bestehen sie aus Weizen, Reis, Mungbohnen oder Buchweizen.\n\nAllen ist gemein, dass sie aus einem einfachen Teig bestehen: Mehl oder Grieß wird mit Wasser vermengt, manchmal kommen Eier dazu. Nach dem Formen können sie in der Regel getrocknet werden. Das macht Nudeln zu einem sehr praktischen Lebens­mittel. Sie sind günstig, lassen sich gut lagern und schnell zubereiten.\n\nWer sie erfunden hat, lässt sich nicht genau sagen. Wahrscheinlich entwickel­ten Menschen unterschiedliche Versionen unabhängig voneinander an verschiedenen Orten – und das schon vor Tausenden Jahren. Bei Ausgrabungen in China entdeckten Forschende einen Tontopf aus der Jungsteinzeit. Darin fanden sie dünne Teigfäden, etwa einen halben Meter lang. Der Topf wurde bei einer Naturkatastrophe begraben, vermutlich einem Erdbeben oder einer Überschwemmung. Er lag unter einer so dicken Schicht aus Erde und Lehm, dass keine Luft in das Gefäß kam.\n\nOhne Sauerstoff verrotten Essensreste viel langsamer. So überstand die Mahlzeit rund 4000 Jahre. Beim Öffnen des Topfs zerfielen die Teigstränge zwar zu Staub, der aber noch untersucht werden konnte. Das Ergebnis: Schon damals kneteten Menschen einen Teig aus Getreide und Wasser und formten ihn zu langen Fäden, also einer Art Steinzeit-Spaghetti.\n\nWeil Nudeln im Vergleich zu anderen Lebensmitteln lange haltbar sind, begann man früh damit, sie in großen Mengen herzustellen und zu verkaufen. In Gragnano, einer Stadt in Süditalien, passte man im 19. Jahrhundert sogar die Stadtplanung an die Pasta-Produktion an. Die Straße wurde verbreitert, sodass es weniger Schatten gab und der Wind besser hindurchwehen konnte. Die langen Nudeln hingen wie Vorhänge auf Wäscheständern, trockneten schnell und konnten in andere Länder verkauft werden.\n\nVor etwa 120 Jahren entstanden die ersten Fabriken mit Maschinen und Trockner-Automaten. Formen von Hand war nicht mehr nötig. Alles ging schneller, die Mengen wurden größer. Heute produzieren die Länder der Europäischen Union jährlich mehr als sechs Millionen Tonnen Nudeln. Das sind so viele, dass man damit etwa 6100 olympische Schwimmbecken füllen könnte.",
