@@ -1,6 +1,117 @@
 {
   "library": [
     {
+      "id": 1777733230744,
+      "niveau": "B1",
+      "tekst": "Baiersbronn im Schwarzwald ist berühmt für seine Sterneküche. In einer Minikoch-Ausbildung lernen Kinder von Profis: Sie filetieren Fisch und falten Servietten zu Bösewichten.\n\nDie Forelle sieht ein bisschen unheimlich aus, wie sie da leblos vor Sarah auf einem Blech liegt. Ihr Schuppenkleid schimmert im Licht der Küche, das Auge ist milchig weiß getrübt. Mit den Fingern und einem kleinen Messer entfernt Sarah die Flossen und zieht die Fischhaut ab. Dann schneidet sie mit einer Bewegung einmal längs durch den Fisch, vom Kopf bis zum Schwanz. Sie will an das schmackhafte Fischfilet ran und dabei möglichst alle Gräten entfernen. »Der schaut einen so an, am Anfang hat mich das viel Überwindung gekostet«, sagt die Zwölfjährige, als sie fertig ist. »Die Haut hat sich ganz glitschig angefühlt.«\n\nSarah, 12, nimmt am Programm »Europa Miniköche« teil. In Hotels, Restaurants und Schulen lernen Kinder das Kochen und den richtigen Umgang mit Lebensmitteln. Sarah steht in der blank polierten Edelstahlküche des Hotels Bareiss im Schwarzwaldort Baiersbronn. Um sie herum mühen sich weitere Kinder mit Fischen ab. Alle tragen einen weißen Kittel und eine Kappe, »Europa Mi­ni­köche« steht in bunten Buchstaben darauf. Obwohl kaum jemand der Jungen und Mädchen älter als Sarah ist und alle noch zur Schule gehen, machen sie bereits eine Art Kochausbildung. Innerhalb von zwei Jahren lernen sie, Gemüse in winzige Würfel zu schneiden, Desserts zu karamellisieren – oder eben Fisch zu filetieren.\n\nIm Theorieteil erfahren sie, welche Nährstoffe in Lebensmitteln enthalten sind, wie wichtig Hygiene in der Küche ist und welche Gefahr etwa von Bakterien wie Salmonellen droht, die zum Beispiel in rohen Eiern stecken können. Am Ende ihrer Ausbildung legen die Kinder sogar eine Prüfung ab. Sie müssen Fachbegriffe wie »Mise en Place« erklären (vor dem Kochen werden alle Zutaten und das Kochgeschirr einsatzbereit zurechtgelegt) und aus dem Kopf zum Beispiel das Rezept für schwäbischen Kartoffel­salat aufschreiben.\n\nSarah hat schon als kleines Kind gern in der Küche gesessen. »Am liebsten würde ich jeden Tag etwas backen oder kochen«, sagt sie. Für das Miniköche-Programm hat sie sich mit einem selbst gestalteten Plakat und einem Video beworben – und so die Zusage für einen der 24 Plätze bekommen.\n\nJetzt ist sie erleichtert, als der Fisch eingesammelt wird und es weitergeht. Die Forelle wird heute als Salat angerichtet. Für die Vinaigrette, also das Dressing, würfeln die Kinder Äpfel und schneiden Lauchzwiebeln zu dünnen Ringen. »Finger zu Krallen«, erinnert eine der Köchinnen sie an die korrekte Haltung.\n\nDer Forellensalat ist eine Spezialität des Hotels Bareiss. Bei anderen Terminen haben die Nachwuchsköchinnen und -köche schon Spätzle geschabt, Bärlauchsuppe oder Schweinefilet im Kräutermantel zubereitet. Es sind keine typischen Kindergerichte wie Lasagne, Pizza oder Pommes. Baiersbronn ist für seine Spitzengastronomie bekannt. Das merkt man auch an dem, was der Nachwuchs hier beigebracht bekommt.\n\nWo die Kinder heute Fisch filetieren, hat sonst ein Drei-Sterne-Koch das Sagen. Drei Michelin-Sterne, das ist die höchste Auszeichnung, die ein Restaurant bekommen kann. Sie bedeuten: Das Essen ist so außergewöhnlich gut, dass es sich lohnt, nur deswegen hierher zu reisen. Restaurants in Baiersbronn haben sich insgesamt acht Sterne erkocht, das ist sehr viel für einen so kleinen Ort. Außer im Bareiss bekommen die Jungen und Mädchen in drei weiteren Hotel­küchen einen Eindruck von der Arbeit in der Spitzengastronomie.\n\nAuch einige der 24 Miniköche möchten später einmal professionell kochen. Statt Sternen können sie sich vorerst Knöpfe verdienen. Wer im Theorieunterricht gut aufgepasst hat, bekommt einen grünen Knopf für seine Kochjacke. Wer in der Küche glänzt, einen goldenen. Und dann ist da noch der rote Knopf – den kriegt, wer zu viel Unsinn macht. »Vergeben haben wir den aber noch nie«, sagt Oliver Ruthardt. »Nur mal mahnend in die Mitte gelegt.«\n\nVielleicht wird Sarah später tatsächlich einmal Köchin. Ob mit oder ohne Stern, ist ihr egal. Bei einer Sache hat ihr die Kochausbildung auf jeden Fall schon geholfen: »Ich kann Zwiebeln jetzt so schnell klein schneiden, dass ich nicht mehr weinen muss.«",
+      "titel": "Koch-Ausbildung für Kinder: In der Sternchenküche",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 646,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: B1",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was ist der Kerninhalt des 1. Absatzes?",
+          "opties": [
+            "A Baiersbronn im Schwarzwald ist berühmt für seine Sterneküche.",
+            "B In einer Minikoch-Ausbildung lernen Kinder von Profis: Sie filetieren Fisch und falten Servietten zu Bösewichten.",
+            "C Baiersbronn im Schwarzwald ist berühmt für seine Sterneküche.",
+            "D Baiersbronn im Schwarzwald ist berühmt für seine Sterneküche."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 2",
+          "vraag": "Was ist der Kerninhalt des 2. Absatzes?",
+          "opties": [
+            "A Die Forelle sieht ein bisschen unheimlich aus, wie sie da leblos vor Sarah auf einem Blech liegt.",
+            "B Ihr Schuppenkleid schimmert im Licht der Küche, das Auge ist milchig weiß getrübt.",
+            "C Mit den Fingern und einem kleinen Messer entfernt Sarah die Flossen und zieht die Fischhaut ab.",
+            "D Dann schneidet sie mit einer Bewegung einmal längs durch den Fisch, vom Kopf bis zum Schwanz."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 4",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 4.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Im Theorieteil erfahren sie, welche Nährstoffe in Lebensmitteln enthalten sind, wie wichtig Hygiene in der Küche ist und welche Gefahr etwa von Bakterien wie Salmonellen droht, die zum Beispiel in rohen Eiern stecken können.",
+              "antwoord": "wel",
+              "alinea": 4
+            },
+            {
+              "tekst": "Am Ende ihrer Ausbildung legen die Kinder sogar eine Prüfung ab.",
+              "antwoord": "niet",
+              "alinea": 4
+            },
+            {
+              "tekst": "Sie müssen Fachbegriffe wie »Mise en Place« erklären (vor dem Kochen werden alle Zutaten und das Kochgeschirr einsatzbereit zurechtgelegt) und aus dem Kopf zum Beispiel das Rezept für schwäbischen Kartoffel­salat aufschreiben.",
+              "antwoord": "wel",
+              "alinea": 4
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 6",
+          "vraag": "„Die Forelle wird heute als Salat angerichtet.“ (6. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als schlussfolgerung.",
+            "B als steigerung.",
+            "C als konkretisierung.",
+            "D als einräumung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 7",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 7 die de hoofdgedachte weergeeft.",
+          "antwoord": "Der Forellensalat",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 9",
+          "vraag": "Hoe reageert de auteur in alinea 9? Beantwoord in het Nederlands.",
+          "antwoord": "Auch einige der 24 Miniköche möchten später einmal professionell kochen. Statt Sternen können sie sich vorerst Knöpfe verdienen.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777733065413,
       "niveau": "B1",
       "tekst": "US-Präsident Trump hat für die Insel Grönland große Pläne. Es gibt allerdings einige Leute, die etwas dagegen haben. Für Kinder erklärt hier Mirko Drotschmann, auch bekannt als MrWissen2go, worum es in dem Streit geht.\n\nüße bunte Häuser, freundliche Menschen und jede Menge Eis: Das ist Grönland, eine riesige Insel ganz im Norden auf der Erdkugel. Grönland ist ungefähr sechsmal so groß wie Deutschland, hat aber nur knapp 57.000 Einwohner. Tatsächlich leben deutlich mehr Robben auf der Insel als Menschen.\n\nDas alles ist faszinierend. Genauso wie die Geschichte der Insel, die seit rund 5000 Jahren von Menschen bewohnt wird und auf der auch schon mal die Wikinger gelebt haben. Aber Urlaub machen oder sogar dorthin ziehen möchte kaum jemand. Dafür ist Grönland einfach zu weit weg und zu kalt.\n\nDie Insel hat allerdings einen berühmten Fan – nämlich den Präsidenten der USA, Donald Trump. Der findet Grönland so wichtig, dass er sagt: Ich möchte diese Insel kaufen. Nicht für sich persönlich, sondern für die USA.\n\nAber wie kommt er auf so eine Idee? Für Donald Trump hat Grönland viele Vorteile. Zum ­einen könnte er mit der Insel sein Land und damit sein Einflussgebiet deutlich vergrößern, um rund 20 Prozent. Außerdem ist Grönland reich an Bodenschätzen. Es gibt dort unter anderem sogenannte seltene Erden, also wichtige Metalle, die man beispielsweise für die Herstellung von Smartphones braucht. Auch Öl und Gas sollen dort zu finden sein.\n\nUnd dann gibt es noch etwas, das Donald Trump wichtig ist: Grönland ist ein guter Standort für seine Armee, die hier schon einen Stützpunkt hat, um von da aus zum Beispiel zu beobachten, was Länder wie Russland oder China machen. Für Donald Trump ist deshalb klar, dass Amerika Grönland ­haben muss. Das Problem ist nur: Die Insel gehört schon zu einem anderen Land, nämlich zu Dänemark – und das seit mehr als 200 Jahren.\n\nInzwischen können die Grönländer zwar viele Dinge selbst bestimmen, aber offiziell sind sie dänische Staatsbürger. Und die Regierung Dänemarks ist überhaupt nicht begeistert von den Plänen des US-Präsidenten. Genauso wie die Grönländer. 85 Prozent der Menschen auf der Insel sind dagegen, dass ihr Land Teil der USA wird.\n\nIst Donald Trump davon beeindruckt? Nicht unbedingt. Er bleibt bei seinen Plänen – sagt aber auch, dass nichts gegen den Willen der Grönländer passieren soll. Ob er sich an diese Aussage wirklich hält, ist schwer zu sagen. Aber wie auch immer es ausgeht: Zumindest den Robben dürfte es egal sein, wer sie künftig regiert.",
