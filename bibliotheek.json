@@ -1,6 +1,122 @@
 {
   "library": [
     {
+      "id": 1777730570328,
+      "niveau": "A2",
+      "tekst": "Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts? DEIN SPIEGEL erklärt, was der Linksverkehr mit Rittern zu tun hat – und welcher französische Kaiser für die Verbreitung des Rechtsverkehrs sorgte.\n\nIn Deutschland fahren alle rechts – aber in Ländern wie England, Australien oder In­dien fährt man auf der linken Straßenseite. Dass das so ist, hat mit Geschichte zu tun, und zwar mit der Zeit, als Menschen vor allem zu Pferd unterwegs waren. Ritter trugen ihr Schwert meistens in der rechten Hand, um damit kämpfen zu können. Also ritten sie mit ihrem Pferd auf der linken Seite der Straße – die rechte Hand mit dem Schwert zeigte zur Straße, um sich im Notfall verteidigen zu können.\n\nSpäter blieben viele Länder dabei. In Frankreich setzte sich aber vor rund 200 Jahren der Rechtsverkehr durch, und ab 1910 galt das auch für ganz Deutschland. Das lag vor allem an Napoleon, der neue Regeln machte, die er in die von ihm eroberten Gebiete trug. England blieb beim Linksverkehr, und die einstigen britischen Kolonien übernahmen das.\n\nHeute fährt man in etwa einem Viertel aller Länder links. Damit es keine Unfälle gibt, bleibt heute jedes Land bei einer Seite – egal ob links oder rechts.",
+      "titel": "Rätsel des Alltags Warum in manchen Ländern Linksverkehr herrscht",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 203,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: A2",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was wird aus dem 1. Absatz deutlich?",
+          "opties": [
+            "A Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts?",
+            "B DEIN SPIEGEL erklärt, was der Linksverkehr mit Rittern zu tun hat – und welcher französische Kaiser für die Verbreitung des Rechtsverkehrs sorgte.",
+            "C Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts?",
+            "D Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts?"
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was ist der Kerninhalt des 1. Absatzes?",
+          "opties": [
+            "A Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts?",
+            "B DEIN SPIEGEL erklärt, was der Linksverkehr mit Rittern zu tun hat – und welcher französische Kaiser für die Verbreitung des Rechtsverkehrs sorgte.",
+            "C Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts?",
+            "D Warum fahren die Briten, Australierinnen und Inder eigentlich links und wir rechts?"
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 4,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "In Deutschland fahren alle rechts – aber in Ländern wie England, Australien oder In­dien fährt man auf der linken Straßenseite.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Dass das so ist, hat mit Geschichte zu tun, und zwar mit der Zeit, als Menschen vor allem zu Pferd unterwegs waren.",
+              "antwoord": "niet",
+              "alinea": 2
+            },
+            {
+              "tekst": "Ritter trugen ihr Schwert meistens in der rechten Hand, um damit kämpfen zu können.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Also ritten sie mit ihrem Pferd auf der linken Seite der Straße – die rechte Hand mit dem Schwert zeigte zur Straße, um sich im Notfall verteidigen zu können.",
+              "antwoord": "niet",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "„In Frankreich setzte sich aber vor rund 200 Jahren der Rechtsverkehr durch, und ab 1910 galt das auch für ganz Deutschland.“ (3. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als begründung.",
+            "B als widerlegung.",
+            "C als relativierung.",
+            "D als konkretisierung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 3 die de hoofdgedachte weergeeft.",
+          "antwoord": "Später blieben",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "Wat is de hoofdgedachte van alinea 4? Schrijf één zin.",
+          "antwoord": "Heute fährt man in etwa einem Viertel aller Länder links. Damit es keine Unfälle gibt, bleibt heute jedes Land bei einer Seite – egal ob l.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777730409671,
       "niveau": "B2",
       "tekst": "In vielen Hamburger Schulen lagern Knochen, die früher im Biologieunterricht eingesetzt wurden. Bis vor 60 Jahren kamen die von Firmen, die aus den Überresten Verstorbener Lehrmittel herstellten. Die Herkunft gibt aber Rätsel auf.\n\nm Biologieraum steht eine Plastikwanne, zugedeckt mit einem weißen Tuch. Lehrer Jörg Hofmann zieht das Stück Stoff zur Seite. Da­runter liegen gräuliche Knochen, gestapelt auf zwei Schädeln. Das Skelett eines Fußes ragt über den Rand. »Kommt mal alle nach vorn«, sagt Jörg Hofmann.\n\nDie Schülerinnen und Schüler der Klasse 13 c treten an den Tisch. Koray, 18, nimmt einen der Schädel vorsichtig in die Hand. »Wie leicht er ist«, sagt er und streicht über die Oberfläche, »fühlt sich an wie glattes Holz.« Seine Klassenkameradin Samantha, 19, betrachtet einen Fuß, zusammengehalten von Schrauben. »Das ist schon ein bisschen gruselig«, sagt sie. In dem Behälter auf dem Tisch der Stadtteilschule Stellingen in Hamburg liegen menschliche Körperteile. Sie waren jahrzehntelang in den Schränken der Biologie-Materialsammlung verborgen – wie lange genau, weiß niemand.\n\nDas ist nicht ungewöhnlich: Viele Schulen besitzen Schulskelette oder Präparate wie in Konservierungsmittel eingelagerte Gehirne. Laut einer Umfrage finden sich solche Stücke in rund vier von zehn weiterführenden Schulen in Hamburg. Dort wurden 22 vollständige Skelette, 46 Schädel und 40 Organe entdeckt. Sie lagern in Schränken, auf Dachböden, in Kisten im Keller oder hinter verschlossenen Türen im Biologieraum. Man nennt sie »Human Remains«, menschliche Überreste. Doch sie sind mehr als Objekte. Jedes Teil gehörte zu einem Menschen, der geboren wurde, lebte und starb. Das Problem: Keiner weiß, zu wem. Niemand kennt ihre Namen, ihre Geschichte oder den genauen Grund, warum ihr Körper hier gelandet ist.\n\n»Als ich vor rund zwölf Jahren hier Biologielehrer wurde, habe ich alle Schränke geöffnet. Zwischen Kunststoffmodellen lagen Teile, die anders aussahen, dunkler, brüchiger. Ich habe sofort gemerkt: Das müssen Menschenknochen sein«, sagt Jörg Hofmann. Er sammelte aus verschiedenen Kästen 45 Teile ein, darunter zwei Schädel, ein Becken und ein Stück einer Wirbelsäule. »Meine ersten Gedanken waren: Woher kommen sie? Und was machen wir jetzt mit ihnen?«\n\n»Immer wieder haben sich Lehrerinnen und Lehrer an uns gewandt und gefragt, was sie mit den Überresten tun sollen«, sagt Antje Nagel. Die Wissenschaftlerin arbeitet an der Zentralstelle für wissenschaftliche Sammlungen der Universität Hamburg. Gemeinsam mit anderen Fachleuten hat sie zu den menschlichen Überresten in Schulen geforscht.\n\n»Bis vor rund 60 Jahren war es ganz normal, Knochen Verstorbener im Unterricht zur Anschauung zu nutzen«, sagt sie. Damals gab es kaum Videomaterial, keine Animationen oder künstliche 3D-Modelle von Knochen. Wer etwas über den Körper lernen wollte, musste ihn sich ansehen. Schulen konnten in Lehrmittelkata­logen ankreuzen, welche Präparate sie benötigten. Heute findet man dort Kunststoffmodelle der Lunge oder Wirbel aus Plastik.\n\nFrüher bestellte man auf diese Weise Teile von Menschen: »Es gab Firmen, die aus den Überresten Verstorbener Lehrmittel herstellten und damit handelten«, sagt Antje Nagel. Woher diese Unternehmen ihre Ware bezogen, ist heute kaum noch nachzuvollziehen: Viele existieren längst nicht mehr. Es fehlen Dokumente, die Hinweise auf die Herkunft geben könnten. Lieferanten mussten damals nicht angeben, woher sie die Körperteile hatten.\n\nDie Knochen könnten aus Ländern wie Indien oder China stammen, vermuten Fachleute. Händler kauften dort massenhaft Gebeine auf und verkauften sie mit Gewinn weiter. Auf ähnliche Weise gelangten Skelett-Teile aus Afrika, Asien und dem Pazifikraum nach Europa. Deutschland und andere europäische Länder hatten dort Kolonien – Gebiete, die sie erobert und beherrscht hatten. Reisende plünderten Gräber und raubten Skelette. In Europa wurden die Objekte ausgestellt. Teilweise wurde behauptet, an den Gebeinen könne man zeigen, dass manche Menschen weniger wert seien.\n\nAuch innerhalb Deutschlands wurde mit den Körpern von Menschen gehandelt. Starb jemand ohne Angehörige, gaben Krankenhäuser den Leichnam für wissenschaftliche Untersuchungen oder an Firmen weiter. Manche Gebeine könnten auch aus der Zeit des Nationalsozialismus und des Zweiten Weltkriegs, also aus den 1930er- und 1940er-Jahren stammen. Damals vertrieben und töteten deutsche Soldaten unter Adolf Hitler Millionen Menschen. Die Leichen der Opfer wurden ohne Zustimmung ihrer Familien an Universitäten weitergegeben. Ob sie auch in Schulen landeten, ist unklar.\n\nEines jedoch steht fest: Die Frauen, Männer und Kinder, zu denen die Überreste gehören, wurden vor ihrem Tod nicht gefragt. »Das war unrecht, verletzt die Menschenwürde und das Recht auf Selbstbestimmung«, sagt Wissenschaftlerin Antje Nagel. »Heute wäre so etwas unvorstellbar und ist zudem verboten.«\n\nAls in den Sechzigerjahren Firmen begannen, Skelette aus Plastik herzustellen, ersetzten diese zunehmend die Menschenknochen. »Die blieben oft aber trotzdem in den Schulsammlungen«, sagt Antje Nagel. Auch in der Stadtteilschule Stellingen werden die echten Knochen im Unterricht nicht eingesetzt – außer jetzt, für ein Projekt mit der 13 c.\n\nDie Abiturklasse der Stadtteilschule hat viele Fragen. »Wie ich es wohl fände, wenn ich hier liegen würde?«, sagt Schülerin Johanna. »Ich würde gern etwas über die Menschen herausfinden – das Heimatland und das Geschlecht zum Beispiel.« Die 13 c will sich nun auf Spurensuche begeben – auch wenn es sich bislang nur in ganz wenigen Einzelfällen klären ließ, zu wem die Skelette gehören. Das war nur möglich, wenn Universitäten oder Krankenhäuser dokumentiert hatten, woher der Körper stammte. Knochen, die in Schulen aufbewahrt wurden, konnten bisher noch nie einem bestimmten Menschen zugeordnet werden.\n\nDie Klasse der Stadtteilschule Stellingen will in den nächsten Monaten darüber diskutieren, was mit den Überresten geschehen soll. Begraben? Aufbewahren? Oder ihnen ein Denkmal setzen? »Die Person könnte seit über 100 Jahren tot sein. Wer weiß schon, was sie gewollt hätte?«, sagt Koray. »Sie haben es in jedem Fall verdient, dass wir ihnen Respekt entgegenbringen.«",
