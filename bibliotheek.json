@@ -1,6 +1,112 @@
 {
   "library": [
     {
+      "id": 1777730886410,
+      "niveau": "B1",
+      "tekst": "Sowohl Tiger als auch Leoparden schleichen sich bei der Jagd an ihre Beute heran. Doch während die eine Raubkatze dies im Streifen-Look tut, setzt die andere auf Fleckenmuster. Wie kommt das? DEIN SPIEGEL erklärt’s.\n\nTiger und Leoparden gehören zu den Großkatzen, haben scharfe Zähne und sind darin geübt, sich heimlich an ihre Beute anzupirschen. Eine optische Besonderheit unterscheidet die beiden: Tiger haben Streifen, Leoparden Flecken.\n\nUm zu verstehen, warum das so ist, muss man sich die Jagdgebiete der beiden Großkatzen ansehen: Tiger jagen im Dschungel oder schleichen sich in hohem Gras an ihre Beute heran. Ihre von oben nach unten verlaufenden Streifen helfen ihnen, dabei nicht entdeckt zu werden. Der Hell-Dunkel-Kontrast der schwarzen Streifen auf hellerem Fell ahmt die Umgebung nach: dunkle, Schatten spendende Bäume und helles Licht, das dazwischen hindurchfällt.\n\nAuch Leoparden sind sogenannte Lauer- und Anschleichjäger, die sich leise nähern, um dann direkt anzugreifen. Auf längeren Distanzen sind sie Beutetieren wie Gazellen in Bezug auf die Schnelligkeit nämlich unterlegen.\n\nIm Gegensatz zu Tigern jagen sie jedoch in sehr unterschiedlichen Lebensräumen – von der Savanne über Wälder bis zu Gebirgen. Dank ihrer Flecken fallen sie in einer Umgebung voller Büsche, Laub und Felsen kaum auf. Es gibt aber auch schwarze Leoparden, besser bekannt als Panther. Mit ihrem dunklen Fell sind sie perfekt an die Jagd in der Nacht angepasst.",
+      "titel": "Rätsel des Alltags: Warum haben Tiger Streifen und Leoparden Flecken?",
+      "datum": "2-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 220,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: B1",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welche Aussage stimmt mit dem 1. Absatz überein?",
+          "opties": [
+            "A Sowohl Tiger als auch Leoparden schleichen sich bei der Jagd an ihre Beute heran.",
+            "B Doch während die eine Raubkatze dies im Streifen-Look tut, setzt die andere auf Fleckenmuster.",
+            "C Wie kommt das?",
+            "D DEIN SPIEGEL erklärt’s."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was wird aus dem 1. Absatz deutlich?",
+          "opties": [
+            "A Sowohl Tiger als auch Leoparden schleichen sich bei der Jagd an ihre Beute heran.",
+            "B Doch während die eine Raubkatze dies im Streifen-Look tut, setzt die andere auf Fleckenmuster.",
+            "C Wie kommt das?",
+            "D DEIN SPIEGEL erklärt’s."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 2,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Tiger und Leoparden gehören zu den Großkatzen, haben scharfe Zähne und sind darin geübt, sich heimlich an ihre Beute anzupirschen.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Eine optische Besonderheit unterscheidet die beiden: Tiger haben Streifen, Leoparden Flecken.",
+              "antwoord": "niet",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "„Ihre von oben nach unten verlaufenden Streifen helfen ihnen, dabei nicht entdeckt zu werden.“ (3. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als beispiel.",
+            "B als widerlegung.",
+            "C als einräumung.",
+            "D als relativierung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "Citeer het woord uit alinea 4 waaruit de kerngedachte blijkt.",
+          "antwoord": "Lauer",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "Wat wordt duidelijk uit alinea 5? Beantwoord in het Nederlands.",
+          "antwoord": "Im Gegensatz zu Tigern jagen sie jedoch in sehr unterschiedlichen Lebensräumen – von der Savanne über Wälder bis zu Gebirgen. Dank ihrer Flecken fallen sie in einer Umgebung voller Büsche, Laub und Felsen k.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777730766750,
       "niveau": "B1",
       "tekst": "Kleinere Bewegungen gehören zum Schlafen dazu. Doch woher weiß der schlafende Körper, wo die Matratze endet – und wieso müssen Kinder das Nicht-aus-dem-Bett-Fallen erst lernen? DEIN SPIEGEL erklärt’s.\n\nKleine Kinder schlafen in einem Gitterbett, damit sie nicht hinausfallen. Wenn wir älter werden, brauchen wir das nicht mehr. Auch wenn wir uns nachts heftig herum­wälzen, landet höchstens die Decke auf dem Boden.\n\nUnser Schlaf teilt sich in verschiedene Phasen: den Leichtschlaf, den Tiefschlaf und den Traumschlaf. In der Leichtschlafphase können wir wach werden und uns drehen. Im Tiefschlaf bewegen wir uns kaum, und im Traumschlaf ist unser Körper nahezu bewegungsunfähig. Das ist ein Schutzmechanismus, damit wir unsere Träume nicht ausleben und uns verletzen.\n\nDoch auch im aktiveren Leichtschlaf fallen wir nicht aus dem Bett. Selbst mit geschlossenen Augen kennt unser Gehirn die Grenzen des Betts. Unterstützt wird es dabei von kleinen Sensoren in unseren Muskeln, Sehnen und Gelenken. Die melden, wie wir gerade liegen, ob wir uns drehen oder ob ein Bein aus dem Bett baumelt. Besteht Sturzgefahr, wird das Signal: »Achtung, sofort zurückdrehen!« gesendet, während wir einfach weiterschlummern.\n\nDas Gehirn von Babys muss das Zusammenspiel mit den Sensoren erst noch lernen. Aber auch bei Erwachsenen kann der Schutzmechanismus gestört sein: etwa durch Alkoholkonsum. Und auch ältere Menschen können leichter aus dem Bett fallen.",
