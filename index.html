@@ -981,7 +981,7 @@ async function jbLoad(){
     if(currentMode==='teacher'){
       const meta=await r.json();
       ghFileSha=meta.sha;
-    data=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+   data=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
     }else{
       data=await r.json();
     }
