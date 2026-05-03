@@ -1,6 +1,95 @@
 {
   "library": [
     {
+      "id": 1777794875959,
+      "niveau": "A1",
+      "tekst": "Mein Name ist Anna. Ich komme aus Österreich und lebe seit drei Jahren in Deutschland. Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael ist 18 Jahre alt. Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München. Meine Mutter ist Köchin, mein Vater arbeitet in einer Bank.\n\nIch lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen. Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik. Physik und Chemie mag ich nicht so gerne.\n\nNach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis. Am Samstag gehen wir oft ins Kino. Am Sonntag schlafe ich lange, dann koche ich mit meiner Mutter das Mittagessen. Nach dem Essen gehen wir mit dem Hund am See spazieren. Sonntag ist mein Lieblingstag!",
+      "titel": "Wer bist du? - Anna aus Österreich",
+      "datum": "3-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 153,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: A1",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Wat maakt de tekst duidelijk over alinea 1?",
+          "opties": [
+            "A Mein Name ist Anna.",
+            "B Ich komme aus Österreich und lebe seit drei Jahren in Deutschland.",
+            "C Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael ist 18 Jahre alt.",
+            "D Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welke uitspraak past bij alinea 1?",
+          "opties": [
+            "A Mein Name ist Anna.",
+            "B Ich komme aus Österreich und lebe seit drei Jahren in Deutschland.",
+            "C Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael ist 18 Jahre alt.",
+            "D Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 3,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik.",
+              "antwoord": "niet",
+              "alinea": 2
+            },
+            {
+              "tekst": "Physik und Chemie mag ich nicht so gerne.",
+              "antwoord": "wel",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "Hoe reageert de auteur in alinea 3? Beantwoord in het Nederlands.",
+          "antwoord": "Nach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis. Am Samstag gehen wir oft ins Kino.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777794751833,
       "niveau": "A2",
       "tekst": "Reyad Danhar aus Syrien hat in Deutschland eine bessere Zukunft gesucht – und sie auch gefunden. Er ist Koch und hat einen Michelin-Stern bekommen. Hier erzählt er seine Geschichte. \n\nIch komme aus Damaskus und lebe heute in Wuppertal in Nordrhein-Westfalen – dazwischen liegt aber eine lange Reise. Als in Syrien im Jahr 2011 der Bürgerkrieg begann, wurde mir klar: In diesem Land gibt es keine Zukunft für mich. \n\nIch floh in den Libanon. Dort verdiente ich mein Geld als Barista und Fooddesigner. Doch mit der Zeit wurde es auch dort unsicher. Ich flog nach Brasilien, fand dort aber keine Arbeit. \n\nAlso reiste ich weiter nach Algerien, Tunesien, Libyen. Ich wollte nach Deutschland. Ein Bekannter hatte dort in den 80er-Jahren gearbeitet und mir viel von der deutschen Mentalität und dem guten Leben dort erzählt. \n\nIch kontaktierte einen Schmuggler, der Boote für die Flucht nach Europa organisierte. Um fünf Uhr morgens begann die Reise. Um mich herum schrien die Babys, Frauen weinten. Ich hatte noch nie solche Angst. Dann trafen wir ein großes Schiff. Es nahm die Frauen und Kinder auf und rief die italienische Marine, die uns in einem Militärschiff abholte. \n\nVon Italien fuhr ich mit dem Zug nach Deutschland. Als ich zum ersten Mal die schwarz-rot-goldene Fahne sah, wusste ich: Ich bin endlich angekommen, hier kann meine Zukunft beginnen. Den Deutschen wollte ich etwas kochen, das sie noch nie gegessen haben\n\nZuerst besuchte ich einen Sprachkurs. Weil ich schon immer gerne in der Küche stand, machte ich eine Ausbildung zum Koch. Ich wollte mir meine eigenen Gerichte überlegen. Den Deutschen wollte ich etwas kochen, das sie noch nie gegessen haben. Ich arbeitete hart, bis ich Küchenchef des Wuppertaler Restaurants Shiraz wurde. \n\nIch glaube, dass man erst glücklich mit seinem Leben ist, wenn man etwas Großes erreicht hat. Also stellte ich mir selbst die Aufgabe, einen Michelin-Stern zu bekommen – und ich schaffte es. Andere Köchinnen finden mich chaotisch. Ich koche nicht nach Rezept, sondern nach Gefühl und Erinnerung. Trotzdem bin ich perfektionistisch. Ich glaube, das und die Kombination mit der orientalischen Küche machen meine Gerichte anders als alle anderen. \n\nMein nächstes Ziel ist es, unter die 100 besten Köche der Welt zu kommen. Ich möchte Anerkennung. Als Flüchtling bekommt man die selten. Wenn ich das geschafft habe, bin ich zufrieden mit mir. Dann höre ich vielleicht auf mit der stressigen Sterneküche, starte ein kleines Restaurant und koche nur noch Eintöpfe.",
