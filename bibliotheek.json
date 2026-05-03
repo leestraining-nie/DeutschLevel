@@ -1,6 +1,122 @@
 {
   "library": [
     {
+      "id": 1777801107134,
+      "niveau": "B2",
+      "tekst": "Miron Muslić führt Schalke 04 vielleicht schon an diesem Wochenende zurück in die Bundesliga. Und ein anderer Klub sucht Hilfe bei Katja Ebstein. Der 32. Spieltag.\n\nWelches Spiel dürfen Sie auf keinen Fall verpassen?\nHoffenheim gegen Stuttgart. Die Meisterschaft ist längst entschieden und gefeiert, Bundesligafans müssen sich an der Tabellenspitze andere Pulstreiber suchen. Und das Duell der Kraichgauer gegen die Schwaben ist eines um die Champions League. Aktuell würde sich der VfB als Vierter dafür noch qualifizieren. Allerdings haben die Stuttgarter ein schweres Restprogramm, sie spielen noch gegen die drei Mannschaften, die direkt hinter ihnen liegen (neben Hoffenheim sind das Leverkusen und Frankfurt). Und die TSG ist nur vier Tore schlechter, könnte mit einem Sieg also am VfB vorbeiziehen. Nicht ausgeschlossen, dass die Bundesliga nächste Saison im wichtigsten europäischen Wettbewerb von einem Klub vertreten wird, dessen Logo aussieht, als hätte sich ein Zehnjähriger im Fußballmanagerspiel dafür ein bisschen zu wenig Zeit genommen.\n\nWelches Spiel können Sie mit gutem Gewissen verpassen?\nBayern gegen Heidenheim. Für den Meister geht es in der Liga nur noch um Rekorde, für die Heidenheimer um alles – bei einer Niederlage könnten sie schon an diesem Wochenende absteigen. Und sind wir ehrlich, ein Sieg ist selbst gegen die B-Elf der Bayern schwer vorstellbar. Auch wenn Heidenheim zwei der letzten drei Spiele gewonnen hat, müssen wir vermutlich nach drei Jahren Abschied nehmen vom Dorfklub, der es bis in die Conference League geschafft hat. Nur 1,77 Prozent betrage die Wahrscheinlichkeit, dass es die Heidenheimer noch auf den Relegationsplatz schaffen, haben die Datenanalytiker von Opta errechnet. Weniger wahrscheinlich, als zwei Sechsen hintereinander zu würfeln. Frank Schmidt will trotzdem »das ganz Verrückte schaffen«. Die Heidenheimer Zeitung sieht nur noch einen Weg, sie sucht Hilfe bei Katja Ebstein und titelt: »Wunder gibt es immer wieder«.\n\nWer steht im Blickpunkt?\nDer FC Schalke 04. Nach drei Jahren in der zweiten Liga kehrt die Macht aus dem Revier vielleicht schon an diesem Samstag zurück in die Bundesliga. Wo der sechstgrößte Fußballklub der Welt auch hingehört, das werden selbst Dortmunder zugeben. Vergangene Saison drohte der Absturz in die dritte Liga. Nun wäre mit einem Sieg gegen Fortuna Düsseldorf der Aufstieg sicher. Die letzten vier Spiele hat Schalke gewonnen. Die Fans zweifeln nicht mehr, zu den Trainings auf Schalke kommen Hunderte. Ihr Held ist der Trainer Miron Muslić. Der bosnische Tiroler, der mit seiner kumpelhaften, fröhlichen Art perfekt nach Gelsenkirchen zu passen scheint, ist auf dem Weg, der beliebteste Schalketrainer seit Huub Stevens zu werden. Zur Pressekonferenz vor dem Spiel kam er mit einem Shirt, das ihm die Ultras zu Weihnachten geschenkt hatten. Die größte Sorge der Schalker vor dem Wochenende: ein Platzsturm der Fans. Beim Aufstieg vor vier Jahren gab es viele Verletzte, denn die Tribüne in der Schalker Arena liegt mehrere Meter über dem Spielfeld. Muslić: »Es ist ein absolutes No-Go, dass der Platz gestürmt wird.« Die Schalker müssen also etwas tun, das vielleicht noch schwerer ist, als aufzusteigen: Sie müssen den Aufstieg mit Bedacht feiern.\n\nWorüber haben in dieser Woche alle geredet?\nÜber zwei sehr unterschiedliche, aber jeweils tolle Champions-League-Halbfinals. Aber leider redete man nicht nur über die völlig entfesselten Offensiven von PSG und den Bayern oder die etwas weniger entfesselten Teams von Atlético Madrid und Arsenal, sondern auch – mal wieder – über den VAR. Der muss sich selbst bei zwei solchen Spielen in den Vordergrund drängen. Mehrmals griff der VAR ein, manchmal zu Recht, wie beim 4:5 der Bayern, das kein Abseits war. Oder beim Handelfmeter für Atlético, der zum Ausgleich führte. Er führte aber auch mal wieder zu endlosen Debatten, die niemanden glücklich machen. Etwa wegen des Handelfmeters gegen Alphonso Davies. Der gute Schiedsrichter Sandro Schärer hatte weiterlaufen lassen, nach dem Videogucken aber doch den Elfmeter gegeben, den der ehemalige Schiri Manuel Gräfe bei Bild »als nicht im Sinne des Fußballs« bezeichnete. Und in Madrid nahm der Schiedsrichter Danny Makkelie einen Elfmeter für Arsenal zurück. Den minimalen Fußkontakt musste man nicht pfeifen, konnte man aber. Viel mehr Foul war der Elfmeter, den Arsenal tatsächlich bekam, auch nicht. Der Videobeweis ist und bleibt die größte Nervensäge des Fußballs.",
+      "titel": "Auf diesen Trainer hat Schalke gewartet",
+      "datum": "3-5-2026",
+      "analysis": {
+        "niveau": "B1",
+        "betrouwbaarheid": 72,
+        "kansen": {
+          "A1": 2,
+          "A2": 9,
+          "B1": 48,
+          "B2": 30,
+          "C1": 9,
+          "C2": 2
+        },
+        "woordenschat": "gemiddeld",
+        "zinsbouw": "matig complex",
+        "woordenAantal": 677,
+        "gemZinlengte": 12,
+        "vreemdeWoorden": [],
+        "toelichting": "Demo-resultaat."
+      },
+      "bron": "LLE: B2",
+      "vragen": [
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welche Aussage stimmt mit dem 1. Absatz überein?",
+          "opties": [
+            "A Miron Muslić führt Schalke 04 vielleicht schon an diesem Wochenende zurück in die Bundesliga.",
+            "B Und ein anderer Klub sucht Hilfe bei Katja Ebstein.",
+            "C Der 32.",
+            "D Spieltag."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Welche Aussage stimmt mit dem 1. Absatz überein?",
+          "opties": [
+            "A Miron Muslić führt Schalke 04 vielleicht schon an diesem Wochenende zurück in die Bundesliga.",
+            "B Und ein anderer Klub sucht Hilfe bei Katja Ebstein.",
+            "C Der 32.",
+            "D Spieltag."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "bewering",
+          "punten": 4,
+          "context": "Absatz 2",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 2.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "Welches Spiel dürfen Sie auf keinen Fall verpassen?",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Hoffenheim gegen Stuttgart.",
+              "antwoord": "niet",
+              "alinea": 2
+            },
+            {
+              "tekst": "Die Meisterschaft ist längst entschieden und gefeiert, Bundesligafans müssen sich an der Tabellenspitze andere Pulstreiber suchen.",
+              "antwoord": "wel",
+              "alinea": 2
+            },
+            {
+              "tekst": "Und das Duell der Kraichgauer gegen die Schwaben ist eines um die Champions League.",
+              "antwoord": "niet",
+              "alinea": 2
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 3",
+          "vraag": "„Bayern gegen Heidenheim.“ (3. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als konkretisierung.",
+            "B als widerlegung.",
+            "C als gegensatz.",
+            "D als einräumung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 4 die de hoofdgedachte weergeeft.",
+          "antwoord": "Wer steht",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 5",
+          "vraag": "Wat wordt duidelijk uit alinea 5? Beantwoord in het Nederlands.",
+          "antwoord": "Worüber haben in dieser Woche alle geredet?. Über zwei sehr unterschiedliche, aber jeweils tolle Champions-League-Halbfinals.",
+          "uitleg": ""
+        }
+      ]
+    },
+    {
       "id": 1777800888173,
       "niveau": "B2",
       "tekst": "Seit Januar befragt die Bundeswehr 18-jährige Männer und Frauen zu Eignung und Motivation für den Wehrdienst. Bislang wurden rund 200.000 Briefe verschickt.\n\nSeit dem 15. Januar erhalten 18-jährige Männer und Frauen Anschreiben von der Bundeswehr, durch die mehr junge Menschen für den Wehrdienst gewonnen werden sollen. Nach Angaben des Verteidigungsministeriums hat die Bundeswehr bis zum 24. April 194.000 solcher Briefe verschickt.\n\nSie enthalten unter anderem QR-Codes, die auf einen Online-Fragebogen weiterleiten. Darin wird unter anderem abgefragt, ob die Angeschriebenen einen Wehrdienst leisten würden. Auch persönliche Daten müssen eingetragen werden, sowie Angaben zu Schul- und Berufsausbildung, weiteren Qualifikationen und eine Selbsteinschätzung zur körperlichen Fitness. Die Anschreiben richten sich an alle Männer und Frauen, die 2026 volljährig werden und sollen den Angaben zufolge jungen Menschen frühzeitig Orientierung bieten und zugleich die »personelle Einsatzbereitschaft der Bundeswehr« langfristig stärken. Männer müssen den Fragebogen beantworten, für Frauen ist das Ausfüllen freiwillig. Der Wehrdienst bleibt freiwillig.\n\nZur Resonanz auf die Aktion ließen sich derzeit noch keine verlässlichen Aussagen machen, so eine Sprecherin des Verteidigungsministeriums. Das liege unter anderem an dem sukzessiven Versand der Anschreiben sowie den unterschiedlichen Fristen für den Rücklauf. »Valide Rückschlüsse« seien erst im Laufe des Jahres möglich.\n\nNeues Wehrdienst-Gesetz seit Januar in Kraft\nDie Maßnahme ist Teil des Wehrdienst-Modernisierungsgesetzes, das der Bundestag Ende des vergangenen Jahres beschlossen hatte und das am 1. Januar in Kraft getreten ist. Ziel des Gesetzes es, die Personalstärke der Bundeswehr bis 2035 auf 260.000 Soldatinnen und Soldaten zu erhöhen. Auch die Zahl der Reservisten soll wachsen – auf 200.000 Männer und Frauen.\n\nUnterdessen steigt die Zahl der Anträge auf Kriegsdienstverweigerung in Deutschland. Im ersten Quartal 2026 hätten bereits mehr als 2.600 Menschen einen entsprechenden Antrag gestellt, berichtete die Neue Osnabrücker Zeitung unter Berufung auf Angaben des Bundesamtes für Familie und zivilgesellschaftliche Aufgaben Ende April. Im Jahr 2024 hatten nach Angaben der Bundesregierung insgesamt 2.998 Menschen einen Antrag auf Kriegsdienstverweigerung gestellt, 2025 waren es 3.867 Anträge.",
