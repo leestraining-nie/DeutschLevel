@@ -80,27 +80,86 @@
       "bron": "LLE: A2",
       "vragen": [
         {
-          "type": "open",
-          "punten": 2,
-          "context": "Alinea 1",
-          "vraag": "Wat wordt duidelijk uit de eerste alinea?",
-          "antwoord": "Klik op \"Analyseer & genereer\" om echte vragen te genereren op basis van de tekst.",
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 1",
+          "vraag": "Was wird aus dem 1. Absatz deutlich?",
+          "opties": [
+            "A Dennis Schröder ist der Kapitän der Basketball-Nationalmannschaft.",
+            "B Mit Adrian, 12 Jahre alt, und Fabian, 13, sprach er über seine Heimatstadt Braunschweig, Skateboardfahren und die anstehende Europameisterschaft.",
+            "C Dennis Schröder ist der Kapitän der Basketball-Nationalmannschaft.",
+            "D Dennis Schröder ist der Kapitän der Basketball-Nationalmannschaft."
+          ],
+          "antwoord": "A",
           "uitleg": ""
         },
         {
-          "type": "open",
-          "punten": 2,
-          "context": "Alinea 2",
-          "vraag": "Wat noemt de auteur in alinea 2?",
-          "antwoord": "Klik op \"Analyseer & genereer\" om echte vragen te genereren op basis van de tekst.",
+          "type": "mc",
+          "punten": 1,
+          "context": "Absatz 4",
+          "vraag": "Welche Aussage stimmt mit dem 4. Absatz überein?",
+          "opties": [
+            "A DEIN SPIEGEL: Fällt es dir schwer, mit Niederlagen umzugehen?",
+            "B Schröder: Mittlerweile nicht mehr.",
+            "C Früher war das anders, da war ich ein ziemlicher Hitzkopf.",
+            "D Als Kind habe ich oft geweint oder war wütend, wenn ich ein Basketballspiel verloren habe."
+          ],
+          "antwoord": "A",
           "uitleg": ""
         },
         {
-          "type": "open",
+          "type": "bewering",
           "punten": 3,
-          "context": "Hele tekst",
-          "vraag": "Wat is de hoofdgedachte van de tekst?",
-          "antwoord": "Klik op \"Analyseer & genereer\" om echte vragen te genereren op basis van de tekst.",
+          "context": "Absatz 8",
+          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 8.\nNoteer 'wel' of 'niet'.",
+          "beweringen": [
+            {
+              "tekst": "DEIN SPIEGEL: Wie findest du es, dass Basketballer in der NBA kaum mitbestimmen können, bei welchem Team sie spielen?",
+              "antwoord": "wel",
+              "alinea": 8
+            },
+            {
+              "tekst": "Schröder: Das ist das Einzige, was mir an der Liga nicht so gut gefällt.",
+              "antwoord": "niet",
+              "alinea": 8
+            },
+            {
+              "tekst": "Die Teams können mit uns Spielern machen, was sie wollen.",
+              "antwoord": "wel",
+              "alinea": 8
+            }
+          ],
+          "antwoord": "",
+          "uitleg": ""
+        },
+        {
+          "type": "relatie",
+          "punten": 1,
+          "context": "Absatz 12",
+          "vraag": "„Ich bin als dunkelhäutiger Junge in Braunschweig aufgewachsen.“ (12. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
+          "opties": [
+            "A als konkretisierung.",
+            "B als beispiel.",
+            "C als gegensatz.",
+            "D als schlussfolgerung."
+          ],
+          "antwoord": "A",
+          "uitleg": ""
+        },
+        {
+          "type": "citeer",
+          "punten": 1,
+          "context": "Absatz 15",
+          "vraag": "Citeer de eerste twee woorden van de zin in alinea 15 die de hoofdgedachte weergeeft.",
+          "antwoord": "Und sie",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 1,
+          "context": "Absatz 19",
+          "vraag": "Hoe reageert de auteur in alinea 19? Beantwoord in het Nederlands.",
+          "antwoord": "DEIN SPIEGEL: Bei der Eröffnungsfeier der Olympischen Spiele warst du Fahnenträger. Wie hat sich das angefühlt?.",
           "uitleg": ""
         }
       ]
