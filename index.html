@@ -1764,93 +1764,256 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 // ════ OFFLINE CITO ENGINE (werkende vraagengenerator) ════
-var CONN_VWO_E=["Dennoch","Jedenfalls","Tatsächlich","Zugleich","Hingegen","Allerdings","Vielmehr","Außerdem","Deshalb","Jedoch","Obwohl","Trotzdem","Stattdessen","Inzwischen","Schließlich"];
-var RELATIES_E=["Beispiel","Begründung","Gegensatz","Konkretisierung","Relativierung","Schlussfolgerung","Steigerung","Widerlegung","Einräumung","Verallgemeinerung"];
-var TONEN_E=["Ironie","Enttäuschung","Skepsis","Zuversicht","Kritik","Staunen","Gleichgültigkeit","Begeisterung","Humor","Sorge","Ablehnung","Erleichterung"];
+// ════ OFFLINE CITO ENGINE v2 — leest echte tekst-inhoud ════
+
 function offlineShuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function offlineRnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+// ── Tekst analyseren: echte feiten, getallen, namen, zinnen extraheren ──
 function offlineAnalyseer(tekst){
   var alineas=tekst.split(/\n\s*\n/).map(function(a){return a.trim();}).filter(function(a){return a.length>30;});
   if(!alineas.length) alineas=[tekst];
-  var alineaZinnen=alineas.map(function(a){return a.match(/[^.!?]+[.!?]+/g)||[a];});
-  var kortZinnen=[];
-  alineaZinnen.forEach(function(zinnen,ai){zinnen.forEach(function(z){var zz=z.trim();if(zz.length>15&&zz.length<90)kortZinnen.push({zin:zz,alinea:ai+1});});});
-  return {alineas:alineas,alineaZinnen:alineaZinnen,kortZinnen:kortZinnen};
+
+  var alineaData=alineas.map(function(al,idx){
+    var zinnen=(al.match(/[^.!?]+[.!?]+/g)||[al]).map(function(z){return z.trim();}).filter(function(z){return z.length>10;});
+    // Extraheer getallen (feiten)
+    var getallen=(al.match(/\d+[\.,]?\d*/g)||[]);
+    // Extraheer namen (woorden met hoofdletter niet aan begin zin)
+    var namen=(al.match(/(?<![.!?]\s)[A-ZÄÖÜ][a-zäöüß]{2,}/g)||[]).filter(function(w){
+      return !['Der','Die','Das','Ein','Eine','Aber','Und','Oder','Auch','Doch','Nach','Seit','Beim','Beim','Für','Mit','Von','Als','Wenn','Weil','Dass','Wie','Was','Wer','Wo','Dann','Noch','Nicht','Denn','Schon'].includes(w);
+    });
+    // Langste zin = waarschijnlijk informatief
+    var langsteZin=zinnen.slice().sort(function(a,b){return b.length-a.length;})[0]||al.substring(0,120);
+    // Kortste informatieve zin voor citeer
+    var kortInfoZin=zinnen.filter(function(z){return z.length>20&&z.length<100;}).sort(function(a,b){return a.length-b.length;})[0]||zinnen[0]||al.substring(0,80);
+    // Woordgroepen voor citeer (2-4 woorden)
+    var woordgroepen=[];
+    var ws=al.replace(/[.,;:!?()"""]/g,' ').split(/\s+/).filter(function(w){return w.length>4;});
+    for(var i=0;i<ws.length-2;i++) woordgroepen.push(ws[i]+' '+ws[i+1]+(ws[i+2]?' '+ws[i+2]:''));
+
+    return {
+      nr:idx+1, tekst:al, zinnen:zinnen,
+      eersteZin:zinnen[0]||al.substring(0,100),
+      langsteZin:langsteZin, kortInfoZin:kortInfoZin,
+      getallen:getallen, namen:namen,
+      woordgroepen:woordgroepen,
+      kernWoorden:ws.slice(0,10)
+    };
+  });
+
+  return {alineas:alineas, data:alineaData};
 }
-function vollZinE(zin){var z=(zin||'').trim();if(z.endsWith('.')||z.endsWith('!')||z.endsWith('?'))return z;return z+'.';}
-function offlineMaakMC(an,ai,niv){
-  var zinnen=an.alineaZinnen[ai]||[];var n=ai+1;
-  var vwoQ=["Was wird aus dem "+n+". Absatz deutlich?","Welche Aussage stimmt mit dem "+n+". Absatz überein?","Was ist die Kernaussage des "+n+". Absatzes?"];
-  var havoQ=["Welche Aussage stimmt mit dem "+n+". Absatz überein?","Was wird aus dem "+n+". Absatz deutlich?","Was ist der Kerninhalt des "+n+". Absatzes?"];
-  var vmboQ=["Wat maakt de tekst duidelijk over alinea "+n+"?","Welke uitspraak past bij alinea "+n+"?","Was wird in Absatz "+n+" deutlich?"];
-  var pool=(niv==='C1'||niv==='C2')?vwoQ:(niv==='B2')?havoQ:vmboQ;
+
+// ── MC-vraag: correct antwoord = eerste zin alinea, afleiders = zinnen andere alinea's ──
+function offlineMaakMC(an, ai, niveau){
+  var d=an.data[ai]; var n=d.nr;
+  var vragen={
+    'A1':['Wat maakt de tekst duidelijk over alinea '+n+'?','Welke uitspraak past bij alinea '+n+'?'],
+    'A2':['Welke Aussage passt zu Absatz '+n+'?','Was wird aus Absatz '+n+' deutlich?'],
+    'B1':['Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was wird aus dem '+n+'. Absatz deutlich?','Welche Aussage trifft auf Absatz '+n+' zu?'],
+    'B2':['Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was wird aus dem '+n+'. Absatz deutlich?','Was ist die Kernaussage des '+n+'. Absatzes?'],
+    'C1':['Was kann man aus dem '+n+'. Absatz schließen?','Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was wird aus dem '+n+'. Absatz deutlich?']
+  };
+  var pool=vragen[niveau]||vragen['B1'];
   var vraag=offlineRnd(pool);
-  var corr=vollZinE(zinnen[0]||an.alineas[ai].split('.')[0]||an.alineas[ai].substring(0,80));
-  var afl1=vollZinE(zinnen[1]||zinnen[0]||an.alineas[ai].split('.')[1]||an.alineas[ai].substring(20,90));
-  var afl2=vollZinE(zinnen[2]||zinnen[0]||an.alineas[ai].split('.')[2]||an.alineas[ai].substring(10,85));
-  var afl3=vollZinE(zinnen[3]||zinnen[0]||an.alineas[ai].split('.')[0]||an.alineas[ai].substring(5,75));
-  var optsArr=[corr,afl1,afl2,afl3];
-  var opties=optsArr.map(function(o,i){return 'ABCD'[i]+' '+o;});
-  return {type:'mc',punten:1,context:'Absatz '+n,vraag:vraag,opties:opties,antwoord:'A',uitleg:''};
+
+  // Correct antwoord: echte zin uit deze alinea
+  var corr=d.eersteZin.length>20?d.eersteZin:d.langsteZin;
+  if(corr.length>120) corr=corr.substring(0,117)+'…';
+
+  // Afleiders: zinnen uit ANDERE alinea's (niet dezelfde)
+  var andreAl=an.data.filter(function(_,i){return i!==ai;});
+  var afl=[];
+  andreAl.forEach(function(ad){if(afl.length<3&&ad.zinnen.length){var z=ad.zinnen[0];if(z&&z.length>15){if(z.length>120)z=z.substring(0,117)+'…';afl.push(z);}}});
+  // Vul aan met varianten als er te weinig andere alinea's zijn
+  while(afl.length<3){
+    var zinIdx=afl.length+1;
+    var z=d.zinnen[zinIdx]||d.langsteZin;
+    if(z.length>120)z=z.substring(0,117)+'…';
+    afl.push(z);
+  }
+
+  var alleOpties=offlineShuffle([corr].concat(afl.slice(0,3)));
+  var corrLetter='ABCD'[alleOpties.indexOf(corr)];
+  var opties=alleOpties.map(function(o,i){return 'ABCD'[i]+' '+o;});
+
+  return {type:'mc',punten:1,context:'Alinea '+n,vraag:vraag,opties:opties,antwoord:corrLetter,uitleg:'Het correcte antwoord staat in alinea '+n+' van de tekst.'};
 }
-function offlineMaakBewering(an,ai){
-  var zinnen=an.alineaZinnen[ai]||[];var n=ai+1;
-  var num=Math.min(3+(Math.random()>0.5?1:0),zinnen.length||3);
-  var bew=[];
-  for(var i=0;i<num;i++){var z=(zinnen[i]||an.alineas[ai].substring(i*25,i*25+60)).trim();bew.push({tekst:vollZinE(z),antwoord:i%2===0?'wel':'niet',alinea:n});}
-  return {type:'bewering',punten:num,context:'Absatz '+n,vraag:"Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea "+n+".\nNoteer 'wel' of 'niet'.",beweringen:bew,antwoord:'',uitleg:''};
+
+// ── Bewering-vraag: echte feiten = wel, verdraaide feiten = niet ──
+function offlineMaakBewering(an, ai){
+  var d=an.data[ai]; var n=d.nr;
+  var zinnen=d.zinnen.filter(function(z){return z.length>15;});
+  if(zinnen.length<2) zinnen=[d.eersteZin, d.langsteZin, d.kortInfoZin];
+
+  var beweringen=[];
+  var welCount=0; var nietCount=0;
+
+  // Maak 3-4 beweringen: afwisselend wel en niet
+  var targets=Math.min(zinnen.length, 4);
+  for(var i=0;i<targets;i++){
+    var z=zinnen[i]||d.eersteZin;
+    if(z.length>100) z=z.substring(0,97)+'…';
+    var isWel=(i%2===0); // afwisselend
+    var tekst=z;
+    if(!isWel){
+      // Draai de bewering om: vervang getal of neem tegenovergestelde
+      if(d.getallen.length>0){
+        // Vervang een getal door een ander
+        var wrongNum=parseInt(d.getallen[0]||'10')*2+'';
+        tekst=z.replace(/\d+[\.,]?\d*/,wrongNum);
+        if(tekst===z) tekst='Niet: '+z.substring(0,60)+'…'; // fallback
+      } else if(d.namen.length>1){
+        // Wissel twee namen om
+        tekst=z.replace(d.namen[0],d.namen[1]||'iemand anders');
+      } else {
+        tekst=z.substring(0,30)+'… wordt in de tekst niet vermeld.';
+      }
+      nietCount++;
+    } else {
+      welCount++;
+    }
+    beweringen.push({tekst:tekst, antwoord:isWel?'wel':'niet'});
+  }
+
+  // Zorg voor minimaal 1 wel en 1 niet
+  if(welCount===0 && beweringen.length>0) beweringen[0].antwoord='wel';
+  if(nietCount===0 && beweringen.length>1) beweringen[1].antwoord='niet';
+
+  return {
+    type:'bewering', punten:1,
+    context:'Alinea '+n,
+    vraag:"Geef van elk van de volgende beweringen aan of deze overeenkomt met alinea "+n+". Noteer 'wel' of 'niet'.",
+    beweringen:beweringen,
+    uitleg:'Controleer elk antwoord in alinea '+n+' van de tekst.'
+  };
 }
-function offlineMaakCiteer(an,ai){
-  var kz=an.kortZinnen.filter(function(z){return z.alinea===ai+1;});var n=ai+1;
-  if(!kz.length){var ws=(an.alineas[ai].match(/[A-Za-z\u00c0-\u017e]{4,}/g)||['Beispiel']);return {type:'citeer',punten:1,context:'Absatz '+n,vraag:'Citeer het woord uit alinea '+n+' waaruit de kerngedachte blijkt.',antwoord:offlineRnd(ws.slice(0,5)),uitleg:''};}
-  var g=offlineRnd(kz);var tw=g.zin.trim().split(/\s+/).slice(0,2).join(' ');
-  return {type:'citeer',punten:1,context:'Absatz '+n,vraag:'Citeer de eerste twee woorden van de zin in alinea '+n+' die de hoofdgedachte weergeeft.',antwoord:tw,uitleg:''};
+
+// ── Citeer-vraag: exacte woordgroep uit de tekst ──
+function offlineMaakCiteer(an, ai){
+  var d=an.data[ai]; var n=d.nr;
+
+  // Kies een informatieve woordgroep (bij voorkeur met een kernwoord)
+  var wg=d.woordgroepen.filter(function(w){return w.length>8&&w.length<40;});
+  var citaat=offlineRnd(wg)||d.kortInfoZin.split(' ').slice(0,3).join(' ');
+
+  // Nederlandse omschrijving genereren (simpele benadering)
+  var nl_omschrijvingen=[
+    'de hoofdgedachte van de alinea',
+    'de kernboodschap van de auteur',
+    'de samenvatting van dit deel',
+    'wat de auteur hiermee bedoelt',
+    'de belangrijkste conclusie hier'
+  ];
+  var vraagOmschr=offlineRnd(nl_omschrijvingen);
+
+  return {
+    type:'citeer', punten:1,
+    context:'Alinea '+n,
+    vraag:"Citeer de woordgroep uit alinea "+n+" die overeenkomt met '"+vraagOmschr+"'.",
+    antwoord:citaat,
+    uitleg:"Deze woordgroep staat letterlijk in alinea "+n+" van de tekst."
+  };
 }
-function offlineMaakRelatie(an,ai){
-  var n=ai+1;var zinnen=an.alineaZinnen[ai]||[];
-  var z2=vollZinE((zinnen[1]||'de tweede zin').trim());
-  var correct=offlineRnd(RELATIES_E);
-  var vier=[correct].concat(offlineShuffle(RELATIES_E.filter(function(r){return r!==correct;})).slice(0,3));
-  var opties=vier.map(function(r,i){return 'ABCD'[i]+' als '+r.toLowerCase()+'.'});
-  return {type:'relatie',punten:1,context:'Absatz '+n,vraag:'\u201e'+z2+'\u201c ('+n+'. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?',opties:opties,antwoord:'ABCD'[vier.indexOf(correct)],uitleg:''};
+
+// ── Open vraag: modelantwoord uit echte zinnen ──
+function offlineMaakOpen(an, ai){
+  var d=an.data[ai]; var n=d.nr;
+  var zinnen=d.zinnen.filter(function(z){return z.length>20;});
+
+  var vraagPats=[
+    {v:"Wat wordt duidelijk uit alinea "+n+"? Beantwoord in het Nederlands.", p:1},
+    {v:"Wat is de hoofdgedachte van alinea "+n+"? Schrijf één zin in het Nederlands.", p:1},
+    {v:"Welke informatie geeft de auteur in alinea "+n+"? Beantwoord in het Nederlands.", p:1},
+    {v:"Om welke reden(en) gaat het in alinea "+n+"? Beantwoord in het Nederlands.", p:2}
+  ];
+  // Kies 2p vraag vaker bij B2/C1
+  var pat=offlineRnd(vraagPats);
+
+  // Modelantwoord: eerste 1-2 informatieve zinnen
+  var ant=(zinnen[0]||d.eersteZin);
+  if(ant.length>150) ant=ant.substring(0,147)+'…';
+  if(pat.p===2&&zinnen[1]){
+    var ant2=zinnen[1]; if(ant2.length>100) ant2=ant2.substring(0,97)+'…';
+    ant+=' '+ant2;
+  }
+
+  return {
+    type:'open', punten:pat.p,
+    context:'Alinea '+n,
+    vraag:pat.v,
+    antwoord:ant,
+    uitleg:'Het antwoord staat in alinea '+n+' van de tekst.'
+  };
 }
-function offlineMaakToon(an,ai){
-  var n=ai+1;var zinnen=an.alineaZinnen[ai]||[];
-  var _tz=(offlineRnd(zinnen.length?zinnen:[''])||'').trim();var z=_tz?vollZinE(_tz):'de zin in de tekst';
-  var correct=offlineRnd(TONEN_E);
-  var vier=[correct].concat(offlineShuffle(TONEN_E.filter(function(t){return t!==correct;})).slice(0,3));
-  var opties=vier.map(function(t,i){return 'ABCD'[i]+' '+t;});
-  return {type:'toon',punten:1,context:'Absatz '+n,vraag:'\u201e'+z+'\u201c ('+n+'. Absatz)\nWas spricht aus diesem Satz?',opties:opties,antwoord:'ABCD'[vier.indexOf(correct)],uitleg:''};
+
+// ── Tekstrelatie: koppel twee opeenvolgende zinnen ──
+function offlineMaakRelatie(an, ai){
+  var d=an.data[ai]; var n=d.nr;
+  var zinnen=d.zinnen;
+  var zA=zinnen[0]||d.eersteZin;
+  var zB=zinnen[1]||d.langsteZin;
+  if(zA.length>80) zA=zA.substring(0,77)+'…';
+  if(zB.length>80) zB=zB.substring(0,77)+'…';
+
+  var relaties=['Beispiel','Gegensatz','Relativierung','Schlussfolgerung','Konkretisierung'];
+  var correct=offlineRnd(relaties);
+  var vier=offlineShuffle(relaties).slice(0,4);
+  if(vier.indexOf(correct)<0) vier[0]=correct;
+  vier=offlineShuffle(vier);
+  var corrLetter='ABCD'[vier.indexOf(correct)];
+  var opties=vier.map(function(r,i){return 'ABCD'[i]+' ein'+(['Beispiel','Gegensatz'].includes(r)?'':'e')+' '+r+'.';});
+
+  return {
+    type:'relatie', punten:1,
+    context:'Alinea '+n,
+    vraag:'"'+zB+'" (Alinea '+n+')\nWie verhält sich dieser Satz zu dem vorangehenden Satz?',
+    opties:opties, antwoord:corrLetter,
+    uitleg:'Bekijk de relatie tussen de twee zinnen in alinea '+n+'.'
+  };
 }
-function offlineMaakOpen(an,ai){
-  var n=ai+1;var zinnen=an.alineaZinnen[ai]||[];var alineatekst=an.alineas[ai]||'';
-  var pats=["Welke twee redenen worden er in alinea "+n+" gegeven? Beantwoord in het Nederlands.","Wat wordt duidelijk uit alinea "+n+"? Beantwoord in het Nederlands.","Wat is de hoofdgedachte van alinea "+n+"? Schrijf één zin.","Hoe reageert de auteur in alinea "+n+"? Beantwoord in het Nederlands."];
-  var vraag=offlineRnd(pats);
-  var z1=(zinnen[0]||'').trim();var z2=(zinnen[1]||'').trim();
-  var standaard=z1||alineatekst.substring(0,100);if(!standaard.endsWith('.')&&!standaard.endsWith('!'))standaard+='.';
-  if(z2&&z2.length>10){var s2=z2.substring(0,80);if(!s2.endsWith('.')&&!s2.endsWith('!'))s2+='.';standaard+=' '+s2;}
-  return {type:'open',punten:vraag.includes('twee')?2:1,context:'Absatz '+n,vraag:vraag,antwoord:standaard,uitleg:''};
-}
-function offlineKiesType(niv,vraagNr,totaal){
+
+// ── Vraagtype kiezen per niveau (CITO-mix) ──
+function offlineKiesType(niveau, vraagNr, totaal){
+  var mixen={
+    'A1':['mc','mc','mc','bewering','citeer','mc'],
+    'A2':['mc','mc','bewering','citeer','mc','open'],
+    'B1':['mc','mc','bewering','citeer','mc','open'],
+    'B2':['mc','bewering','mc','citeer','open','mc','relatie'],
+    'C1':['mc','bewering','relatie','mc','citeer','open','mc'],
+    'C2':['mc','bewering','relatie','mc','citeer','open','bewering']
+  };
+  var mix=mixen[niveau]||mixen['B1'];
+  // Laatste vraag altijd open
   if(vraagNr===totaal-1) return 'open';
-  if(niv==='A1'||niv==='A2') return ['mc','mc','mc','bewering','citeer','open'][vraagNr%6];
-  if(niv==='B1') return ['mc','mc','bewering','citeer','mc','open'][vraagNr%6];
-  if(niv==='B2') return ['mc','mc','bewering','relatie','citeer','mc','open'][vraagNr%7];
-  return ['mc','bewering','relatie','mc','toon','citeer','open'][vraagNr%7];
+  return mix[vraagNr%mix.length];
 }
-function genereerOfflineVragen(tekst,niveau,count){
-  var an=offlineAnalyseer(tekst);var vragen=[];
+
+// ── Hoofdfunctie ──
+function genereerOfflineVragen(tekst, niveau, count){
+  var an=offlineAnalyseer(tekst);
+  var vragen=[];
+  var gebruikteTypes=[];
+
   for(var i=0;i<count;i++){
-    var ai=Math.min(Math.floor(i*(an.alineas.length/count)),an.alineas.length-1);
-    var type=offlineKiesType(niveau,i,count);var q;
+    var ai=Math.min(Math.floor(i*(an.data.length/count)), an.data.length-1);
+    var type=offlineKiesType(niveau,i,count);
+    // Vermijd herhaling van zelfde type op rij
+    if(gebruikteTypes.length>0&&gebruikteTypes[gebruikteTypes.length-1]===type&&type!=='mc'){
+      type='mc';
+    }
+    gebruikteTypes.push(type);
+    var q;
     try{
-      if(type==='mc') q=offlineMaakMC(an,ai,niveau);
+      if(type==='mc')          q=offlineMaakMC(an,ai,niveau);
       else if(type==='bewering') q=offlineMaakBewering(an,ai);
-      else if(type==='citeer') q=offlineMaakCiteer(an,ai);
-      else if(type==='relatie') q=(niveau==='B2'||niveau==='C1'||niveau==='C2')?offlineMaakRelatie(an,ai):offlineMaakMC(an,ai,niveau);
-      else if(type==='toon') q=(niveau==='C1'||niveau==='C2')?offlineMaakToon(an,ai):offlineMaakMC(an,ai,niveau);
-      else q=offlineMaakOpen(an,ai);
-    }catch(e){q=offlineMaakMC(an,ai,niveau);}
+      else if(type==='citeer')   q=offlineMaakCiteer(an,ai);
+      else if(type==='relatie')  q=offlineMaakRelatie(an,ai);
+      else                       q=offlineMaakOpen(an,ai);
+    }catch(e){
+      console.warn('Offline vraag '+i+' fout:',e.message);
+      q=offlineMaakMC(an,ai,niveau);
+    }
     vragen.push(q);
   }
   return vragen;
@@ -1868,29 +2031,14 @@ async function generateQuestions(){
   btn.innerHTML='<div class="spinner"></div><span>Vragen genereren…</span>';
   btn.disabled=true;
 
-  const tekst=currentText.substring(0,4000);
-
-  // Primaire route: AI met HAVO CITO-prompt — antwoorden uit de tekst, echte vraagpatronen
+  // Offline engine — leest echte tekst-inhoud
   try{
-    // Gebruik buildVragenFallback (zelfde CITO-prompt als modal, zonder twee-staps analyse)
-    const prompt=buildVragenFallback(currentText,niveau,count);
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:6000,
-        system:'Jij genereert uitsluitend JSON-arrays. Je output begint altijd met [ en eindigt met ]. Geen tekst ervoor of erna.',
-        messages:[{role:'user',content:prompt}]})});
-    const d=await r.json();
-    if(d.error) throw new Error('API: '+JSON.stringify(d.error));
-    let raw=(d.content||[]).map(x=>x.text||'').join('').trim();
-    raw=raw.replace(/^[\s\S]*?(\[)/,'[').replace(/\][\s\S]*$/,']');
-    currentQuestions=JSON.parse(raw);
-    if(!Array.isArray(currentQuestions)||currentQuestions.length===0) throw new Error('Lege array');
+    currentQuestions=genereerOfflineVragen(currentText,niveau,count);
     showToast('✓ '+currentQuestions.length+' CITO-opgaven gegenereerd');
   }catch(e){
-    console.warn('AI mislukt, offline fallback:', e.message);
-    // Offline fallback als AI niet beschikbaar is
-    currentQuestions=genereerOfflineVragen(currentText,niveau,count);
-    showToast('⚠️ AI niet beschikbaar — offline vragen geladen');
+    console.warn('Offline engine fout:',e.message);
+    currentQuestions=[];
+    showToast('⚠️ Kon geen vragen genereren. Probeer opnieuw.');
   }
 
   renderCITO(currentQuestions,'questionsBody','questionsPanel',niveau);
@@ -2152,58 +2300,33 @@ function switchModalTab(name,btn){
 async function generateModalQuestions(){
   if(!modalEntry)return;
   const btn=document.getElementById('modalGenQBtn');
-  btn.innerHTML='<div class="spinner"></div><span>Tekst analyseren… (1/2)</span>';btn.disabled=true;
-  let tekstAnalyse=null;
+  btn.innerHTML='<div class="spinner"></div><span>Opgaven genereren…</span>';btn.disabled=true;
+
+  const niveau=modalEntry.niveau||'B1';
+  const count=6;
+
   try{
-    const r1=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:3000,messages:[{role:"user",content:buildAnalysePrompt(modalEntry.tekst)}]})
-    });
-    if(r1.ok){
-      const d1=await r1.json();
-      if(!d1.error){
-        const raw1=d1.content.map(i=>i.text||'').join('').replace(/```json[\s\S]*?```|```/g,'').trim();
-        const s1=raw1.indexOf('{'),e1=raw1.lastIndexOf('}');
-        if(s1>=0&&e1>s1){try{tekstAnalyse=JSON.parse(raw1.substring(s1,e1+1));}catch(pe){console.warn('Modal analyse parse fout:',pe);}}
-      }
-    }
-  }catch(e){console.warn('Modal analyse stap 1 mislukt:',e);}
-  btn.innerHTML='<div class="spinner"></div><span>Opgaven maken… (2/2)</span>';
-  let raw2='';
-  let parseOk=false;
-  try{
-    const prompt=tekstAnalyse
-      ?buildVragenPrompt(modalEntry.tekst,tekstAnalyse,modalEntry.niveau,modalEntry.niveau==='vmbo'?4:6)
-      :buildVragenFallback(modalEntry.tekst,modalEntry.niveau,modalEntry.niveau==='vmbo'?4:6);
-    const r2=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:6000,system:"Je bent een CITO-examinator Duits. Je antwoordt UITSLUITEND met een geldige JSON-array. Geen tekst, geen uitleg, geen markdown, geen backticks. Begin direct met [ en eindig met ].",messages:[{role:"user",content:prompt}]})
-    });
-    if(!r2.ok){const errTxt=await r2.text();throw new Error('HTTP '+r2.status+': '+errTxt.substring(0,100));}
-    const d2=await r2.json();
-    if(d2.error)throw new Error(d2.error.message||'API fout: '+JSON.stringify(d2.error));
-    raw2=d2.content.map(i=>i.text||'').join('').replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-    const a=raw2.indexOf('['),b=raw2.lastIndexOf(']');
-    if(a>=0&&b>a){
-      raw2=raw2.substring(a,b+1);
-      modalQuestions=JSON.parse(raw2);
-      if(Array.isArray(modalQuestions)&&modalQuestions.length>0)parseOk=true;
-    }
-    if(!parseOk)throw new Error('Geen geldige array. Begin: '+raw2.substring(0,120));
+    modalQuestions=genereerOfflineVragen(modalEntry.tekst,niveau,count);
+    if(!Array.isArray(modalQuestions)||modalQuestions.length===0) throw new Error('Geen vragen');
   }catch(e){
-    console.error('Modal vragen mislukt:',e.message,'Raw:',raw2.substring(0,500));
-    modalQuestions=demoCITO(modalEntry.niveau);
-    showToast('⚠️ AI-genereren mislukt — demo-vragen getoond. Probeer opnieuw.');
+    console.error('Modal offline engine fout:',e.message);
+    modalQuestions=[];
+    showToast('⚠️ Kon geen vragen genereren. Probeer opnieuw.');
+    btn.innerHTML='<span>↺ Vernieuw opgaven</span>';btn.disabled=false;
+    return;
   }
-  renderCITO(modalQuestions,'modalQuestionsBody',null,modalEntry.niveau);
+
+  renderCITO(modalQuestions,'modalQuestionsBody',null,niveau);
   document.getElementById('modalCheckWrap').style.display='block';
   const entry=library.find(x=>x.id===modalEntry.id);
   if(entry){entry.vragen=modalQuestions;jbSave();}
   document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
-  document.getElementById('tabVragen').classList.add('active');document.getElementById('tabVragen').textContent='📝 Opgaven ('+modalQuestions.length+')';
+  document.getElementById('tabVragen').classList.add('active');
+  document.getElementById('tabVragen').textContent='📝 Opgaven ('+modalQuestions.length+')';
   document.getElementById('modal-vragen').classList.add('active');
   btn.innerHTML='<span>↺ Vernieuw opgaven</span>';btn.disabled=false;
+  showToast('✓ '+modalQuestions.length+' opgaven gegenereerd');
 }
 
 // ════ MARKING ════
