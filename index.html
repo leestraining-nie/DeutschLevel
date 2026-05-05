@@ -967,6 +967,15 @@ function showSync(type,msg,ms=0){
 function hideSync(){document.getElementById('syncBar').classList.remove('show');}
 
 // ════ GITHUB API ════
+function fixLibEntry(e){
+  // Herstel kapotte UTF-8 encoding in opgeslagen bibliotheekitems
+  function fe(s){if(!s||typeof s!=='string')return s;try{return decodeURIComponent(escape(s));}catch(err){return s;}}
+  return Object.assign({},e,{
+    titel:fe(e.titel),
+    tekst:fe(e.tekst),
+    bron:fe(e.bron)
+  });
+}
 async function jbLoad(){
   try{
     const controller=new AbortController();
@@ -993,7 +1002,7 @@ async function jbLoad(){
     localStorage.setItem('dl_deleted',JSON.stringify(deletedIds));
     const deletedSet=new Set(deletedIds);
     const raw=Array.isArray(data.library)?data.library:[];
-    library=raw.filter(x=>!deletedSet.has(x.id));
+    library=raw.filter(x=>!deletedSet.has(x.id)).map(fixLibEntry);
     localStorage.setItem('dl_lib',JSON.stringify(library));
     renderSidebarLib();
     renderLibPage();
@@ -1001,7 +1010,7 @@ async function jbLoad(){
     jbReady=true;
   }catch(e){
     console.warn('GitHub laden mislukt:',e);
-    library=JSON.parse(localStorage.getItem('dl_lib')||'[]');
+    library=JSON.parse(localStorage.getItem('dl_lib')||'[]').map(fixLibEntry);
     document.getElementById('spOfflineDot').style.display='block';
     showSync('err','⚠️ Sync mislukt — lokale modus',4000);
     jbReady=true;
@@ -1098,7 +1107,7 @@ function saveStats(){
 // ════ APP START ════
 async function appStart(){
   // Laad lokale cache meteen zodat UI niet leeg is
-  library=JSON.parse(localStorage.getItem('dl_lib')||'[]');
+  library=JSON.parse(localStorage.getItem('dl_lib')||'[]').map(fixLibEntry);
   playerStats=JSON.parse(localStorage.getItem('dl_stats')||JSON.stringify(playerStats));
   renderSidebarLib();
   // Daarna JSONBin laden (overschrijft met meest recente gedeelde versie)
@@ -1479,9 +1488,25 @@ function getNiveauInstructies(niveau){
 }
 
 // ════ URL IMPORT ════
+function fixEncoding(str){
+  // Fix dubbel-geëncodeerde UTF-8 (Latin-1 → UTF-8 → verkeerd weergegeven)
+  try{
+    // Methode 1: decodeURIComponent + escape trick
+    return decodeURIComponent(escape(str));
+  }catch(e){
+    try{
+      // Methode 2: TextDecoder
+      const bytes=new Uint8Array(str.split('').map(c=>c.charCodeAt(0)));
+      return new TextDecoder('utf-8').decode(bytes);
+    }catch(e2){return str;}
+  }
+}
 function htmlToText(html){
+  // Fix encoding vóór HTML-parsing
+  let cleanHtml=html;
+  try{cleanHtml=fixEncoding(html);}catch(e){}
   const tmp=document.createElement('div');
-  tmp.innerHTML=html
+  tmp.innerHTML=cleanHtml
     .replace(/<script[\s\S]*?<\/script>/gi,'')
     .replace(/<style[\s\S]*?<\/style>/gi,'')
     .replace(/<nav[\s\S]*?<\/nav>/gi,'')
@@ -1490,7 +1515,10 @@ function htmlToText(html){
     .replace(/<aside[\s\S]*?<\/aside>/gi,'')
     .replace(/<figure[\s\S]*?<\/figure>/gi,'')
     .replace(/<button[\s\S]*?<\/button>/gi,'');
-  return (tmp.innerText||tmp.textContent||'').replace(/[ \t]{2,}/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+  let tekst=(tmp.innerText||tmp.textContent||'').replace(/[ \t]{2,}/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+  // Extra encoding fix op de extracted tekst
+  try{tekst=fixEncoding(tekst);}catch(e){}
+  return tekst;
 }
 async function importURL(){
   const urlEl=document.getElementById('urlInput');
@@ -1514,8 +1542,18 @@ async function importURL(){
       if(!resp.ok) continue;
       let html='';
       const ct=resp.headers.get('content-type')||'';
-      if(ct.includes('application/json')){const j=await resp.json();html=j.contents||j.body||'';}
-      else{html=await resp.text();}
+      if(ct.includes('application/json')){
+        const j=await resp.json();
+        html=j.contents||j.body||'';
+        // allorigins retourneert contents als string — fix mogelijke encoding
+        try{html=fixEncoding(html);}catch(e){}
+      } else {
+        // Lees als ArrayBuffer en decodeer als UTF-8
+        try{
+          const buf=await resp.arrayBuffer();
+          html=new TextDecoder('utf-8').decode(buf);
+        }catch(e){html=await resp.text();}
+      }
       if(html.length<200) continue;
       const tekst=htmlToText(html);
       if(tekst&&tekst.length>150){
@@ -1554,55 +1592,162 @@ async function importURL(){
 }
 
 function buildAnalysePrompt(text){
-  const instrStr = [
-    'Lees de volgende Duitstalige tekst volledig. Analyseer de ECHTE inhoud.',
-    'Stuur UITSLUITEND geldige JSON terug zonder preamble of backticks.',
-    '',
-    'Vereiste velden:',
-    '- teksttype: artikel/interview/verhaal/recept/reportage/opiniestuk/brief',
-    '- onderwerp_exact: een concrete zin met PRECIES het onderwerp, namen en plaatsen',
-    '- alineas: array met per alinea: nr, eerste_zin (letterlijk!), kerninhoud (namen/feiten/acties), interessant_citaat (letterlijke zin), citaat_betekenis',
-    '- personages: array met naam en rol van personen/organisaties in de tekst',
-    '- concrete_feiten_juist: 4-6 beweringen die LETTERLIJK in de tekst staan (met alineanummer)',
-    '- bewust_foute_beweringen: 4-6 beweringen die NIET kloppen (bijna-juist, omgekeerd, of verkeerd toegeschreven)',
-    '- zinnen_voor_volgorde: 3-4 letterlijke zinnen uit dezelfde alinea in JUISTE volgorde',
-    '- invulwoorden: array met zin_met_gat (zin met [___]), juiste_woord, foute_opties (2 woorden)',
-    '- toon: toon van de tekst met een letterlijke voorbeeldzin',
-    '',
-    'TEKST:',
-    '"""'
-  ].join('\n');
-  return instrStr + '\n' + text.substring(0,3800) + '\n"""';
+  return 'Lees deze Duitstalige tekst en geef UITSLUITEND geldige JSON terug (geen backticks, geen tekst).
+
+'
+    +'JSON-structuur:
+'
+    +'{
+'
+    +'"alineas":[{nr,kerninhoud,interessant_citaat,citaat_nl_omschrijving,eerste_zin}],
+'
+    +'"mc_vragen":[{alinea_nr,vraag_duits,correct_antwoord_nl,afleiders:[3 foute opties nl]}],
+'
+    +'"bewering_sets":[{alinea_nr,beweringen:[{tekst_nl,antwoord:"wel"/"niet"}]}],
+'
+    +'"open_vragen":[{alinea_nr,vraag_nl,modelantwoord_nl,punten}],
+'
+    +'"tekstrelatie_vragen":[{alinea_nr,zin_a,zin_b,relatie:"Beispiel"/"Gegensatz"/"Relativierung"/"Schlussfolgerung",uitleg_nl}]
+'
+    +'}
+
+'
+    +'REGELS:
+'
+    +'- mc_vragen: 3-4 vragen, elk over andere alinea, correct_antwoord_nl is letterlijk uit tekst
+'
+    +'- bewering_sets: 2-3 sets, elke set 3-4 beweringen met VERPLICHT mix wel+niet, elk over ander feit
+'
+    +'- open_vragen: 2 vragen, modelantwoord_nl volledig uitgeschreven met namen/feiten
+'
+    +'- citaat_nl_omschrijving: Nederlandse omschrijving van interessant_citaat (voor citeer-vragen)
+
+'
+    +'TEKST:
+"""
+'+text.substring(0,3500)+'
+"""';
 }
 
-function buildVragenPrompt(text,analyse,niveau,count){
-  const alineas=(analyse&&analyse.alineas)||[];
-  const alineaInfo=alineas.length>0
-    ?alineas.map(function(a){return 'Alinea '+a.nr+': '+a.kerninhoud;}).join('\n')
-    :'';
-  return 'Maak '+count+' open leesopgaven over deze Duitstalige tekst. Schrijf vragen en antwoorden in het Nederlands.\n'
-    +'Vraagpatronen: "Wat wordt duidelijk uit alinea X over [onderwerp]?", "Welke reden noemt de auteur in alinea X?", "Wat is de hoofdgedachte van de tekst?"\n'
-    +'Modelantwoord: inhoudelijk, met concrete namen en feiten uit de tekst. Geen placeholders of "...".\n'
-    +(alineaInfo?'Alinea-inhoud:\n'+alineaInfo+'\n':'')
-    +'Tekst:\n'+text.substring(0,3500)+'\n'
-    +'Geef alleen een JSON-array. Elk object: {"type":"open","punten":2,"context":"Alinea X","vraag":"...","antwoord":"...","uitleg":""}';
+function buildVragenPrompt(text, analyse, niveau, count){
+  // Bouw rijke CITO-vragenset op basis van analyse-data
+  const al = (analyse&&analyse.alineas)||[];
+  const mc = (analyse&&analyse.mc_vragen)||[];
+  const bew = (analyse&&analyse.bewering_sets)||[];
+  const open = (analyse&&analyse.open_vragen)||[];
+  const invul = (analyse&&analyse.invul_vragen)||[];
+  const rel = (analyse&&analyse.tekstrelatie_vragen)||[];
+
+  // Serialiseer analyse-data compact voor de prompt (beperkt tot essentials)
+  const analyseData = JSON.stringify({
+    alineas: al.slice(0,8).map(function(a){return {
+      nr:a.nr,
+      kern:a.kerninhoud,
+      citaat:a.interessant_citaat,
+      citaat_nl:a.citaat_nl_omschrijving
+    };}),
+    mc: mc.slice(0,3).map(function(q){return {
+      al:q.alinea_nr, v:q.vraag_duits,
+      ok:q.correct_antwoord_nl,
+      fout:q.afleiders
+    };}),
+    bew: bew.slice(0,2).map(function(b){return {
+      al:b.alinea_nr,
+      items:b.beweringen
+    };}),
+    open: open.slice(0,2).map(function(o){return {
+      al:o.alinea_nr, v:o.vraag_nl,
+      ant:o.modelantwoord_nl, p:o.punten
+    };}),
+    rel: rel.slice(0,1)
+  });
+
+  // Bepaal vraagmix per niveau (gebaseerd op echte CITO-examens VMBO/HAVO/VWO)
+  const mixInstr = {
+    'A1': 'Maak '+count+' eenvoudige mc-vragen (4 opties A/B/C/D). Vragen in het Nederlands.',
+    'A2': 'Maak '+count+' vragen: '+Math.ceil(count*0.6)+' mc (4 opties A/B/C/D) + 1 citeer. Vragen in het Nederlands.',
+    'B1': 'Maak precies '+count+' vragen in VMBO-GL/TL CITO-stijl:\n'
+      +'- '+Math.ceil(count*0.4)+' mc-vragen (4 opties A/B/C/D, elk over andere alinea)\n'
+      +'- 1 bewering-vraag (3 beweringen, VERPLICHT mix wel+niet, over dezelfde alinea)\n'
+      +'- 1 citeer-vraag (exacte woordgroep uit tekst)\n'
+      +'- 1 open-vraag (2p, om welke twee redenen / welke twee maatregelen)\n'
+      +'- resterende vragen: open (2p) of extra mc',
+    'B2': 'Maak precies '+count+' vragen in HAVO CITO Duits-stijl:\n'
+      +'- '+Math.ceil(count*0.35)+' mc-vragen (4 opties A/B/C/D)\n'
+      +'- 1-2 bewering-vragen (3-4 beweringen elk, VERPLICHT mix wel+niet)\n'
+      +'- 1-2 citeer-vragen\n'
+      +'- 1 open-vraag (2p)\n'
+      
+      +'- 1 tekstrelatie-vraag (Wie verhält sich... / Welche Funktion hat...)',
+    'C1': 'Maak precies '+count+' vragen in VWO CITO Duits-stijl:\n'
+      +'- '+Math.ceil(count*0.3)+' mc-vragen (4 opties, dieper begrip)\n'
+      +'- 1-2 bewering-vragen (4 beweringen elk, VERPLICHT mix wel+niet)\n'
+      +'- 1 citeer-vraag\n'
+      +'- 1-2 open-vragen (2p)\n'
+      
+      +'- 1 tekstrelatie-vraag (Wie schließt... / Welche Funktion...)\n'
+      +'- 1 volgorde-vraag als de tekst zich daarvoor leent',
+    'C2': 'Maak precies '+count+' gevarieerde VWO/C2 vragen: mc, bewering (mix!), citeer, open, invul, relatie, eventueel toon.'
+  };
+
+  return 'Je bent een CITO-examinator Duits voor niveau '+niveau+'.\n\n'
+    +'VOLLEDIGE TEKST (gebruik ALLEEN deze tekst voor vragen en antwoorden):\n"""\n'
+    +text.substring(0,3500)+'\n"""\n\n'
+    +'ANALYSE-DATA (gebruik deze gegevens als basis voor de vragen — vul aan vanuit de tekst):\n'
+    +analyseData+'\n\n'
+    +(mixInstr[niveau]||mixInstr['B1'])+'\n\n'
+    +'FORMATEN (gebruik exact):\n'
+    +'mc:{"type":"mc","punten":1,"context":"Alinea X","vraag":"Welche Aussage stimmt mit dem X. Absatz überein?","opties":["A ...","B ...","C ...","D ..."],"antwoord":"B","uitleg":"Alinea X zegt: [citaat]"}\n'
+    +'bewering:{"type":"bewering","punten":1,"context":"Alinea X","vraag":"Geef van elk van de volgende beweringen aan of deze overeenkomt met alinea X. Noteer wel of niet.","beweringen":[{"tekst":"...","antwoord":"wel"},{"tekst":"...","antwoord":"niet"},{"tekst":"...","antwoord":"wel"}],"uitleg":"..."}\n'
+    +'citeer:{"type":"citeer","punten":1,"context":"Alinea X","vraag":"Citeer de woordgroep uit alinea X die overeenkomt met [nl omschrijving].","antwoord":"EXACTE woorden letterlijk uit tekst","uitleg":"..."}\n'
+    +'open:{"type":"open","punten":2,"context":"Alinea X","vraag":"Om welke twee redenen... / Wat maakt de tekst duidelijk over...?","antwoord":"Volledig uitgeschreven modelantwoord met namen/feiten/getallen — geen placeholders","uitleg":"..."}\n'
+    +'relatie:{"type":"relatie","punten":1,"context":"Alinea X","vraag":"Wie verhält sich [zin B] (Zeile X) zu [zin A] (Zeile Y)?","opties":["A ein Beispiel","B einen Gegensatz","C eine Relativierung","D eine Schlussfolgerung"],"antwoord":"C","uitleg":"..."}\n\n'
+    +'ABSOLUTE REGELS:\n'
+    +'1. ANTWOORDEN uit de tekst: elk "antwoord"-veld moet aantoonbaar uit de tekst komen.\n'
+    +'2. BEWERING-mix: elke bewering-vraag MOET zowel "wel" als "niet" antwoorden bevatten. Nooit alle wel of alle niet.\n'
+    +'3. BEWERING-variatie: elke bewering in een set gaat over een ANDER feit — nooit herhaling.\n'
+    +'4. CITEER: "antwoord" is de EXACTE woordgroep uit de tekst, geen parafrase.\n'
+    +'5. MODELANTWOORD open: volledig uitgeschreven, concrete namen/feiten/getallen — NOOIT "zie tekst" of "...".\n'
+    +'6. MC-afleiders: plausibel maar aantoonbaar onjuist op basis van de tekst.\n'
+    +'7. VRAAG-variatie: geen twee vragen met dezelfde structuur achter elkaar.\n'
+    +'8. Vragen en antwoorden in het Nederlands, tenzij het type vraag Duits vereist (mc-opties bij Duits niveau A1/A2 mogen Duits zijn).\n\n'
+    +'Geef UITSLUITEND een JSON-array van precies '+count+' vragen. Begin direct met [.';
 }
 
-function buildVragenFallback(text,niveau,count){
-  return 'Maak '+count+' open leesopgaven over deze Duitstalige tekst. Schrijf vragen en antwoorden in het Nederlands.\n'
-    +'Vraagpatronen: "Wat wordt duidelijk uit alinea X?", "Welke reden noemt de auteur?", "Wat is de hoofdgedachte?"\n'
-    +'Modelantwoord: concrete feiten en namen uit de tekst, geen placeholders.\n'
-    +'Tekst:\n'+text.substring(0,3500)+'\n'
-    +'Geef alleen een JSON-array. Elk object: {"type":"open","punten":2,"context":"Alinea X","vraag":"...","antwoord":"...","uitleg":""}';
+function buildVragenFallback(text, niveau, count){
+  // Fallback zonder analyse: directe prompt met volledige tekst
+  const mixInstr = {
+    'A1': count+' mc-vragen (4 opties A/B/C/D)',
+    'A2': Math.ceil(count*0.7)+' mc + 1 citeer-vraag',
+    'B1': Math.ceil(count*0.4)+' mc + 1 bewering (mix wel/niet) + 1 citeer + 1 open (2p)',
+    'B2': Math.ceil(count*0.35)+' mc + 1-2 bewering (mix wel/niet) + 1 citeer + 1 open (2p) + 1 relatie',
+    'C1': Math.ceil(count*0.3)+' mc + 1-2 bewering (mix wel/niet) + 1 citeer + 1 open (2p) + 1 relatie',
+    'C2': 'gevarieerde mix mc/bewering/citeer/open/relatie/toon'
+  };
+  return 'Je bent een CITO-examinator Duits voor niveau '+niveau+'.\n\n'
+    +'TEKST (gebruik ALLEEN deze tekst):\n"""\n'+text.substring(0,3500)+'\n"""\n\n'
+    +'Maak precies '+count+' vragen: '+(mixInstr[niveau]||mixInstr['B1'])+'.\n\n'
+    +'ABSOLUTE REGELS:\n'
+    +'1. Elk antwoord komt AANTOONBAAR uit de tekst — citeer of parafraseer direct.\n'
+    +'2. Bewering-vragen: ALTIJD mix van "wel" en "niet" antwoorden, nooit allemaal hetzelfde.\n'
+    +'3. Elke bewering in een set gaat over een ANDER feit uit de tekst.\n'
+    +'4. Citeer-antwoord: EXACTE woordgroep uit de tekst.\n'
+    +'5. Open modelantwoord: volledig uitgeschreven met concrete namen/feiten — geen placeholders.\n'
+    +'6. MC: precies 1 correct antwoord, 3 plausibele maar onjuiste afleiders.\n\n'
+    +'JSON-formaten:\n'
+    +'mc: {"type":"mc","punten":1,"context":"Alinea X","vraag":"Welche Aussage stimmt...","opties":["A ...","B ...","C ...","D ..."],"antwoord":"B","uitleg":"Alinea X zegt: [citaat]"}\n'
+    +'bewering: {"type":"bewering","punten":1,"context":"Alinea X","vraag":"Geef van elk van de volgende beweringen aan of deze overeenkomt met alinea X. Noteer \'wel\' of \'niet\'.","beweringen":[{"tekst":"...","antwoord":"wel"},{"tekst":"...","antwoord":"niet"},{"tekst":"...","antwoord":"wel"}],"uitleg":"..."}\n'
+    +'citeer: {"type":"citeer","punten":1,"context":"Alinea X","vraag":"Citeer de woordgroep uit alinea X die overeenkomt met \'[Nederlandse omschrijving]\'.","antwoord":"[exacte tekst]","uitleg":"..."}\n'
+    +'open: {"type":"open","punten":2,"context":"Alinea X","vraag":"Om welke twee redenen...","antwoord":"[volledig modelantwoord met namen/feiten]","uitleg":"..."}\n'
+
+    +'relatie: {"type":"relatie","punten":1,"context":"Alinea X","vraag":"Wie verhält sich \\"[zin B]\\" zu \\"[zin A]\\"?","opties":["A ein Beispiel","B einen Gegensatz","C eine Relativierung","D eine Schlussfolgerung"],"antwoord":"C","uitleg":"..."}\n\n'
+    +'Geef UITSLUITEND een JSON-array van precies '+count+' vragen. Begin direct met [.';
 }
 
 function demoCITO(niveau){
-  // Alleen als fallback bij een API-crash — antwoorden zijn leeg zodat ze niet verwarren
-  const tekst=currentText||'';
+  // Lege fallback — toont duidelijke melding, geen nepantwoorden
   return [
-    {type:'open',punten:2,context:'Alinea 1',vraag:'Wat wordt duidelijk uit de eerste alinea?',antwoord:'Klik op "Analyseer & genereer" om echte vragen te genereren op basis van de tekst.',uitleg:''},
-    {type:'open',punten:2,context:'Alinea 2',vraag:'Wat noemt de auteur in alinea 2?',antwoord:'Klik op "Analyseer & genereer" om echte vragen te genereren op basis van de tekst.',uitleg:''},
-    {type:'open',punten:3,context:'Hele tekst',vraag:'Wat is de hoofdgedachte van de tekst?',antwoord:'Klik op "Analyseer & genereer" om echte vragen te genereren op basis van de tekst.',uitleg:''}
+    {type:'open',punten:2,context:'',vraag:'⚠️ Verbinding mislukt. Klik op "↺ Vernieuw opgaven" om opnieuw te proberen.',antwoord:'Klik op de knop hierboven om echte opgaven te genereren op basis van de tekst.',uitleg:''}
   ];
 }
 
@@ -1715,62 +1860,51 @@ function genereerOfflineVragen(tekst,niveau,count){
 async function generateQuestions(){
   if(!currentText){showToast('Analyseer eerst een tekst');return;}
   let niveau=finalNiveau||currentLevel||'B1';
-  // Overschrijf niveau op basis van examentype-keuze
   if(selectedExamNiveau==='vmbo') niveau='B1';
   else if(selectedExamNiveau==='havo') niveau='B2';
   else if(selectedExamNiveau==='vwo') niveau='C1';
   const count=parseInt(document.getElementById('qCount').value)||6;
   const btn=document.getElementById('genQBtn');
-  btn.innerHTML='<div class="spinner"></div><span>Vragen genereren\u2026</span>';
+  btn.innerHTML='<div class="spinner"></div><span>Vragen genereren…</span>';
   btn.disabled=true;
 
-  // Stap 1: Altijd eerst offline CITO-engine (geen API, direct klaar)
-  try{
-    currentQuestions=genereerOfflineVragen(currentText,niveau,count);
-    if(Array.isArray(currentQuestions)&&currentQuestions.length>0){
-      renderCITO(currentQuestions,'questionsBody','questionsPanel',niveau);
-      const qp=document.getElementById('questionsPanel');
-      if(qp){qp.classList.add('visible');setTimeout(function(){qp.scrollIntoView({behavior:'smooth',block:'start'});},100);}
-      const saveBtn=document.getElementById('saveWithQBtn');
-      if(saveBtn){saveBtn.style.display='inline-flex';saveBtn.textContent='\uD83D\uDCDA Bewaar in bibliotheek';saveBtn.style.background='var(--b1)';saveBtn.disabled=false;}
-      btn.innerHTML='<span>\uD83D\uDD0D Analyseer &amp; genereer opgaven</span>';btn.disabled=false;
-      showToast('\u2713 '+count+' opgaven gegenereerd');
-      return;
-    }
-  }catch(offlineErr){
-    console.warn('Offline engine fout:', offlineErr.message);
-  }
-
-  // Stap 2: Fallback naar AI
   const tekst=currentText.substring(0,4000);
-  const prompt='Lees deze tekst goed:\n\n'+tekst+'\n\nMaak nu '+count+' open leesopgaven in het Nederlands.\nGeef alleen een JSON-array. Elk object: {"type":"open","punten":2,"context":"Alinea 1","vraag":"...","antwoord":"...","uitleg":""}';
-  let raw='';
+
+  // Primaire route: AI met HAVO CITO-prompt — antwoorden uit de tekst, echte vraagpatronen
   try{
+    // Gebruik buildVragenFallback (zelfde CITO-prompt als modal, zonder twee-staps analyse)
+    const prompt=buildVragenFallback(currentText,niveau,count);
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
       headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:4000,
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:6000,
         system:'Jij genereert uitsluitend JSON-arrays. Je output begint altijd met [ en eindigt met ]. Geen tekst ervoor of erna.',
         messages:[{role:'user',content:prompt}]})});
-    const d=await r.json();if(d.error) throw new Error('API: '+JSON.stringify(d.error));
-    raw=(d.content||[]).map(function(x){return x.text||'';}).join('').trim();
+    const d=await r.json();
+    if(d.error) throw new Error('API: '+JSON.stringify(d.error));
+    let raw=(d.content||[]).map(x=>x.text||'').join('').trim();
     raw=raw.replace(/^[\s\S]*?(\[)/,'[').replace(/\][\s\S]*$/,']');
     currentQuestions=JSON.parse(raw);
     if(!Array.isArray(currentQuestions)||currentQuestions.length===0) throw new Error('Lege array');
+    showToast('✓ '+currentQuestions.length+' CITO-opgaven gegenereerd');
   }catch(e){
-    console.error('AI fallback mislukt:',e.message);
+    console.warn('AI mislukt, offline fallback:', e.message);
+    // Offline fallback als AI niet beschikbaar is
     currentQuestions=genereerOfflineVragen(currentText,niveau,count);
-    showToast('\u26A0\uFE0F AI niet beschikbaar \u2014 offline vragen geladen');
+    showToast('⚠️ AI niet beschikbaar — offline vragen geladen');
   }
+
   renderCITO(currentQuestions,'questionsBody','questionsPanel',niveau);
   const qp=document.getElementById('questionsPanel');
   if(qp){qp.classList.add('visible');setTimeout(function(){qp.scrollIntoView({behavior:'smooth',block:'start'});},100);}
   const saveBtn=document.getElementById('saveWithQBtn');
   if(saveBtn){saveBtn.style.display='inline-flex';saveBtn.textContent='\uD83D\uDCDA Bewaar in bibliotheek';saveBtn.style.background='var(--b1)';saveBtn.disabled=false;}
-  btn.innerHTML='<span>\uD83D\uDD0D Analyseer &amp; genereer opgaven</span>';btn.disabled=false;
+  btn.innerHTML='<span>\uD83D\uDD0D Analyseer & genereer opgaven</span>';btn.disabled=false;
 }
 
 // ════ RENDER CITO ════
 function renderCITO(questions,bodyId,panelId,niveau){
+  // Reset XP-claim guard voor deze bodyId zodat nieuwe vragen nakijkbaar zijn
+  delete _xpClaimed[bodyId];
   const body=document.getElementById(bodyId);
   const xpMult=LEVEL_XP[niveau||'B1'];
   const totalPunten=questions.reduce((a,q)=>a+(q.punten||1),0);
@@ -1865,10 +1999,23 @@ function slaScoreOp(btn, bodyId, qIdx, pts){
 }
 
 // ════ CHECK ════
+// XP-claim guard: bijgehouden per sessie per bodyId
+const _xpClaimed={};
 function checkAllAnswers(){doCheck('questionsBody',currentQuestions,'scoreDisplay',currentLevel);}
 function checkModalAnswers(){doCheck('modalQuestionsBody',modalQuestions,null,modalEntry?.niveau);}
 async function doCheck(bodyId,questions,scoreId,niveau){
   if(!questions||!questions.length)return;
+  // Blokkeer dubbele XP: na eerste nakijken knop disablen
+  const checkBtn=(bodyId==='modalQuestionsBody')
+    ?document.querySelector('#modalCheckWrap .btn-sm')
+    :document.querySelector('[onclick="checkAllAnswers()"]');
+  const alreadyChecked=_xpClaimed[bodyId];
+  if(alreadyChecked){
+    // Toon score opnieuw maar ken geen XP toe
+    showToast('Al nakgekeken — XP is al verdiend voor deze set');return;
+  }
+  _xpClaimed[bodyId]=true;
+  if(checkBtn){checkBtn.disabled=true;checkBtn.textContent='✓ Nagekeken';checkBtn.style.opacity='0.55';}
   let score=0,total=0;const xpMult=LEVEL_XP[niveau||'B1'];
   for(let i=0;i<questions.length;i++){
     const q=questions[i];total+=q.punten||1;
@@ -1888,8 +2035,12 @@ async function doCheck(bodyId,questions,scoreId,niveau){
       });
       score+=pts;if(fb){fb.className='feedback-box show partial-fb';fb.textContent='Score: '+pts+'/'+(q.beweringen||[]).length+' correct. '+(q.uitleg||'');}
     } else if(q.type==='citeer'){
-      const cEl=document.getElementById(bodyId+'-citeer-'+i);const ans=(cEl?.value||'').trim().toLowerCase();const correct=(q.antwoord||'').toLowerCase().replace(/\[.*?\]/,'').trim();
-      const ok=correct&&ans&&(ans.includes(correct.substring(0,15))||correct.includes(ans.substring(0,15)));
+      const cEl=document.getElementById(bodyId+'-citeer-'+i);const ans=(cEl?.value||'').trim().toLowerCase();
+      const correct=(q.antwoord||'').toLowerCase().replace(/\[.*?\]/,'').trim();
+      // Match: leerling-antwoord moet minstens 60% van de sleutelwoorden van het modelantwoord bevatten
+      const modelWoorden=correct.split(/\s+/).filter(w=>w.length>3);
+      const aantalGevonden=modelWoorden.filter(w=>ans.includes(w)).length;
+      const ok=correct&&ans&&modelWoorden.length>0&&(aantalGevonden/modelWoorden.length)>=0.6;
       if(cEl)cEl.disabled=true;const cFb=document.getElementById(bodyId+'-citeerfb-'+i)||fb;
       if(cFb){cFb.className='feedback-box show '+(ok?'correct-fb':'wrong-fb');cFb.textContent=ok?'✓ Correct citaat!':'✗ Modelantwoord: „'+q.antwoord+'" '+q.uitleg;}
       if(ok)score+=q.punten||1;
@@ -2006,7 +2157,7 @@ async function generateModalQuestions(){
   try{
     const r1=await fetch("https://api.anthropic.com/v1/messages",{
       method:"POST",headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:2500,messages:[{role:"user",content:buildAnalysePrompt(modalEntry.tekst)}]})
+      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:3000,messages:[{role:"user",content:buildAnalysePrompt(modalEntry.tekst)}]})
     });
     if(r1.ok){
       const d1=await r1.json();
@@ -2022,11 +2173,11 @@ async function generateModalQuestions(){
   let parseOk=false;
   try{
     const prompt=tekstAnalyse
-      ?buildVragenPrompt(modalEntry.tekst,tekstAnalyse,modalEntry.niveau,6)
-      :buildVragenFallback(modalEntry.tekst,modalEntry.niveau,6);
+      ?buildVragenPrompt(modalEntry.tekst,tekstAnalyse,modalEntry.niveau,modalEntry.niveau==='vmbo'?4:6)
+      :buildVragenFallback(modalEntry.tekst,modalEntry.niveau,modalEntry.niveau==='vmbo'?4:6);
     const r2=await fetch("https://api.anthropic.com/v1/messages",{
       method:"POST",headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:4000,system:"Je bent een docent Duits. Je antwoordt UITSLUITEND met een geldige JSON-array. Geen tekst, geen uitleg, geen markdown, geen backticks. Alleen de raw JSON-array die begint met [ en eindigt met ].",messages:[{role:"user",content:prompt}]})
+      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:6000,system:"Je bent een CITO-examinator Duits. Je antwoordt UITSLUITEND met een geldige JSON-array. Geen tekst, geen uitleg, geen markdown, geen backticks. Begin direct met [ en eindig met ].",messages:[{role:"user",content:prompt}]})
     });
     if(!r2.ok){const errTxt=await r2.text();throw new Error('HTTP '+r2.status+': '+errTxt.substring(0,100));}
     const d2=await r2.json();
