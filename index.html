@@ -1262,7 +1262,7 @@ function selectMode(mode){
   currentMode=mode;
   document.getElementById('modeScreen').classList.add('hidden');
   const mb=document.getElementById('modeBadge');
-  mb.textContent=mode==='teacher'?'👩‍🏫 Docent':'🎓 '+playerNaam;
+  mb.textContent=mode==='teacher'?'Docent':''+playerNaam;
   mb.className='mode-badge '+mode;
   document.getElementById('btnExport').style.display=mode==='teacher'?'':'none';
   document.getElementById('btnImport').style.display=mode==='teacher'?'':'none';
@@ -1768,7 +1768,7 @@ function offlineAnalyseer(tekst){
     var kortInfoZin=zinnen.filter(function(z){return z.length>20&&z.length<100;}).sort(function(a,b){return a.length-b.length;})[0]||zinnen[0]||al.substring(0,80);
     // Woordgroepen voor citeer (2-4 woorden)
     var woordgroepen=[];
-    var ws=al.replace(/[.,;:!?()"""]/g,' ').split(/\s+/).filter(function(w){return w.length>4;});
+    var ws=al.replace(/[.,;:!?()“”‘’]/g,' ').split(/\s+/).filter(function(w){return w.length>4;});
     for(var i=0;i<ws.length-2;i++) woordgroepen.push(ws[i]+' '+ws[i+1]+(ws[i+2]?' '+ws[i+2]:''));
 
     return {
