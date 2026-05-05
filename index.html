@@ -1592,41 +1592,21 @@ async function importURL(){
 }
 
 function buildAnalysePrompt(text){
-  return 'Lees deze Duitstalige tekst en geef UITSLUITEND geldige JSON terug (geen backticks, geen tekst).
-
-'
-    +'JSON-structuur:
-'
-    +'{
-'
-    +'"alineas":[{nr,kerninhoud,interessant_citaat,citaat_nl_omschrijving,eerste_zin}],
-'
-    +'"mc_vragen":[{alinea_nr,vraag_duits,correct_antwoord_nl,afleiders:[3 foute opties nl]}],
-'
-    +'"bewering_sets":[{alinea_nr,beweringen:[{tekst_nl,antwoord:"wel"/"niet"}]}],
-'
-    +'"open_vragen":[{alinea_nr,vraag_nl,modelantwoord_nl,punten}],
-'
-    +'"tekstrelatie_vragen":[{alinea_nr,zin_a,zin_b,relatie:"Beispiel"/"Gegensatz"/"Relativierung"/"Schlussfolgerung",uitleg_nl}]
-'
-    +'}
-
-'
-    +'REGELS:
-'
-    +'- mc_vragen: 3-4 vragen, elk over andere alinea, correct_antwoord_nl is letterlijk uit tekst
-'
-    +'- bewering_sets: 2-3 sets, elke set 3-4 beweringen met VERPLICHT mix wel+niet, elk over ander feit
-'
-    +'- open_vragen: 2 vragen, modelantwoord_nl volledig uitgeschreven met namen/feiten
-'
-    +'- citaat_nl_omschrijving: Nederlandse omschrijving van interessant_citaat (voor citeer-vragen)
-
-'
-    +'TEKST:
-"""
-'+text.substring(0,3500)+'
-"""';
+  return 'Lees deze Duitstalige tekst en geef UITSLUITEND geldige JSON terug (geen backticks, geen tekst).\n\n'
+    +'JSON-structuur:\n'
+    +'{\n'
+    +'"alineas":[{nr,kerninhoud,interessant_citaat,citaat_nl_omschrijving,eerste_zin}],\n'
+    +'"mc_vragen":[{alinea_nr,vraag_duits,correct_antwoord_nl,afleiders:[3 foute opties nl]}],\n'
+    +'"bewering_sets":[{alinea_nr,beweringen:[{tekst_nl,antwoord:"wel"/"niet"}]}],\n'
+    +'"open_vragen":[{alinea_nr,vraag_nl,modelantwoord_nl,punten}],\n'
+    +'"tekstrelatie_vragen":[{alinea_nr,zin_a,zin_b,relatie:"Beispiel"/"Gegensatz"/"Relativierung"/"Schlussfolgerung",uitleg_nl}]\n'
+    +'}\n\n'
+    +'REGELS:\n'
+    +'- mc_vragen: 3-4 vragen, elk over andere alinea, correct_antwoord_nl is letterlijk uit tekst\n'
+    +'- bewering_sets: 2-3 sets, elke set 3-4 beweringen met VERPLICHT mix wel+niet, elk over ander feit\n'
+    +'- open_vragen: 2 vragen, modelantwoord_nl volledig uitgeschreven met namen/feiten\n'
+    +'- citaat_nl_omschrijving: Nederlandse omschrijving van interessant_citaat (voor citeer-vragen)\n\n'
+    +'TEKST:\n"""\n'+text.substring(0,3500)+'\n"""';
 }
 
 function buildVragenPrompt(text, analyse, niveau, count){
