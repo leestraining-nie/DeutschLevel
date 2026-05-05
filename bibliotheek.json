@@ -3746,37 +3746,5 @@
     1777196959429,
     1777199533553,
     1777712474494
-  ],
-  "leaderboard": [
-    {
-      "naam": "Zohar",
-      "klas": "4H",
-      "gebruikersnaam": "zoharr",
-      "xp": 15952,
-      "level": 10,
-      "title": "Deutsch-Champion",
-      "opgaven": 1321,
-      "streak": 1
-    },
-    {
-      "naam": "Amelia",
-      "klas": "4H",
-      "gebruikersnaam": "amelial",
-      "xp": 535,
-      "level": 4,
-      "title": "Lesereifer",
-      "opgaven": 33,
-      "streak": 1
-    },
-    {
-      "naam": "Illay",
-      "klas": "4H",
-      "gebruikersnaam": "illaym",
-      "xp": 151,
-      "level": 2,
-      "title": "Wortschatz-Sammler",
-      "opgaven": 15,
-      "streak": 1
-    }
   ]
 }
