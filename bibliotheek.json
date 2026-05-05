@@ -29,9 +29,25 @@
         {
           "type": "open",
           "punten": 2,
-          "context": "",
-          "vraag": "⚠️ Verbinding mislukt. Klik op \"↺ Vernieuw opgaven\" om opnieuw te proberen.",
-          "antwoord": "Klik op de knop hierboven om echte opgaven te genereren op basis van de tekst.",
+          "context": "Alinea 1",
+          "vraag": "Wat wordt duidelijk uit de eerste alinea?",
+          "antwoord": "Klik op \"Analyseer & genereer\" om echte vragen te genereren op basis van de tekst.",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 2,
+          "context": "Alinea 2",
+          "vraag": "Wat noemt de auteur in alinea 2?",
+          "antwoord": "Klik op \"Analyseer & genereer\" om echte vragen te genereren op basis van de tekst.",
+          "uitleg": ""
+        },
+        {
+          "type": "open",
+          "punten": 3,
+          "context": "Hele tekst",
+          "vraag": "Wat is de hoofdgedachte van de tekst?",
+          "antwoord": "Klik op \"Analyseer & genereer\" om echte vragen te genereren op basis van de tekst.",
           "uitleg": ""
         }
       ],
