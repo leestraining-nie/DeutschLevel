@@ -1787,7 +1787,8 @@ function offlineAnalyseer(tekst){
 }
 
 // ── MC-vraag: correct antwoord = eerste zin alinea, afleiders = zinnen andere alinea's ──
-function offlineMaakMC(an, ai, niveau){
+function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
+  gebruikteZinnen=gebruikteZinnen||[];
   var d=an.data[ai]; var n=d.nr;
   var vragen={
     'A1':['Wat maakt de tekst duidelijk over alinea '+n+'?','Welke uitspraak past bij alinea '+n+'?'],
@@ -1805,7 +1806,7 @@ function offlineMaakMC(an, ai, niveau){
 
   // Afleiders: zinnen uit ANDERE alinea's — zorg dat ze uniek zijn en verschillen van correct
   var afl=[];
-  var gebruikt=[corr];
+  var gebruikt=[corr].concat(gebruikteZinnen);
   an.data.forEach(function(ad, idx){
     if(idx===ai) return;
     ad.zinnen.forEach(function(z){
@@ -1891,11 +1892,12 @@ function offlineMaakBewering(an, ai){
 }
 
 // ── Citeer-vraag: exacte woordgroep uit de tekst ──
-function offlineMaakCiteer(an, ai){
+function offlineMaakCiteer(an, ai, gebruikteZinnen){
+  gebruikteZinnen=gebruikteZinnen||[];
   var d=an.data[ai]; var n=d.nr;
 
-  // Kies een informatieve woordgroep (bij voorkeur met een kernwoord)
-  var wg=d.woordgroepen.filter(function(w){return w.length>8&&w.length<40;});
+  // Kies een informatieve woordgroep die nog niet gebruikt is
+  var wg=d.woordgroepen.filter(function(w){return w.length>8&&w.length<40&&gebruikteZinnen.indexOf(w)<0;});
   var citaat=offlineRnd(wg)||d.kortInfoZin.split(' ').slice(0,3).join(' ');
 
   // Nederlandse omschrijving genereren (simpele benadering)
@@ -1918,9 +1920,11 @@ function offlineMaakCiteer(an, ai){
 }
 
 // ── Open vraag: modelantwoord uit echte zinnen ──
-function offlineMaakOpen(an, ai){
+function offlineMaakOpen(an, ai, gebruikteZinnen){
+  gebruikteZinnen=gebruikteZinnen||[];
   var d=an.data[ai]; var n=d.nr;
-  var zinnen=d.zinnen.filter(function(z){return z.length>20;});
+  var zinnen=d.zinnen.filter(function(z){return z.length>20&&gebruikteZinnen.indexOf(z)<0;});
+  if(!zinnen.length) zinnen=d.zinnen.filter(function(z){return z.length>20;});
 
   var vraagPats=[
     {v:"Wat wordt duidelijk uit alinea "+n+"? Beantwoord in het Nederlands.", p:1},
@@ -1995,6 +1999,8 @@ function genereerOfflineVragen(tekst, niveau, count){
   var an=offlineAnalyseer(tekst);
   var vragen=[];
   var gebruikteTypes=[];
+  var gebruikteVragen=[];   // bijhouden welke vraagteksten al gebruikt zijn
+  var gebruikteZinnen=[];   // bijhouden welke zinnen al als optie/antwoord zijn gebruikt
 
   for(var i=0;i<count;i++){
     var ai=Math.min(Math.floor(i*(an.data.length/count)), an.data.length-1);
@@ -2005,16 +2011,35 @@ function genereerOfflineVragen(tekst, niveau, count){
     }
     gebruikteTypes.push(type);
     var q;
-    try{
-      if(type==='mc')          q=offlineMaakMC(an,ai,niveau);
-      else if(type==='bewering') q=offlineMaakBewering(an,ai);
-      else if(type==='citeer')   q=offlineMaakCiteer(an,ai);
-      else if(type==='relatie')  q=offlineMaakRelatie(an,ai);
-      else                       q=offlineMaakOpen(an,ai);
-    }catch(e){
-      console.warn('Offline vraag '+i+' fout:',e.message);
-      q=offlineMaakMC(an,ai,niveau);
-    }
+    var pogingen=0;
+    do{
+      try{
+        if(type==='mc')            q=offlineMaakMC(an,ai,niveau,gebruikteZinnen);
+        else if(type==='bewering') q=offlineMaakBewering(an,ai);
+        else if(type==='citeer')   q=offlineMaakCiteer(an,ai,gebruikteZinnen);
+        else if(type==='relatie')  q=offlineMaakRelatie(an,ai);
+        else                       q=offlineMaakOpen(an,ai,gebruikteZinnen);
+      }catch(e){
+        console.warn('Offline vraag '+i+' fout:',e.message);
+        q=offlineMaakMC(an,ai,niveau,gebruikteZinnen);
+      }
+      pogingen++;
+      // Als dezelfde vraag al bestaat, probeer een andere alinea
+      if(gebruikteVragen.indexOf(q.vraag)>=0){
+        ai=(ai+1)%an.data.length;
+        q=null;
+      }
+    }while(!q && pogingen<5);
+
+    if(!q) q=offlineMaakOpen(an,ai,gebruikteZinnen);
+
+    // Registreer gebruikte vraagtekst
+    gebruikteVragen.push(q.vraag);
+    // Registreer gebruikte zinnen uit opties/antwoord
+    if(q.opties) q.opties.forEach(function(o){gebruikteZinnen.push(o.substring(2));});
+    if(q.antwoord && q.type==='citeer') gebruikteZinnen.push(q.antwoord);
+    if(q.antwoord && q.type==='open') gebruikteZinnen.push(q.antwoord);
+
     vragen.push(q);
   }
   return vragen;
