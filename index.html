@@ -968,13 +968,29 @@ function hideSync(){document.getElementById('syncBar').classList.remove('show');
 
 // ════ GITHUB API ════
 function fixLibEntry(e){
-  // Herstel kapotte UTF-8 encoding in opgeslagen bibliotheekitems
-  function fe(s){if(!s||typeof s!=='string')return s;try{return decodeURIComponent(escape(s));}catch(err){return s;}}
-  return Object.assign({},e,{
+  function fe(s){if(!s||typeof s!=='string')return s;return fixEncoding(s);}
+  var fixed=Object.assign({},e,{
     titel:fe(e.titel),
     tekst:fe(e.tekst),
     bron:fe(e.bron)
   });
+  // Fix markeringen (opgeslagen HTML met highlights)
+  if(fixed.markeringen) try{fixed.markeringen=fe(fixed.markeringen);}catch(ex){}
+  // Fix tekst in opgeslagen vragen
+  if(Array.isArray(fixed.vragen)){
+    fixed.vragen=fixed.vragen.map(function(q){
+      var fq=Object.assign({},q);
+      if(fq.vraag) fq.vraag=fe(fq.vraag);
+      if(fq.antwoord) fq.antwoord=fe(fq.antwoord);
+      if(fq.uitleg) fq.uitleg=fe(fq.uitleg);
+      if(Array.isArray(fq.opties)) fq.opties=fq.opties.map(fe);
+      if(Array.isArray(fq.beweringen)) fq.beweringen=fq.beweringen.map(function(b){
+        return Object.assign({},b,{tekst:fe(b.tekst)});
+      });
+      return fq;
+    });
+  }
+  return fixed;
 }
 async function jbLoad(){
   try{
@@ -1490,28 +1506,20 @@ function getNiveauInstructies(niveau){
 // ════ URL IMPORT ════
 function fixEncoding(str){
   if(!str||typeof str!=='string') return str;
-  // Snelle check: als er geen Ã of Â in zit, is encoding waarschijnlijk al goed
-  if(str.indexOf('Ã')<0 && str.indexOf('Â')<0 && str.indexOf('â€')<0) return str;
-  // Methode 1: decodeURIComponent(escape()) — werkt voor enkelvoudig verkeerd gedecodeerde UTF-8
-  try{
-    var result=decodeURIComponent(escape(str));
-    // Controleer of het beter is (minder Ã-tekens)
-    if(result.indexOf('Ã')<str.indexOf('Ã')||(str.indexOf('Ã')>=0&&result.indexOf('Ã')<0)) return result;
-  }catch(e){}
-  // Methode 2: handmatige vervangingstabel voor meest voorkomende kapotte tekens
-  return str
-    .replace(/Ã¼/g,'ü').replace(/Ã¶/g,'ö').replace(/Ã¤/g,'ä')
-    .replace(/ÃŒ/g,'Ü').replace(/Ã–/g,'Ö').replace(/Ã„/g,'Ä')
-    .replace(/ÃŸ/g,'ß').replace(/Ã©/g,'é').replace(/Ã¨/g,'è')
-    .replace(/Ã /g,'à').replace(/Ã¢/g,'â').replace(/Ãª/g,'ê')
-    .replace(/Ã®/g,'î').replace(/Ã´/g,'ô').replace(/Ã»/g,'û')
-    .replace(/Ã§/g,'ç').replace(/Ã«/g,'ë').replace(/Ã¯/g,'ï')
-    .replace(/Ã±/g,'ñ').replace(/Ã½/g,'ý')
-    .replace(/â€œ/g,'"').replace(/â€/g,'"').replace(/â€™/g,"'")
-    .replace(/â€˜/g,"'").replace(/â€"/g,'–').replace(/â€"/g,'—')
-    .replace(/Â»/g,'»').replace(/Â«/g,'«').replace(/Â·/g,'·')
-    .replace(/âÂÂ/g,'…').replace(/â€¦/g,'…')
-    .replace(/Ã/g,'').replace(/Â/g,'');
+  if(str.indexOf('Ã')<0&&str.indexOf('Â')<0&&str.indexOf('â€')<0) return str;
+  // Vervang Windows-1252 tekens die browsers verkeerd weergeven als Unicode
+  // (bijv. \x9f wordt Ÿ U+0178, \x96 wordt – U+2013, etc.)
+  str=str
+    .replace(/\u0178/g,'\x9f').replace(/\u201a/g,'\x82').replace(/\u0192/g,'\x83')
+    .replace(/\u201e/g,'\x84').replace(/\u2026/g,'\x85').replace(/\u2020/g,'\x86')
+    .replace(/\u2021/g,'\x87').replace(/\u02c6/g,'\x88').replace(/\u2030/g,'\x89')
+    .replace(/\u0160/g,'\x8a').replace(/\u2039/g,'\x8b').replace(/\u0152/g,'\x8c')
+    .replace(/\u017d/g,'\x8e').replace(/\u2018/g,'\x91').replace(/\u2019/g,'\x92')
+    .replace(/\u201c/g,'\x93').replace(/\u201d/g,'\x94').replace(/\u2022/g,'\x95')
+    .replace(/\u2013/g,'\x96').replace(/\u2014/g,'\x97').replace(/\u02dc/g,'\x98')
+    .replace(/\u2122/g,'\x99').replace(/\u0161/g,'\x9a').replace(/\u203a/g,'\x9b')
+    .replace(/\u0153/g,'\x9c').replace(/\u017e/g,'\x9e');
+  try{return decodeURIComponent(escape(str));}catch(e){return str;}
 }
 function htmlToText(html){
   // Fix encoding vóór HTML-parsing
@@ -2298,14 +2306,21 @@ function filterLibPage(lvl,btn){libPageFilter=lvl;document.querySelectorAll('#vi
 // ════ MODAL ════
 function openModal(id){
   const e=library.find(x=>x.id===id);if(!e)return;
+  // Fix encoding op de entry zelf (eenmalig, permanent in memory)
+  e.tekst=fixEncoding(e.tekst||'');
+  e.titel=fixEncoding(e.titel||'');
+  if(e.bron) e.bron=fixEncoding(e.bron);
   modalEntry=e;currentModalId=e.id;
   document.getElementById('modalBadge').textContent=e.niveau;document.getElementById('modalBadge').style.background=LC[e.niveau];
   document.getElementById('modalTitle').textContent=e.titel;
-  // Load text with markings
+  // Load text — altijd via fixEncoding, ook als er markeringen zijn
   const body=document.getElementById('modalTextBody');
-  let modalTekst=e.tekst;try{modalTekst=fixEncoding(modalTekst);}catch(ex){}
-  if(e.markeringen)body.innerHTML=e.markeringen;
-  else body.innerHTML=modalTekst.split('\n').filter(Boolean).map(p=>'<p>'+p+'</p>').join('');
+  if(e.markeringen){
+    let fixedMark=e.markeringen;try{fixedMark=fixEncoding(fixedMark);}catch(ex){}
+    body.innerHTML=fixedMark;
+  } else {
+    body.innerHTML=e.tekst.split('\n').filter(Boolean).map(p=>'<p>'+p+'</p>').join('');
+  }
   const xpR=Math.round(10*LEVEL_XP[e.niveau]);
   document.getElementById('modalXpInfo').textContent='Niveau '+e.niveau+' · '+DIFF_STR[e.niveau]+' · Verdien tot +'+(xpR*6)+' XP';
   // Load saved questions if any
