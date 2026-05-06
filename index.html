@@ -1751,6 +1751,8 @@ function offlineRnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
 // ── Tekst analyseren: echte feiten, getallen, namen, zinnen extraheren ──
 function offlineAnalyseer(tekst){
+  // Zorg dat encoding correct is
+  try{tekst=fixEncoding(tekst);}catch(e){}
   var alineas=tekst.split(/\n\s*\n/).map(function(a){return a.trim();}).filter(function(a){return a.length>30;});
   if(!alineas.length) alineas=[tekst];
 
@@ -1797,20 +1799,39 @@ function offlineMaakMC(an, ai, niveau){
   var pool=vragen[niveau]||vragen['B1'];
   var vraag=offlineRnd(pool);
 
-  // Correct antwoord: echte zin uit deze alinea
+  // Correct antwoord: echte zin uit deze alinea — encoding al gefixed door fixEncoding bij laden
   var corr=d.eersteZin.length>20?d.eersteZin:d.langsteZin;
   if(corr.length>120) corr=corr.substring(0,117)+'…';
 
-  // Afleiders: zinnen uit ANDERE alinea's (niet dezelfde)
-  var andreAl=an.data.filter(function(_,i){return i!==ai;});
+  // Afleiders: zinnen uit ANDERE alinea's — zorg dat ze uniek zijn en verschillen van correct
   var afl=[];
-  andreAl.forEach(function(ad){if(afl.length<3&&ad.zinnen.length){var z=ad.zinnen[0];if(z&&z.length>15){if(z.length>120)z=z.substring(0,117)+'…';afl.push(z);}}});
-  // Vul aan met varianten als er te weinig andere alinea's zijn
+  var gebruikt=[corr];
+  an.data.forEach(function(ad, idx){
+    if(idx===ai) return;
+    ad.zinnen.forEach(function(z){
+      if(afl.length>=3) return;
+      if(z && z.length>15 && gebruikt.indexOf(z)<0){
+        if(z.length>120) z=z.substring(0,117)+'…';
+        afl.push(z);
+        gebruikt.push(z);
+      }
+    });
+  });
+
+  // Vul aan met verschillende zinnen uit dezelfde alinea als er te weinig andere alinea's zijn
+  var zIdx=1;
   while(afl.length<3){
-    var zinIdx=afl.length+1;
-    var z=d.zinnen[zinIdx]||d.langsteZin;
-    if(z.length>120)z=z.substring(0,117)+'…';
+    var z=d.zinnen[zIdx]||null;
+    if(!z || gebruikt.indexOf(z)>=0){
+      // Maak een variatie
+      z='Zie alinea '+n+' voor meer informatie over dit onderwerp.';
+      if(gebruikt.indexOf(z)>=0) z='Dit wordt in de tekst niet vermeld.';
+      if(gebruikt.indexOf(z)>=0) z='De auteur gaat hier niet op in.';
+    }
+    if(z.length>120) z=z.substring(0,117)+'…';
     afl.push(z);
+    gebruikt.push(z);
+    zIdx++;
   }
 
   var alleOpties=offlineShuffle([corr].concat(afl.slice(0,3)));
