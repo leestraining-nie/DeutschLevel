@@ -32,27 +32,27 @@
           "context": "Alinea 1",
           "vraag": "Welke Aussage passt zu Absatz 1?",
           "opties": [
-            "A Unsere Haut schwitzt, besonders in Socken und geschlossenen Schuhen.",
-            "B Nach dem Sport oder an heißen Tagen riechen manche Füße streng – so stark, dass man sie »Käsefüße« nennt.",
-            "C Müffelnde Schuhe an einem schwitzigen Sommertag oder nach dem Joggen?",
-            "D Der Geruch stammt nicht direkt von den Füßen, sondern von Bakterien."
+            "A Müffelnde Schuhe an einem schwitzigen Sommertag oder nach dem Joggen?",
+            "B Unsere Haut schwitzt, besonders in Socken und geschlossenen Schuhen.",
+            "C Der Geruch stammt nicht direkt von den Füßen, sondern von Bakterien.",
+            "D Nach dem Sport oder an heißen Tagen riechen manche Füße streng – so stark, dass man sie »Käsefüße« nennt."
           ],
-          "antwoord": "C",
+          "antwoord": "A",
           "uitleg": "Het correcte antwoord staat in alinea 1 van de tekst."
         },
         {
           "type": "mc",
           "punten": 1,
-          "context": "Alinea 1",
-          "vraag": "Was wird aus Absatz 1 deutlich?",
+          "context": "Alinea 2",
+          "vraag": "Was wird aus Absatz 2 deutlich?",
           "opties": [
             "A Die zersetzen abgestorbene Haut­zellen und Schweiß.",
             "B Dort soll es dann warm und feucht – ein perfekter Ort für Bakterien.",
-            "C Der Geruch stammt nicht direkt von den Füßen, sondern von Bakterien.",
-            "D Müffelnde Schuhe an einem schwitzigen Sommertag oder nach dem Joggen?"
+            "C Nach dem Sport oder an heißen Tagen riechen manche Füße streng – so stark, dass man sie »Käsefüße« nennt.",
+            "D Was genau dort stinkt und wie sich der Geruch stoppen lässt, beschreibt DEIN SPIEGEL."
           ],
-          "antwoord": "D",
-          "uitleg": "Het correcte antwoord staat in alinea 1 van de tekst."
+          "antwoord": "C",
+          "uitleg": "Het correcte antwoord staat in alinea 2 van de tekst."
         },
         {
           "type": "bewering",
@@ -75,8 +75,8 @@
           "type": "citeer",
           "punten": 1,
           "context": "Alinea 3",
-          "vraag": "Citeer de woordgroep uit alinea 3 die overeenkomt met 'wat de auteur hiermee bedoelt'.",
-          "antwoord": "feucht perfekter Bakterien",
+          "vraag": "Citeer de woordgroep uit alinea 3 die overeenkomt met 'de hoofdgedachte van de alinea'.",
+          "antwoord": "genauso stinken gewisse",
           "uitleg": "Deze woordgroep staat letterlijk in alinea 3 van de tekst."
         },
         {
@@ -85,19 +85,19 @@
           "context": "Alinea 3",
           "vraag": "Was wird aus Absatz 3 deutlich?",
           "opties": [
-            "A Unsere Haut schwitzt, besonders in Socken und geschlossenen Schuhen.",
-            "B Wer mehr schwitzt, häufig Schuhe aus Kunststoffen trägt oder die Füße selten wäscht, bietet den Bakterien extraviel Futter.",
-            "C Der Geruch stammt nicht direkt von den Füßen, sondern von Bakterien.",
-            "D Was genau dort stinkt und wie sich der Geruch stoppen lässt, beschreibt DEIN SPIEGEL."
+            "A Wer mehr schwitzt, häufig Schuhe aus Kunststoffen trägt oder die Füße selten wäscht, bietet den Bakterien extraviel Futter.",
+            "B Was genau dort stinkt und wie sich der Geruch stoppen lässt, beschreibt DEIN SPIEGEL.",
+            "C Unsere Haut schwitzt, besonders in Socken und geschlossenen Schuhen.",
+            "D Der Geruch stammt nicht direkt von den Füßen, sondern von Bakterien."
           ],
-          "antwoord": "A",
+          "antwoord": "C",
           "uitleg": "Het correcte antwoord staat in alinea 3 van de tekst."
         },
         {
           "type": "open",
           "punten": 1,
           "context": "Alinea 4",
-          "vraag": "Welke informatie geeft de auteur in alinea 4? Beantwoord in het Nederlands.",
+          "vraag": "Wat is de hoofdgedachte van alinea 4? Schrijf één zin in het Nederlands.",
           "antwoord": "Wer mehr schwitzt, häufig Schuhe aus Kunststoffen trägt oder die Füße selten wäscht, gibt den Bakterien extraviel Futter.",
           "uitleg": "Het antwoord staat in alinea 4 van de tekst."
         }
