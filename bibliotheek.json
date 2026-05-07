@@ -3143,85 +3143,85 @@
         {
           "type": "mc",
           "punten": 1,
-          "context": "Absatz 1",
-          "vraag": "Was wird aus dem 1. Absatz deutlich?",
+          "context": "Alinea 1",
+          "vraag": "Was wird aus Absatz 1 deutlich?",
           "opties": [
-            "A Neo hat im Urlaub mit dem Yo-Yo-Spielen angefangen.",
-            "B Inzwischen beherrscht er Hunderte Tricks und reist zu Wettbewerben.",
-            "C Hier erzählt der Zehnjährige, worauf es dabei ankommt.",
-            "D Neo hat im Urlaub mit dem Yo-Yo-Spielen angefangen."
+            "A Jetzt ist in der Lage ich das Yo-Yo um meine Finger sausen lassen und damit in allen möglichen Positionen landen.",
+            "B Werfe ich mein Yo-Yo, rollt es sich mit Schwung ab.",
+            "C Unten angekommen, surrt es leise beim Drehen.",
+            "D Neo besitzt im Urlaub mit dem Yo-Yo-Spielen angefangen."
           ],
-          "antwoord": "A",
-          "uitleg": ""
+          "antwoord": "D",
+          "uitleg": "Het correcte antwoord staat in alinea 1 van de tekst."
         },
         {
           "type": "mc",
           "punten": 1,
-          "context": "Absatz 3",
-          "vraag": "Was wird aus dem 3. Absatz deutlich?",
+          "context": "Alinea 3",
+          "vraag": "Welke Aussage passt zu Absatz 3?",
           "opties": [
-            "A Egal wo ich bin, ich habe eigentlich immer ein Yo-Yo dabei.",
-            "B Das ist eine der Sachen, die ich so daran mag, man kann es überallhin mitnehmen.",
-            "C Es ist ja nicht besonders groß oder schwer.",
-            "D Und es eignet sich super für zwischendurch."
+            "A Inzwischen beherrscht er Hunderte Tricks und reist zu Wettbewerben.",
+            "B Neo besitzt im Urlaub mit dem Yo-Yo-Spielen angefangen.",
+            "C Hier erzählt der Zehnjährige, worauf es dabei ankommt.",
+            "D Egal wo ich bin, ich habe eigentlich stets ein Yo-Yo dabei."
           ],
-          "antwoord": "A",
-          "uitleg": ""
+          "antwoord": "D",
+          "uitleg": "Het correcte antwoord staat in alinea 3 van de tekst."
         },
         {
           "type": "bewering",
-          "punten": 3,
-          "context": "Absatz 5",
-          "vraag": "Geef van elk van de onderstaande beweringen aan of deze wel of niet overeenkomt met alinea 5.\nNoteer 'wel' of 'niet'.",
+          "punten": 1,
+          "context": "Alinea 5",
+          "vraag": "Geef van elk van de volgende beweringen aan of deze overeenkomt met alinea 5. Noteer 'wel' of 'niet'.",
           "beweringen": [
             {
               "tekst": "Als wir wieder zu Hause waren, durfte ich ein modernes Metall-Yo-Yo ausprobieren.",
-              "antwoord": "wel",
-              "alinea": 5
+              "antwoord": "wel"
             },
             {
               "tekst": "Mein Papa hatte es sich mal gekauft.",
-              "antwoord": "niet",
-              "alinea": 5
+              "antwoord": "niet"
             },
             {
               "tekst": "Moderne Yo-Yos haben ein Kugellager und drehen sich sehr lange.",
-              "antwoord": "wel",
-              "alinea": 5
+              "antwoord": "wel"
+            },
+            {
+              "tekst": "Man kann sich das ein bisschen vorstellen wie ein Diabolo, aber an einer Schnur.",
+              "antwoord": "niet"
             }
           ],
-          "antwoord": "",
-          "uitleg": ""
-        },
-        {
-          "type": "relatie",
-          "punten": 1,
-          "context": "Absatz 8",
-          "vraag": "„Das alles hat mich noch weiter motiviert.“ (8. Absatz)\nWie verhält sich dieser Satz zu dem vorangehenden Satz?",
-          "opties": [
-            "A als konkretisierung.",
-            "B als begründung.",
-            "C als steigerung.",
-            "D als relativierung."
-          ],
-          "antwoord": "A",
-          "uitleg": ""
+          "uitleg": "Controleer elk antwoord in alinea 5 van de tekst."
         },
         {
           "type": "citeer",
           "punten": 1,
-          "context": "Absatz 10",
-          "vraag": "Citeer de eerste twee woorden van de zin in alinea 10 die de hoofdgedachte weergeeft.",
-          "antwoord": "Viele Spieler",
-          "uitleg": ""
+          "context": "Alinea 8",
+          "vraag": "Citeer de woordgroep uit alinea 8 die overeenkomt met 'de belangrijkste conclusie hier'.",
+          "antwoord": "treffen einander zuzuschauen",
+          "uitleg": "Deze woordgroep staat letterlijk in alinea 8 van de tekst."
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Alinea 10",
+          "vraag": "Welke Aussage passt zu Absatz 10?",
+          "opties": [
+            "A Er besitzt uns danach sogar zu Hause besucht und beim Training für die Weltmeisterschaften geholfen.",
+            "B Neo besitzt im Urlaub mit dem Yo-Yo-Spielen angefangen.",
+            "C Oder es auf der Schnur herumhüpfen lassen oder auf meinem Finger balancieren.",
+            "D Jetzt ist in der Lage ich das Yo-Yo um meine Finger sausen lassen und damit in allen möglichen Positionen landen."
+          ],
+          "antwoord": "A",
+          "uitleg": "Het correcte antwoord staat in alinea 10 van de tekst."
         },
         {
           "type": "open",
           "punten": 1,
-          "context": "Absatz 12",
-          "vraag": "Wat is de hoofdgedachte van alinea 12? Schrijf één zin.",
-          "antwoord": "Fürs Halbfinale hat es trotzdem nicht gereicht, das war sehr umkämpft. Von überall aus der Welt waren Spieler extra nach Prag gekommen.",
-          "uitleg": ""
+          "context": "Alinea 12",
+          "vraag": "Wat is de hoofdgedachte van alinea 12? Schrijf één zin in het Nederlands.",
+          "antwoord": "Fürs Halbfinale hat es trotzdem nicht gereicht, das war sehr umkämpft.",
+          "uitleg": "Het antwoord staat in alinea 12 van de tekst."
         }
       ]
     },
