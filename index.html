@@ -1879,6 +1879,46 @@ function parafraseer(zin){
   return result.join('');
 }
 
+function verdraaiZin(zin, data){
+  // Draai een zin inhoudelijk om zodat hij onjuist is maar wel over de tekst gaat
+  var z=zin;
+  // 1. Vervang een getal door dubbel/half
+  if(data.getallen&&data.getallen.length>0){
+    var getal=data.getallen[Math.floor(Math.random()*data.getallen.length)];
+    var nieuw=String(parseInt(getal)*2||parseInt(getal)+10||99);
+    var poging=z.replace(getal,nieuw);
+    if(poging!==z) return poging;
+  }
+  // 2. Draai negatie om (nicht→, kein→, nie→ verwijderen of toevoegen)
+  if(z.indexOf(' nicht ')>=0) return z.replace(' nicht ',' ');
+  if(z.indexOf(' kein ')>=0) return z.replace(' kein ',' ein ');
+  if(z.indexOf(' keine ')>=0) return z.replace(' keine ',' eine ');
+  if(z.indexOf(' nie ')>=0) return z.replace(' nie ',' immer ');
+  if(z.indexOf(' immer ')>=0) return z.replace(' immer ',' selten ');
+  if(z.indexOf(' alle ')>=0) return z.replace(' alle ',' wenige ');
+  if(z.indexOf(' viele ')>=0) return z.replace(' viele ',' wenige ');
+  if(z.indexOf(' wenige ')>=0) return z.replace(' wenige ',' viele ');
+  if(z.indexOf(' gut ')>=0) return z.replace(' gut ',' schlecht ');
+  if(z.indexOf(' schlecht ')>=0) return z.replace(' schlecht ',' gut ');
+  if(z.indexOf(' groß')>=0) return z.replace(' groß',' klein');
+  if(z.indexOf(' klein')>=0) return z.replace(' klein',' groß');
+  if(z.indexOf(' oft ')>=0) return z.replace(' oft ',' selten ');
+  if(z.indexOf(' selten ')>=0) return z.replace(' selten ',' oft ');
+  if(z.indexOf(' mehr ')>=0) return z.replace(' mehr ',' weniger ');
+  if(z.indexOf(' weniger ')>=0) return z.replace(' weniger ',' mehr ');
+  // 3. Wissel namen om als er meerdere zijn
+  if(data.namen&&data.namen.length>=2){
+    return z.replace(data.namen[0],data.namen[1]);
+  }
+  // 4. Voeg "nicht" toe voor het werkwoord (simpele inversie)
+  var werkwoordPos=z.search(/ (ist|sind|hat|haben|wird|werden|kann|soll|muss|will|geht|kommt|macht|gibt|sagt|findet) /);
+  if(werkwoordPos>=0){
+    return z.substring(0,werkwoordPos)+z.substring(werkwoordPos).replace(/ (ist|sind|hat|haben|wird|werden|kann|soll|muss|will|geht|kommt|macht|gibt|sagt|findet) /,' $1 nicht ');
+  }
+  // 5. Laatste redmiddel: neem een andere zin uit andere alinea
+  return null;
+}
+
 function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
   gebruikteZinnen=gebruikteZinnen||[];
   var d=an.data[ai]; var n=d.nr;
@@ -1892,69 +1932,73 @@ function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
   var pool=vragen[niveau]||vragen['B1'];
   var vraag=offlineRnd(pool);
 
-  // Kies de kortste complete zin als correct antwoord
+  // Kies kortste complete zin als correct antwoord
   var kandidaten=d.zinnen.filter(function(z){return z.length>15&&z.length<=180;});
   kandidaten.sort(function(a,b){return a.length-b.length;});
   var bronZin=kandidaten[0]||d.eersteZin||d.langsteZin;
   bronZin=kapZin(bronZin,120);
   var corr=parafraseer(bronZin);
 
-  // Bepaal aantal opties op basis van beschikbare alinea's (2-4)
-  var aantalOpties=Math.min(4,Math.max(2,an.data.length));
+  // Verzamel alle beschikbare zinnen uit de tekst (voor afleiders)
+  var alleZinnen=[];
+  an.data.forEach(function(ad,idx){
+    ad.zinnen.forEach(function(z){
+      if(z&&z.length>15&&z.length<=180) alleZinnen.push({zin:z,alinea:idx});
+    });
+  });
 
-  // Afleiders: kortste geparafraseerde zin uit elke andere alinea
   var afl=[];
   var gebruikt=[corr,bronZin].concat(gebruikteZinnen);
-  an.data.forEach(function(ad, idx){
-    if(idx===ai||afl.length>=aantalOpties-1) return;
+
+  // Stap 1: zinnen uit andere alinea's (geparafraseerd)
+  an.data.forEach(function(ad,idx){
+    if(idx===ai||afl.length>=3) return;
     var zinnen=ad.zinnen.filter(function(z){return z.length>15&&z.length<=180;});
     zinnen.sort(function(a,b){return a.length-b.length;});
     var z=zinnen[0]||ad.eersteZin;
     if(z&&gebruikt.indexOf(z)<0){
-      z=kapZin(z,120);
-      var zPar=parafraseer(z);
-      if(gebruikt.indexOf(zPar)<0){
-        afl.push(zPar);
-        gebruikt.push(z);gebruikt.push(zPar);
-      }
+      var zk=kapZin(z,120);
+      var zPar=parafraseer(zk);
+      if(gebruikt.indexOf(zPar)<0){afl.push(zPar);gebruikt.push(z);gebruikt.push(zPar);}
     }
   });
 
-  // Vul aan met zinnen uit dezelfde alinea (verdraaid) als er te weinig andere alinea's zijn
-  var zIdx=1;
-  while(afl.length<aantalOpties-1&&zIdx<d.zinnen.length){
-    var z=d.zinnen[zIdx];
-    if(z&&z.length>15&&gebruikt.indexOf(z)<0){
-      z=kapZin(z,120);
-      var zPar=parafraseer(z);
-      if(gebruikt.indexOf(zPar)<0){
-        afl.push(zPar);
-        gebruikt.push(z);gebruikt.push(zPar);
+  // Stap 2: verdraaide zinnen uit dezelfde of andere alinea's
+  if(afl.length<3){
+    offlineShuffle(alleZinnen).forEach(function(item){
+      if(afl.length>=3) return;
+      if(item.zin&&gebruikt.indexOf(item.zin)<0){
+        var data=an.data[item.alinea]||d;
+        var verdraaid=verdraaiZin(kapZin(item.zin,120),data);
+        if(verdraaid&&verdraaid!==item.zin&&gebruikt.indexOf(verdraaid)<0){
+          afl.push(verdraaid);
+          gebruikt.push(item.zin);gebruikt.push(verdraaid);
+        }
       }
-    }
-    zIdx++;
+    });
   }
-  // Laatste redmiddel: neem zinnen uit willekeurige alinea's die we nog niet hebben
-  if(afl.length<aantalOpties-1){
-    var alleZinnen=[];
-    an.data.forEach(function(ad){ad.zinnen.forEach(function(z){if(z&&z.length>15)alleZinnen.push(z);});});
-    offlineShuffle(alleZinnen).forEach(function(z){
-      if(afl.length>=aantalOpties-1) return;
-      if(gebruikt.indexOf(z)<0){
-        z=kapZin(z,120);
-        var zPar=parafraseer(z);
+
+  // Stap 3: geparafraseerde zinnen uit dezelfde alinea
+  if(afl.length<2){
+    d.zinnen.forEach(function(z){
+      if(afl.length>=3) return;
+      if(z&&z.length>15&&gebruikt.indexOf(z)<0){
+        var zk=kapZin(z,120);
+        var zPar=parafraseer(zk);
         if(gebruikt.indexOf(zPar)<0){afl.push(zPar);gebruikt.push(z);gebruikt.push(zPar);}
       }
     });
   }
 
-  var alleOpties=offlineShuffle([corr].concat(afl));
+  // Minimaal 1 afleider, maximaal 3
+  if(afl.length===0) afl.push(parafraseer(kapZin(d.langsteZin,120)));
+  var aantalOpties=Math.min(4,afl.length+1);
+  var alleOpties=offlineShuffle([corr].concat(afl.slice(0,aantalOpties-1)));
   var corrLetter='ABCD'[alleOpties.indexOf(corr)];
   var opties=alleOpties.map(function(o,i){return 'ABCD'[i]+' '+o;});
 
   return {type:'mc',punten:1,context:'Alinea '+n,vraag:vraag,opties:opties,antwoord:corrLetter,uitleg:'Het correcte antwoord staat in alinea '+n+' van de tekst.'};
 }
-
 // ── Bewering-vraag: echte feiten = wel, verdraaide feiten = niet ──
 function offlineMaakBewering(an, ai){
   var d=an.data[ai]; var n=d.nr;
