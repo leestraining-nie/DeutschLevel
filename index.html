@@ -883,9 +883,8 @@ footer{margin-top:48px;padding:20px 0;border-top:1px solid var(--border);text-al
 
 function fixEncoding(str){
   if(!str||typeof str!=='string') return str;
-  if(str.indexOf('Ã')<0&&str.indexOf('Â')<0&&str.indexOf('â€')<0) return str;
-  // Vervang Windows-1252 tekens die browsers verkeerd weergeven als Unicode
-  // (bijv. \x9f wordt Ÿ U+0178, \x96 wordt – U+2013, etc.)
+  if(str.indexOf('\xc3')<0&&str.indexOf('\xc2')<0&&str.indexOf('\xe2')<0) return str;
+  // Vervang Windows-1252 tekens die browsers als Unicode tonen
   str=str
     .replace(/\u0178/g,'\x9f').replace(/\u201a/g,'\x82').replace(/\u0192/g,'\x83')
     .replace(/\u201e/g,'\x84').replace(/\u2026/g,'\x85').replace(/\u2020/g,'\x86')
@@ -896,95 +895,20 @@ function fixEncoding(str){
     .replace(/\u2013/g,'\x96').replace(/\u2014/g,'\x97').replace(/\u02dc/g,'\x98')
     .replace(/\u2122/g,'\x99').replace(/\u0161/g,'\x9a').replace(/\u203a/g,'\x9b')
     .replace(/\u0153/g,'\x9c').replace(/\u017e/g,'\x9e');
-  try{return decodeURIComponent(escape(str));}catch(e){return str;}
+  // Percent-encode alle non-ASCII bytes en decodeer als UTF-8
+  // Werkt ook voor C1 controle-tekens (\u0080-\u009f) die escape() niet aankan
+  try{
+    var pct='';
+    for(var i=0;i<str.length;i++){
+      var code=str.charCodeAt(i);
+      pct+=code>127?('%'+('00'+code.toString(16)).slice(-2).toUpperCase()):str[i];
+    }
+    return decodeURIComponent(pct);
+  }catch(e){
+    try{return decodeURIComponent(escape(str));}catch(e2){return str;}
+  }
 }
-const LC={A1:'#3a7d44',A2:'#5a9e5f',B1:'#2e6da4',B2:'#1a4d7e',C1:'#8b3a8b',C2:'#5c1f5c'};
-const LN={A1:'Beginner',A2:'Elementaire Gebruiker',B1:'Drempelgebruiker',B2:'Zelfstandige Gebruiker',C1:'Gevorderde Gebruiker',C2:'Vaardige Gebruiker'};
-const LD={A1:'Beginner niveau',A2:'Elementair niveau',B1:'Drempel niveau',B2:'Zelfstandig niveau',C1:'Gevorderd niveau',C2:'Vaardig niveau'};
-const LEVEL_XP={A1:1,A2:1.5,B1:2,B2:3,C1:4,C2:5};
-const DIFF_STARS={A1:1,A2:2,B1:3,B2:4,C1:5,C2:5};
-const DIFF_STR={A1:'★☆☆☆☆',A2:'★★☆☆☆',B1:'★★★☆☆',B2:'★★★★☆',C1:'★★★★★',C2:'★★★★★'};
-const XP_LABELS={A1:'+10 XP',A2:'+15 XP',B1:'+20 XP',B2:'+30 XP',C1:'+40 XP',C2:'+50 XP'};
-const PLAYER_LEVELS=[
-  {lv:1,title:'Deutsch-Anfänger',xpNeeded:0},{lv:2,title:'Wortschatz-Sammler',xpNeeded:100},
-  {lv:3,title:'Satzbauzler',xpNeeded:250},{lv:4,title:'Lesereifer',xpNeeded:500},
-  {lv:5,title:'Textkenner',xpNeeded:900},{lv:6,title:'Grammatik-Profi',xpNeeded:1400},
-  {lv:7,title:'B-Niveau Meister',xpNeeded:2100},{lv:8,title:'Aufsatz-Experte',xpNeeded:3000},
-  {lv:9,title:'C-Niveau Held',xpNeeded:4200},{lv:10,title:'Deutsch-Champion',xpNeeded:6000},
-];
-const BADGES=[
-  {id:'eerste_analyse',icon:'🔍',name:'Eerste Analyse',xp:25,condition:s=>s.totalAnalyses>=1},
-  {id:'vijf_teksten',icon:'📚',name:'Boekenwurm',xp:50,condition:s=>s.totalAnalyses>=5},
-  {id:'eerste_vragen',icon:'📝',name:'Vraagsteller',xp:30,condition:s=>s.totalQuestions>=1},
-  {id:'perfectionist',icon:'🎯',name:'Perfectionist',xp:75,condition:s=>s.perfectScores>=1},
-  {id:'b1_level',icon:'⬆️',name:'B1 Bereikt',xp:60,condition:s=>(s.levelsAttempted||[]).includes('B1')},
-  {id:'b2_level',icon:'🚀',name:'B2 Durver',xp:100,condition:s=>(s.levelsAttempted||[]).includes('B2')},
-  {id:'c1_level',icon:'🦅',name:'C1 Atleet',xp:150,condition:s=>(s.levelsAttempted||[]).includes('C1')},
-  {id:'streak3',icon:'🔥',name:'Op Stoom',xp:80,condition:s=>s.maxStreak>=3},
-];
-const DAILY_MISSIONS=[
-  {id:'analyse_today',icon:'🔍',name:'Dagelijkse analyse',desc:'Analyseer 1 tekst',xpReward:20,target:1,key:'analysesToday'},
-  {id:'questions_today',icon:'📝',name:'Oefensessie',desc:'Maak 5 vragen',xpReward:30,target:5,key:'questionsToday'},
-  {id:'hard_text',icon:'💪',name:'Uitdaging!',desc:'Oefen een B2/C1/C2 tekst',xpReward:50,target:1,key:'hardTextToday'},
-];
-const ERK_INFO={
-  A1:{name:'Beginner',de:'Anfänger',can:'Eenvoudige uitdrukkingen en dagelijkse zinnen.',vocab:'~500 woorden',gram:'Tegenwoordige tijd, vnw., enkelvoud/meervoud',ex:'„Ich heiße Anna. Ich komme aus Holland."'},
-  A2:{name:'Elementair',de:'Grundlegende Kenntnisse',can:'Vertrouwde onderwerpen: gezin, winkelen.',vocab:'~1.000 woorden',gram:'Perfekt, modale werkwoorden, Akkusativ/Dativ',ex:'„Am Wochenende bin ich in den Park gegangen."'},
-  B1:{name:'Drempel',de:'Mittelstufe',can:'Hoofdpunten begrijpen van standaard taal.',vocab:'~2.000 woorden',gram:'Konjunktiv II, Relativsätze, Passiv eenvoudig',ex:'„Ich würde gerne wissen, ob es hier ein gutes Restaurant gibt."'},
-  B2:{name:'Zelfstandig',de:'Selbstständige Sprachverwendung',can:'Complexe teksten begrijpen. Vloeiend communiceren.',vocab:'~4.000 woorden',gram:'Konjunktiv I, Nominalisierungen, complexe bijzinnen',ex:'„Die Digitalisierung hat erhebliche Auswirkungen auf den Arbeitsmarkt."'},
-  C1:{name:'Gevorderd',de:'Kompetente Sprachverwendung',can:'Lange, veeleisende teksten en impliciete betekenis.',vocab:'~8.000 woorden',gram:'Partizipialkonstruktionen, Stilistik, Register',ex:'„Die philosophischen Implikationen der Quantenmechanik werfen grundlegende Fragen auf."'},
-  C2:{name:'Vaardig',de:'Beherrschende Sprachverwendung',can:'Vrijwel alles begrijpen en vloeiend communiceren.',vocab:'16.000+ woorden',gram:'Volledig geïntegreerd, nuances, ironie',ex:'„Die subtile Ironie in Kafkas Prosa entfaltet sich erst beim zweiten Lesen vollständig."'},
-};
 
-// ════ STATE ════
-const LEERLING_ACCOUNTS = [
-  {voornaam:"Yoav",achternaam:"Barkan",klas:"4V",gebruikersnaam:"yoavb",wachtwoord:"Apfel"},
-  {voornaam:"Max",achternaam:"Haverkamp",klas:"4H",gebruikersnaam:"maxh",wachtwoord:"Mond"},
-  {voornaam:"Sarah",achternaam:"Kropf",klas:"4V",gebruikersnaam:"sarahk",wachtwoord:"Stern"},
-  {voornaam:"Rotem",achternaam:"Machluf",klas:"4V",gebruikersnaam:"rotemm",wachtwoord:"Löwe"},
-  {voornaam:"Lital",achternaam:"Markuszower",klas:"4V",gebruikersnaam:"litalm",wachtwoord:"Regen"},
-  {voornaam:"Illay",achternaam:"Melching",klas:"4H",gebruikersnaam:"illaym",wachtwoord:"Wolf"},
-  {voornaam:"Tex",achternaam:"Prenen",klas:"4H",gebruikersnaam:"texp",wachtwoord:"Baum"},
-  {voornaam:"Zohar",achternaam:"Roeg",klas:"4H",gebruikersnaam:"zoharr",wachtwoord:"Maus"},
-  {voornaam:"Pepijn",achternaam:"Rychter",klas:"4V",gebruikersnaam:"pepijnr",wachtwoord:"Stift"},
-  {voornaam:"Leo",achternaam:"Sandren",klas:"4V",gebruikersnaam:"leos",wachtwoord:"Lampe"},
-  {voornaam:"Joshua",achternaam:"Solomons",klas:"4H",gebruikersnaam:"joshuas",wachtwoord:"Kino"},
-  {voornaam:"David",achternaam:"Vink",klas:"4H",gebruikersnaam:"davidv",wachtwoord:"Garten"},
-  {voornaam:"Amelia",achternaam:"Lee",klas:"4H",gebruikersnaam:"amelial",wachtwoord:"Sand"},
-  {voornaam:"Noah",achternaam:"Lewis",klas:"4H",gebruikersnaam:"noahl",wachtwoord:"Blume"}
-];
-let currentMode=null;
-let library=[];
-let playerStats={
-  xp:0,totalAnalyses:0,totalQuestions:0,perfectScores:0,levelsAttempted:[],
-  earnedBadges:[],streak:0,maxStreak:0,lastActiveDay:'',
-  analysesToday:0,questionsToday:0,hardTextToday:0,dailyMissionsDate:''
-};
-let currentText='',currentLevel='',currentAnalysis=null;
-let libFilter='alle',libPageFilter='alle';
-let currentQuestions=[],modalQuestions=[],modalEntry=null;
-let lleSelectedNiveau=null,finalNiveau=null;
-let activeMarkColor='yellow',currentModalId=null;
-
-// ════ GITHUB OPSLAG STATE ════
-let jbSyncing=false;
-let jbSyncTimer=null;
-let jbReady=false;
-let ghFileSha=null;
-let deletedIds=JSON.parse(localStorage.getItem('dl_deleted')||'[]');
-
-// ════ SYNC BAR ════
-let _syncBarTimer=null;
-function showSync(type,msg,ms=0){
-  const b=document.getElementById('syncBar');
-  const m=document.getElementById('syncMsg');
-  b.className='show '+type; m.textContent=msg;
-  if(_syncBarTimer)clearTimeout(_syncBarTimer);
-  if(ms>0)_syncBarTimer=setTimeout(()=>b.classList.remove('show'),ms);
-}
-function hideSync(){document.getElementById('syncBar').classList.remove('show');}
-
-// ════ GITHUB API ════
 function fixLibEntry(e){
   function fe(s){if(!s||typeof s!=='string')return s;return fixEncoding(s);}
   var fixed=Object.assign({},e,{
