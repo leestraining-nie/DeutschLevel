@@ -1778,68 +1778,89 @@ function kapZin(zin, maxLen){
   return zin.substring(0,maxLen)+'.';
 }
 
+
 function parafraseer(zin){
+  // Vervang max 1 bijwoord door synoniem — zin blijft grammaticaal correct
   if(!zin||zin.length<10) return zin;
-  var woorden=zin.split(/(\s+)/);
-  var veranderd=0;
-  var result=woorden.map(function(w){
-    if(veranderd>=2) return w; // max 2 vervangingen per zin
-    var schoon=w.replace(/[.,;:!?()"""«»]/g,'');
-    var leesteken=w.substring(schoon.length);
-    // Probeer exact match
-    if(SYNONIEMEN[schoon]){veranderd++;return SYNONIEMEN[schoon]+leesteken;}
-    // Probeer lowercase
-    var lc=schoon.toLowerCase();
-    if(SYNONIEMEN[lc]){veranderd++;
-      var syn=SYNONIEMEN[lc];
-      // Behoud hoofdletter als origineel die ook had
-      if(schoon[0]===schoon[0].toUpperCase()&&schoon[0]!==schoon[0].toLowerCase()){
-        syn=syn.charAt(0).toUpperCase()+syn.slice(1);
-      }
-      return syn+leesteken;
-    }
-    return w;
-  });
-  return result.join('');
+  var paren=[
+    [' sehr ',' besonders '],[' oft ',' häufig '],[' immer ',' stets '],
+    [' auch ',' ebenfalls '],[' schon ',' bereits '],[' nur ',' lediglich '],
+    [' fast ',' nahezu '],[' wirklich ',' tatsächlich '],[' genau ',' exakt '],
+    [' sagt ',' erklärt '],[' meint ',' glaubt '],[' gibt ',' bietet '],
+    [' zeigt ',' verdeutlicht '],[' will ',' möchte '],[' kann ',' darf '],
+    [' macht ',' erledigt '],[' geht ',' begibt sich '],[' kommt ',' stammt '],
+  ];
+  for(var i=0;i<paren.length;i++){
+    if(zin.indexOf(paren[i][0])>=0) return zin.replace(paren[i][0],paren[i][1]);
+  }
+  return zin;
+}
+
+function isLopendeDuitsZin(zin){
+  // Eenvoudige check: zin heeft werkwoord-achtig woord en begint met hoofdletter
+  if(!zin||zin.length<8) return false;
+  if(zin[0]!==zin[0].toUpperCase()) return false;
+  // Moet een werkwoord bevatten (eindigt op -t, -en, -te, -ete, of hulpwerkwoord)
+  var heeftWerkwoord=/\b(ist|sind|hat|haben|wird|werden|kann|soll|muss|will|darf|war|waren|hatte|hatten|wurde|wurden|geht|kommt|macht|gibt|sagt|findet|zeigt|braucht|hilft|bleibt|heißt|gilt|lässt|gehört|steht|liegt|führt|bringt|nimmt|sieht|hält|trägt|spricht|kennt|weiß|denkt|glaubt|meint|fühlt|lebt|wohnt|arbeitet|lernt|spielt|kauft|verkauft|schreibt|liest|fährt|reist|besucht|sucht|findet|schläft|isst|trinkt)\b/i;
+  return heeftWerkwoord.test(zin);
 }
 
 function verdraaiZin(zin, data){
-  // Draai een zin inhoudelijk om zodat hij onjuist is maar wel over de tekst gaat
-  var z=zin;
-  // 1. Vervang een getal door dubbel/half
-  if(data.getallen&&data.getallen.length>0){
-    var getal=data.getallen[Math.floor(Math.random()*data.getallen.length)];
-    var nieuw=String(parseInt(getal)*2||parseInt(getal)+10||99);
-    var poging=z.replace(getal,nieuw);
-    if(poging!==z) return poging;
+  if(!zin||zin.length<10) return null;
+  var resultaat=null;
+
+  // 1. Vervang getal — grammatica blijft intact
+  if(data&&data.getallen&&data.getallen.length>0){
+    for(var gi=0;gi<data.getallen.length;gi++){
+      var getal=data.getallen[gi];
+      if(getal&&zin.indexOf(getal)>=0){
+        var nieuwGetal=String(Math.round(parseInt(getal)*2));
+        var poging=zin.replace(getal,nieuwGetal);
+        if(poging!==zin&&isLopendeDuitsZin(poging)){resultaat=poging;break;}
+      }
+    }
   }
-  // 2. Draai negatie om (nicht→, kein→, nie→ verwijderen of toevoegen)
-  if(z.indexOf(' nicht ')>=0) return z.replace(' nicht ',' ');
-  if(z.indexOf(' kein ')>=0) return z.replace(' kein ',' ein ');
-  if(z.indexOf(' keine ')>=0) return z.replace(' keine ',' eine ');
-  if(z.indexOf(' nie ')>=0) return z.replace(' nie ',' immer ');
-  if(z.indexOf(' immer ')>=0) return z.replace(' immer ',' selten ');
-  if(z.indexOf(' alle ')>=0) return z.replace(' alle ',' wenige ');
-  if(z.indexOf(' viele ')>=0) return z.replace(' viele ',' wenige ');
-  if(z.indexOf(' wenige ')>=0) return z.replace(' wenige ',' viele ');
-  if(z.indexOf(' gut ')>=0) return z.replace(' gut ',' schlecht ');
-  if(z.indexOf(' schlecht ')>=0) return z.replace(' schlecht ',' gut ');
-  if(z.indexOf(' groß')>=0) return z.replace(' groß',' klein');
-  if(z.indexOf(' klein')>=0) return z.replace(' klein',' groß');
-  if(z.indexOf(' oft ')>=0) return z.replace(' oft ',' selten ');
-  if(z.indexOf(' selten ')>=0) return z.replace(' selten ',' oft ');
-  if(z.indexOf(' mehr ')>=0) return z.replace(' mehr ',' weniger ');
-  if(z.indexOf(' weniger ')>=0) return z.replace(' weniger ',' mehr ');
-  // 3. Wissel namen om als er meerdere zijn
-  if(data.namen&&data.namen.length>=2){
-    return z.replace(data.namen[0],data.namen[1]);
+
+  // 2. Vervang bijwoord door antoniem — zin structuur ongewijzigd
+  if(!resultaat){
+    var antoniemen=[
+      [' immer ',' selten '],[' selten ',' immer '],[' oft ',' kaum '],[' kaum ',' oft '],
+      [' viele ',' wenige '],[' wenige ',' viele '],[' mehr ',' weniger '],[' weniger ',' mehr '],
+      [' groß ',' klein '],[' klein ',' groß '],[' gut ',' schlecht '],[' schlecht ',' gut '],
+      [' schnell ',' langsam '],[' langsam ',' schnell '],[' früh ',' spät '],[' spät ',' früh '],
+      [' lang ',' kurz '],[' kurz ',' lang '],[' leicht ',' schwer '],[' schwer ',' leicht '],
+      [' alt ',' neu '],[' neu ',' alt '],[' stark ',' schwach '],[' schwach ',' stark '],
+      [' hoch ',' niedrig '],[' niedrig ',' hoch '],[' weit ',' nah '],[' nah ',' weit '],
+      [' laut ',' leise '],[' leise ',' laut '],[' warm ',' kalt '],[' kalt ',' warm '],
+      [' früher ',' später '],[' später ',' früher '],[' besonders ',' kaum '],
+      [' bereits ',' noch nicht '],[' noch nicht ',' bereits '],
+      [' immer mehr ',' immer weniger '],[' immer weniger ',' immer mehr '],
+    ];
+    for(var ai=0;ai<antoniemen.length;ai++){
+      if(zin.indexOf(antoniemen[ai][0])>=0){
+        var poging2=zin.replace(antoniemen[ai][0],antoniemen[ai][1]);
+        if(isLopendeDuitsZin(poging2)){resultaat=poging2;break;}
+      }
+    }
   }
-  // 4. Voeg "nicht" toe voor het werkwoord (simpele inversie)
-  var werkwoordPos=z.search(/ (ist|sind|hat|haben|wird|werden|kann|soll|muss|will|geht|kommt|macht|gibt|sagt|findet) /);
-  if(werkwoordPos>=0){
-    return z.substring(0,werkwoordPos)+z.substring(werkwoordPos).replace(/ (ist|sind|hat|haben|wird|werden|kann|soll|muss|will|geht|kommt|macht|gibt|sagt|findet) /,' $1 nicht ');
+
+  // 3. Voeg "nicht" toe na werkwoord (alleen als zin nog geen negatie heeft)
+  if(!resultaat&&zin.indexOf(' nicht ')<0&&zin.indexOf(' kein')<0){
+    var ww=zin.match(/\b(ist|sind|hat|haben|wird|werden|kann|soll|muss|war|waren|hatte|hatten)\b/);
+    if(ww){
+      var poging3=zin.replace(' '+ww[0]+' ',' '+ww[0]+' nicht ');
+      if(isLopendeDuitsZin(poging3)) resultaat=poging3;
+    }
   }
-  // 5. Laatste redmiddel: neem een andere zin uit andere alinea
+
+  // 4. Verwijder "nicht" als zin negatie heeft
+  if(!resultaat&&zin.indexOf(' nicht ')>=0){
+    var poging4=zin.replace(' nicht ','');
+    if(isLopendeDuitsZin(poging4)) resultaat=poging4;
+  }
+
+  // Valideer dat resultaat een lopende zin is
+  if(resultaat&&isLopendeDuitsZin(resultaat)) return resultaat;
   return null;
 }
 
