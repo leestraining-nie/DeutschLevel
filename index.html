@@ -2318,6 +2318,19 @@ function openModal(id){
   const body=document.getElementById('modalTextBody');
   if(e.markeringen){
     let fixedMark=e.markeringen;try{fixedMark=fixEncoding(fixedMark);}catch(ex){}
+    // Voeg alineanummers toe aan opgeslagen markeringen (als ze er nog niet in zitten)
+    if(fixedMark.indexOf('user-select:none')<0){
+      const tmp=document.createElement('div');tmp.innerHTML=fixedMark;
+      Array.from(tmp.querySelectorAll('p')).forEach((p,i)=>{
+        if(!p.querySelector('[user-select]')){
+          const num=document.createElement('span');
+          num.style.cssText='display:inline-block;min-width:18px;font-size:10px;font-weight:700;color:var(--muted);opacity:0.5;margin-right:6px;vertical-align:top;padding-top:3px;user-select:none;';
+          num.textContent=i+1;
+          p.insertBefore(num,p.firstChild);
+        }
+      });
+      fixedMark=tmp.innerHTML;
+    }
     body.innerHTML=fixedMark;
   } else {
     body.innerHTML=e.tekst.split('\n').filter(Boolean).map((p,i)=>'<p><span style="display:inline-block;min-width:18px;font-size:10px;font-weight:700;color:var(--muted);opacity:0.5;margin-right:6px;vertical-align:top;padding-top:3px;user-select:none;">'+(i+1)+'</span>'+p+'</p>').join('');
