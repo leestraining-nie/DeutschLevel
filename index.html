@@ -1835,19 +1835,23 @@ var SYNONIEMEN={
   'nur':'lediglich','fast':'nahezu','ganz':'vollständig','wirklich':'tatsächlich',
 };
 
-// ── Kap een zin af op een heel woord, nooit midden in een zin ──
+// ── Verkort een zin tot een complete deelzin (nooit afbreken) ──
 function kapZin(zin, maxLen){
-  maxLen=maxLen||200;
-  if(!zin||zin.length<=maxLen) return zin;
-  // Probeer af te kappen bij zinsgrens (. ! ?)
-  var zinGrens=zin.lastIndexOf('.',maxLen);
-  if(zinGrens<0) zinGrens=zin.lastIndexOf('!',maxLen);
-  if(zinGrens<0) zinGrens=zin.lastIndexOf('?',maxLen);
-  if(zinGrens>maxLen*0.6) return zin.substring(0,zinGrens+1);
-  // Anders op woordgrens
+  maxLen=maxLen||150;
+  if(!zin) return zin;
+  // Verwijder bijzinnen na komma als zin te lang is
+  if(zin.length>maxLen){
+    var komma=zin.indexOf(',');
+    if(komma>30&&komma<maxLen) return zin.substring(0,komma)+'.';
+  }
+  if(zin.length<=maxLen) return zin;
+  // Kap op zinsgrens
+  var grens=Math.max(zin.lastIndexOf('.',maxLen),zin.lastIndexOf('!',maxLen),zin.lastIndexOf('?',maxLen));
+  if(grens>maxLen*0.5) return zin.substring(0,grens+1);
+  // Kap op woordgrens — maar NOOIT met ...
   var spatie=zin.lastIndexOf(' ',maxLen);
-  if(spatie>maxLen*0.6) return zin.substring(0,spatie)+'…';
-  return zin.substring(0,maxLen)+'…';
+  if(spatie>maxLen*0.5) return zin.substring(0,spatie)+'.';
+  return zin.substring(0,maxLen)+'.';
 }
 
 function parafraseer(zin){
@@ -1888,43 +1892,43 @@ function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
   var pool=vragen[niveau]||vragen['B1'];
   var vraag=offlineRnd(pool);
 
-  // Correct antwoord: geparafraseerde versie van eerste zin
-  var bronZin=d.eersteZin.length>20?d.eersteZin:d.langsteZin;
-  bronZin=kapZin(bronZin,200);
+  // Kies de kortste complete zin als correct antwoord
+  var kandidaten=d.zinnen.filter(function(z){return z.length>15&&z.length<=180;});
+  kandidaten.sort(function(a,b){return a.length-b.length;});
+  var bronZin=kandidaten[0]||d.eersteZin||d.langsteZin;
+  bronZin=kapZin(bronZin,120);
   var corr=parafraseer(bronZin);
 
-  // Afleiders: geparafraseerde zinnen uit ANDERE alinea's
+  // Bepaal aantal opties op basis van beschikbare alinea's (2-4)
+  var aantalOpties=Math.min(4,Math.max(2,an.data.length));
+
+  // Afleiders: kortste geparafraseerde zin uit elke andere alinea
   var afl=[];
   var gebruikt=[corr,bronZin].concat(gebruikteZinnen);
   an.data.forEach(function(ad, idx){
-    if(idx===ai) return;
-    ad.zinnen.forEach(function(z){
-      if(afl.length>=3) return;
-      if(z && z.length>15 && gebruikt.indexOf(z)<0){
-        z=kapZin(z,200);
-        var zPar=parafraseer(z);
+    if(idx===ai||afl.length>=aantalOpties-1) return;
+    var zinnen=ad.zinnen.filter(function(z){return z.length>15&&z.length<=180;});
+    zinnen.sort(function(a,b){return a.length-b.length;});
+    var z=zinnen[0]||ad.eersteZin;
+    if(z&&gebruikt.indexOf(z)<0){
+      z=kapZin(z,120);
+      var zPar=parafraseer(z);
+      if(gebruikt.indexOf(zPar)<0){
         afl.push(zPar);
         gebruikt.push(z);gebruikt.push(zPar);
       }
-    });
+    }
   });
 
-  // Vul aan als er te weinig alinea's zijn
-  var zIdx=1;
-  while(afl.length<3){
-    var z=d.zinnen[zIdx]||null;
-    var zPar=z?parafraseer(z):'';
-    if(!z||gebruikt.indexOf(z)>=0||gebruikt.indexOf(zPar)>=0){
-      var fallbacks=['Dit wordt in de tekst niet vermeld.','De auteur gaat hier niet op in.','Dit staat niet in deze alinea.'];
-      zPar=fallbacks[afl.length]||'Geen verdere informatie beschikbaar.';
-    }
-    zPar=kapZin(zPar,200);
-    afl.push(zPar);
-    gebruikt.push(zPar);
-    zIdx++;
+  // Vul aan met fallbacks indien nodig
+  var fallbacks=['Dit wordt niet in de tekst vermeld.','De auteur gaat hier niet op in.','Dit staat niet in deze alinea.'];
+  var fi=0;
+  while(afl.length<aantalOpties-1&&fi<fallbacks.length){
+    if(gebruikt.indexOf(fallbacks[fi])<0){afl.push(fallbacks[fi]);gebruikt.push(fallbacks[fi]);}
+    fi++;
   }
 
-  var alleOpties=offlineShuffle([corr].concat(afl.slice(0,3)));
+  var alleOpties=offlineShuffle([corr].concat(afl));
   var corrLetter='ABCD'[alleOpties.indexOf(corr)];
   var opties=alleOpties.map(function(o,i){return 'ABCD'[i]+' '+o;});
 
