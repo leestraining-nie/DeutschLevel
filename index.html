@@ -1808,6 +1808,58 @@ function offlineAnalyseer(tekst){
 }
 
 // ── MC-vraag: correct antwoord = eerste zin alinea, afleiders = zinnen andere alinea's ──
+// ── Parafraseer een zin: vervang sleutelwoorden door synoniemen ──
+var SYNONIEMEN={
+  // Werkwoorden
+  'sagt':'erklärt','erklärt':'beschreibt','beschreibt':'zeigt','zeigt':'verdeutlicht',
+  'geht':'fährt','fährt':'reist','macht':'tut','gibt':'bietet','hat':'besitzt',
+  'ist':'gilt als','sind':'gelten als','wird':'soll','werden':'sollen',
+  'findet':'entdeckt','sieht':'beobachtet','denkt':'glaubt','meint':'ist der Meinung',
+  'hilft':'unterstützt','braucht':'benötigt','will':'möchte','kann':'ist in der Lage',
+  'kommt':'stammt','geht':'begibt sich','lebt':'wohnt','arbeitet':'ist tätig',
+  // Zelfstandige naamwoorden
+  'Kinder':'Jugendliche','Jugendliche':'junge Menschen','Menschen':'Personen',
+  'Leute':'Personen','Problem':'Herausforderung','Möglichkeit':'Chance',
+  'Zeit':'Periode','Jahr':'Zeitraum','Land':'Region','Stadt':'Ort',
+  'Arbeit':'Tätigkeit','Schule':'Bildungseinrichtung','Leben':'Alltag',
+  'Geld':'Mittel','Weg':'Methode','Teil':'Bereich','Ende':'Abschluss',
+  'Anfang':'Beginn','Grund':'Ursache','Folge':'Konsequenz',
+  // Bijvoeglijke naamwoorden
+  'groß':'bedeutend','klein':'gering','viel':'zahlreich','wenig':'kaum',
+  'gut':'positiv','schlecht':'negativ','neu':'aktuell','alt':'früher',
+  'wichtig':'bedeutsam','schwierig':'herausfordernd','einfach':'unkompliziert',
+  'schnell':'rasch','langsam':'allmählich','jung':'heranwachsend','alt':'erfahren',
+  // Bijwoorden
+  'sehr':'besonders','oft':'häufig','immer':'stets','nie':'kaum',
+  'auch':'ebenfalls','noch':'weiterhin','schon':'bereits','erst':'zunächst',
+  'nur':'lediglich','fast':'nahezu','ganz':'vollständig','wirklich':'tatsächlich',
+};
+
+function parafraseer(zin){
+  if(!zin||zin.length<10) return zin;
+  var woorden=zin.split(/(\s+)/);
+  var veranderd=0;
+  var result=woorden.map(function(w){
+    if(veranderd>=2) return w; // max 2 vervangingen per zin
+    var schoon=w.replace(/[.,;:!?()"""«»]/g,'');
+    var leesteken=w.substring(schoon.length);
+    // Probeer exact match
+    if(SYNONIEMEN[schoon]){veranderd++;return SYNONIEMEN[schoon]+leesteken;}
+    // Probeer lowercase
+    var lc=schoon.toLowerCase();
+    if(SYNONIEMEN[lc]){veranderd++;
+      var syn=SYNONIEMEN[lc];
+      // Behoud hoofdletter als origineel die ook had
+      if(schoon[0]===schoon[0].toUpperCase()&&schoon[0]!==schoon[0].toLowerCase()){
+        syn=syn.charAt(0).toUpperCase()+syn.slice(1);
+      }
+      return syn+leesteken;
+    }
+    return w;
+  });
+  return result.join('');
+}
+
 function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
   gebruikteZinnen=gebruikteZinnen||[];
   var d=an.data[ai]; var n=d.nr;
@@ -1821,38 +1873,39 @@ function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
   var pool=vragen[niveau]||vragen['B1'];
   var vraag=offlineRnd(pool);
 
-  // Correct antwoord: echte zin uit deze alinea — encoding al gefixed door fixEncoding bij laden
-  var corr=d.eersteZin.length>20?d.eersteZin:d.langsteZin;
-  if(corr.length>120) corr=corr.substring(0,117)+'…';
+  // Correct antwoord: geparafraseerde versie van eerste zin
+  var bronZin=d.eersteZin.length>20?d.eersteZin:d.langsteZin;
+  if(bronZin.length>120) bronZin=bronZin.substring(0,117)+'…';
+  var corr=parafraseer(bronZin);
 
-  // Afleiders: zinnen uit ANDERE alinea's — zorg dat ze uniek zijn en verschillen van correct
+  // Afleiders: geparafraseerde zinnen uit ANDERE alinea's
   var afl=[];
-  var gebruikt=[corr].concat(gebruikteZinnen);
+  var gebruikt=[corr,bronZin].concat(gebruikteZinnen);
   an.data.forEach(function(ad, idx){
     if(idx===ai) return;
     ad.zinnen.forEach(function(z){
       if(afl.length>=3) return;
       if(z && z.length>15 && gebruikt.indexOf(z)<0){
         if(z.length>120) z=z.substring(0,117)+'…';
-        afl.push(z);
-        gebruikt.push(z);
+        var zPar=parafraseer(z);
+        afl.push(zPar);
+        gebruikt.push(z);gebruikt.push(zPar);
       }
     });
   });
 
-  // Vul aan met verschillende zinnen uit dezelfde alinea als er te weinig andere alinea's zijn
+  // Vul aan als er te weinig alinea's zijn
   var zIdx=1;
   while(afl.length<3){
     var z=d.zinnen[zIdx]||null;
-    if(!z || gebruikt.indexOf(z)>=0){
-      // Maak een variatie
-      z='Zie alinea '+n+' voor meer informatie over dit onderwerp.';
-      if(gebruikt.indexOf(z)>=0) z='Dit wordt in de tekst niet vermeld.';
-      if(gebruikt.indexOf(z)>=0) z='De auteur gaat hier niet op in.';
+    var zPar=z?parafraseer(z):'';
+    if(!z||gebruikt.indexOf(z)>=0||gebruikt.indexOf(zPar)>=0){
+      var fallbacks=['Dit wordt in de tekst niet vermeld.','De auteur gaat hier niet op in.','Dit staat niet in deze alinea.'];
+      zPar=fallbacks[afl.length]||'Geen verdere informatie beschikbaar.';
     }
-    if(z.length>120) z=z.substring(0,117)+'…';
-    afl.push(z);
-    gebruikt.push(z);
+    if(zPar.length>120) zPar=zPar.substring(0,117)+'…';
+    afl.push(zPar);
+    gebruikt.push(zPar);
     zIdx++;
   }
 
