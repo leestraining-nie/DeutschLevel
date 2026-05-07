@@ -2502,6 +2502,7 @@ function switchModalTab(name,btn){
   document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');document.getElementById('modal-'+name).classList.add('active');
 }
+let libPageFilter='alle';
 const _vragenGeneraties={};
 
 async function generateModalQuestions(){
