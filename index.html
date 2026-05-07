@@ -2466,29 +2466,16 @@ function openModal(id){
     modalQuestions=e.vragen;
     renderCITO(modalQuestions,'modalQuestionsBody',null,e.niveau);
     document.getElementById('modalCheckWrap').style.display='block';
+    document.getElementById('modalGenQBtn').innerHTML='<span>↺ Nieuwe opgaven genereren</span>';
     document.getElementById('tabVragen').textContent='📝 Opgaven ('+e.vragen.length+')';
   } else {
     modalQuestions=[];
     document.getElementById('modalQuestionsBody').innerHTML='<div style="text-align:center;padding:36px 14px;color:var(--muted);"><p style="font-size:26px;margin-bottom:7px;">📝</p><p style="font-size:12px;">Ga naar <strong>Lezen</strong> en klik op <strong>Genereer CITO-opgaven</strong>.</p></div>';
     document.getElementById('modalCheckWrap').style.display='none';
+    document.getElementById('modalGenQBtn').innerHTML='<span>📝 Genereer CITO-opgaven</span>';
     document.getElementById('tabVragen').textContent='📝 Opgaven';
   }
-  // Toon juiste knoptekst met teller voor leerlingen
-  const genKeyInit='gen_'+e.id;
-  const gedaanInit=_vragenGeneraties[genKeyInit]||0;
-  const overInit=2-gedaanInit;
-  const btnInit=document.getElementById('modalGenQBtn');
-  if(currentMode==='student'&&gedaanInit>=2){
-    btnInit.innerHTML='<span>🔒 Max. bereikt — geen nieuwe opgaven meer</span>';
-    btnInit.disabled=true;btnInit.style.opacity='0.45';
-  } else if(currentMode==='student'){
-    var labelInit=gedaanInit===0?'📝 Genereer opgaven':'↺ Nieuwe opgaven';
-    btnInit.innerHTML='<span>'+labelInit+' · nog '+overInit+'x</span>';
-    btnInit.disabled=false;btnInit.style.opacity='1';
-  } else {
-    btnInit.innerHTML=e.vragen&&e.vragen.length>0?'<span>↺ Nieuwe opgaven genereren</span>':'<span>📝 Genereer CITO-opgaven</span>';
-    btnInit.disabled=false;btnInit.style.opacity='1';
-  }
+  document.getElementById('modalGenQBtn').disabled=false;
   document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('tabLezen').classList.add('active');
@@ -2540,14 +2527,12 @@ async function generateModalQuestions(){
   document.getElementById('tabVragen').textContent='📝 Opgaven ('+modalQuestions.length+')';
   document.getElementById('modal-vragen').classList.add('active');
   if(currentMode==='student'&&over<=0){
-    btn.innerHTML='<span>🔒 Max. bereikt — geen nieuwe opgaven meer</span>';
-    btn.disabled=true;btn.style.opacity='0.45';
-    showToast('✓ '+modalQuestions.length+' opgaven gegenereerd — dit was je laatste set.');
+    btn.innerHTML='<span>Max. bereikt</span>';btn.disabled=true;btn.style.opacity='0.45';
+    showToast('✓ '+modalQuestions.length+' opgaven gegenereerd - dit was je laatste set.');
   } else {
-    var overTekst=currentMode==='student'?(' · nog '+over+'x vernieuwen'):'';
-    btn.innerHTML='<span>↺ Nieuwe opgaven'+overTekst+'</span>';
-    btn.disabled=false;btn.style.opacity='1';
-    showToast('✓ '+modalQuestions.length+' opgaven gegenereerd'+(currentMode==='student'?' — nog '+over+'x te vernieuwen':'')+'.');
+    btn.innerHTML='<span>↺ Vernieuw opgaven'+(currentMode==='student'?' ('+over+'x over)':'')+'</span>';
+    btn.disabled=false;
+    showToast('✓ '+modalQuestions.length+' opgaven gegenereerd'+(currentMode==='student'?' - nog '+over+'x te vernieuwen':'')+'.');
   }
 }
 
