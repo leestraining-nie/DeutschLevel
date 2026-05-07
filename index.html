@@ -1862,11 +1862,15 @@ function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
   gebruikteZinnen=gebruikteZinnen||[];
   var d=an.data[ai]; var n=d.nr;
   var vragen={
-    'A1':['Wat maakt de tekst duidelijk over alinea '+n+'?','Welke uitspraak past bij alinea '+n+'?'],
-    'A2':['Welke Aussage passt zu Absatz '+n+'?','Was wird aus Absatz '+n+' deutlich?'],
+    // A1/A2: Nederlands, simpele vraagstelling
+    'A1':['Wat staat er in alinea '+n+'?','Welke uitspraak past bij alinea '+n+'?'],
+    'A2':['Welke uitspraak klopt volgens alinea '+n+'?','Was wird in Absatz '+n+' deutlich?'],
+    // B1/VMBO: standaard CITO-stijl
     'B1':['Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was wird aus dem '+n+'. Absatz deutlich?','Welche Aussage trifft auf Absatz '+n+' zu?'],
-    'B2':['Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was wird aus dem '+n+'. Absatz deutlich?','Was ist die Kernaussage des '+n+'. Absatzes?'],
-    'C1':['Was kann man aus dem '+n+'. Absatz schließen?','Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was wird aus dem '+n+'. Absatz deutlich?']
+    // B2/HAVO: iets dieper, kernboodschap
+    'B2':['Welche Aussage stimmt mit dem '+n+'. Absatz überein?','Was ist die Kernaussage des '+n+'. Absatzes?','Was wird aus dem '+n+'. Absatz deutlich?','Wovon handelt der '+n+'. Absatz?'],
+    // C1/VWO: conclusies trekken, impliciete informatie
+    'C1':['Was kann man aus dem '+n+'. Absatz schließen?','Welche Schlussfolgerung lässt sich aus Absatz '+n+' ziehen?','Was lässt sich aus dem '+n+'. Absatz ableiten?','Welche Aussage stimmt mit dem '+n+'. Absatz überein?']
   };
   var pool=vragen[niveau]||vragen['B1'];
   var vraag=offlineRnd(pool);
@@ -1927,16 +1931,18 @@ function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
 }
 
 // ── Bewering-vraag: echte feiten = wel, verdraaide feiten = niet ──
-function offlineMaakBewering(an, ai){
+function offlineMaakBewering(an, ai, niveau){
   var d=an.data[ai]; var n=d.nr;
+  niveau=niveau||'B1';
   var zinnen=d.zinnen.filter(function(z){return z.length>15;});
   if(zinnen.length<2) zinnen=[d.eersteZin, d.langsteZin, d.kortInfoZin];
 
   var beweringen=[];
   var welCount=0; var nietCount=0;
 
-  // Maak 3-4 beweringen: afwisselend wel en niet
-  var targets=Math.min(zinnen.length, 4);
+  // Aantal beweringen per niveau: VMBO=2, HAVO=3, VWO=4
+  var maxBew={'A1':2,'A2':2,'B1':2,'B2':3,'C1':4,'C2':4}[niveau]||3;
+  var targets=Math.min(zinnen.length, maxBew);
   for(var i=0;i<targets;i++){
     var z=zinnen[i]||d.eersteZin;
     z=kapZin(z,200);
@@ -2044,21 +2050,53 @@ function offlineMaakOpen(an, ai, gebruikteZinnen){
   var zinnen=d.zinnen.filter(function(z){return z.length>20&&gebruikteZinnen.indexOf(z)<0;});
   if(!zinnen.length) zinnen=d.zinnen.filter(function(z){return z.length>20;});
 
-  var vraagPats=[
-    {v:"Wat wordt duidelijk uit alinea "+n+"? Beantwoord in het Nederlands.", p:1},
-    {v:"Wat is de hoofdgedachte van alinea "+n+"? Schrijf één zin in het Nederlands.", p:1},
-    {v:"Welke informatie geeft de auteur in alinea "+n+"? Beantwoord in het Nederlands.", p:1},
-    {v:"Om welke reden(en) gaat het in alinea "+n+"? Beantwoord in het Nederlands.", p:2}
-  ];
-  // Kies 2p vraag vaker bij B2/C1
+  // Niveau bepaalt vraagdiepte en punten
+  var niveau=an.niveau||'B1';
+  var vraagPats;
+
+  if(niveau==='A1'||niveau==='A2'){
+    // Simpel: wat staat er, 1 punt
+    vraagPats=[
+      {v:"Wat staat er in alinea "+n+"? Schrijf één zin in het Nederlands.", p:1},
+      {v:"Wat vertelt de auteur in alinea "+n+"? Beantwoord in het Nederlands.", p:1},
+    ];
+  } else if(niveau==='B1'){
+    // VMBO: concreet, 1-2 punten
+    vraagPats=[
+      {v:"Wat wordt duidelijk uit alinea "+n+"? Beantwoord in het Nederlands.", p:1},
+      {v:"Welke informatie geeft de auteur in alinea "+n+"? Beantwoord in het Nederlands.", p:1},
+      {v:"Om welke reden(en) gaat het in alinea "+n+"? Geef twee redenen.", p:2},
+    ];
+  } else if(niveau==='B2'){
+    // HAVO: iets abstracter, 1-2 punten
+    vraagPats=[
+      {v:"Wat maakt de auteur duidelijk in alinea "+n+"? Beantwoord in het Nederlands.", p:1},
+      {v:"Om welke twee redenen... Beantwoord op basis van alinea "+n+".", p:2},
+      {v:"Welke twee maatregelen/redenen noemt de auteur in alinea "+n+"?", p:2},
+      {v:"Wat is de kern van alinea "+n+"? Schrijf één zin.", p:1},
+    ];
+  } else {
+    // C1/C2 VWO: conclusies, impliciete informatie, 2 punten
+    vraagPats=[
+      {v:"Welche zwei Gründe nennt der Autor in Absatz "+n+"? Beantwoord in het Nederlands.", p:2},
+      {v:"Was kann man aus Absatz "+n+" schließen? Leg uit in het Nederlands.", p:2},
+      {v:"Wat is het standpunt van de auteur in alinea "+n+"? Onderbouw je antwoord.", p:2},
+      {v:"Welche Folgen werden in Absatz "+n+" genannt? Beantwoord in het Nederlands.", p:2},
+    ];
+  }
+
   var pat=offlineRnd(vraagPats);
 
-  // Modelantwoord: eerste 1-2 informatieve zinnen
+  // Modelantwoord: dieper bij hogere niveaus
   var ant=(zinnen[0]||d.eersteZin);
   ant=kapZin(ant,250);
   if(pat.p===2&&zinnen[1]){
     var ant2=zinnen[1]; ant2=kapZin(ant2,250);
     ant+=' '+ant2;
+  }
+  // VWO: voeg derde zin toe als beschikbaar
+  if((niveau==='C1'||niveau==='C2')&&pat.p===2&&zinnen[2]){
+    ant+=' '+kapZin(zinnen[2],200);
   }
 
   return {
@@ -2099,12 +2137,12 @@ function offlineMaakRelatie(an, ai){
 // ── Vraagtype kiezen per niveau (CITO-mix) ──
 function offlineKiesType(niveau, vraagNr, totaal){
   var mixen={
-    'A1':['mc','mc','mc','bewering','citeer','mc'],
-    'A2':['mc','mc','bewering','citeer','mc','open'],
-    'B1':['mc','mc','bewering','citeer','mc','open'],
-    'B2':['mc','bewering','mc','citeer','open','mc','relatie'],
-    'C1':['mc','bewering','relatie','mc','citeer','open','mc'],
-    'C2':['mc','bewering','relatie','mc','citeer','open','bewering']
+    'A1':['mc','mc','mc','bewering','mc','mc'],
+    'A2':['mc','mc','bewering','mc','mc','open'],
+    'B1':['mc','mc','bewering','mc','open','relatie'],
+    'B2':['mc','bewering','mc','open','relatie','mc','bewering'],
+    'C1':['mc','bewering','relatie','mc','open','mc','bewering'],
+    'C2':['mc','bewering','relatie','mc','open','mc','bewering']
   };
   var mix=mixen[niveau]||mixen['B1'];
   // Laatste vraag altijd open
@@ -2115,6 +2153,7 @@ function offlineKiesType(niveau, vraagNr, totaal){
 // ── Hoofdfunctie ──
 function genereerOfflineVragen(tekst, niveau, count){
   var an=offlineAnalyseer(tekst);
+  an.niveau=niveau; // sla niveau op voor gebruik in subfuncties
   var vragen=[];
   var gebruikteTypes=[];
   var gebruikteVragen=[];   // bijhouden welke vraagteksten al gebruikt zijn
@@ -2133,7 +2172,7 @@ function genereerOfflineVragen(tekst, niveau, count){
     do{
       try{
         if(type==='mc')            q=offlineMaakMC(an,ai,niveau,gebruikteZinnen);
-        else if(type==='bewering') q=offlineMaakBewering(an,ai);
+        else if(type==='bewering') q=offlineMaakBewering(an,ai,niveau);
         else if(type==='citeer')   q=offlineMaakCiteer(an,ai,gebruikteZinnen);
         else if(type==='relatie')  q=offlineMaakRelatie(an,ai);
         else                       q=offlineMaakOpen(an,ai,gebruikteZinnen);
