@@ -1920,12 +1920,32 @@ function offlineMaakMC(an, ai, niveau, gebruikteZinnen){
     }
   });
 
-  // Vul aan met fallbacks indien nodig
-  var fallbacks=['Dit wordt niet in de tekst vermeld.','De auteur gaat hier niet op in.','Dit staat niet in deze alinea.'];
-  var fi=0;
-  while(afl.length<aantalOpties-1&&fi<fallbacks.length){
-    if(gebruikt.indexOf(fallbacks[fi])<0){afl.push(fallbacks[fi]);gebruikt.push(fallbacks[fi]);}
-    fi++;
+  // Vul aan met zinnen uit dezelfde alinea (verdraaid) als er te weinig andere alinea's zijn
+  var zIdx=1;
+  while(afl.length<aantalOpties-1&&zIdx<d.zinnen.length){
+    var z=d.zinnen[zIdx];
+    if(z&&z.length>15&&gebruikt.indexOf(z)<0){
+      z=kapZin(z,120);
+      var zPar=parafraseer(z);
+      if(gebruikt.indexOf(zPar)<0){
+        afl.push(zPar);
+        gebruikt.push(z);gebruikt.push(zPar);
+      }
+    }
+    zIdx++;
+  }
+  // Laatste redmiddel: neem zinnen uit willekeurige alinea's die we nog niet hebben
+  if(afl.length<aantalOpties-1){
+    var alleZinnen=[];
+    an.data.forEach(function(ad){ad.zinnen.forEach(function(z){if(z&&z.length>15)alleZinnen.push(z);});});
+    offlineShuffle(alleZinnen).forEach(function(z){
+      if(afl.length>=aantalOpties-1) return;
+      if(gebruikt.indexOf(z)<0){
+        z=kapZin(z,120);
+        var zPar=parafraseer(z);
+        if(gebruikt.indexOf(zPar)<0){afl.push(zPar);gebruikt.push(z);gebruikt.push(zPar);}
+      }
+    });
   }
 
   var alleOpties=offlineShuffle([corr].concat(afl));
