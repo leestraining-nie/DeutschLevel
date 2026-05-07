@@ -821,43 +821,43 @@
           "type": "mc",
           "punten": 1,
           "context": "Alinea 1",
-          "vraag": "Welke uitspraak past bij alinea 1?",
-          "opties": [
-            "A Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik.",
-            "B Physik und Chemie mag ich nicht so gerne.",
-            "C Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen.",
-            "D Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael…"
-          ],
-          "antwoord": "D",
-          "uitleg": "Het correcte antwoord staat in alinea 1 van de tekst."
-        },
-        {
-          "type": "mc",
-          "punten": 1,
-          "context": "Alinea 1",
           "vraag": "Wat maakt de tekst duidelijk over alinea 1?",
           "opties": [
-            "A Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael…",
-            "B Nach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis.",
-            "C Am Samstag gehen wir oft ins Kino.",
-            "D Am Sonntag schlafe ich lange, dann koche ich mit meiner Mutter das Mittagessen."
+            "A Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen.",
+            "B Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael…",
+            "C Physik und Chemie mag ich nicht so gerne.",
+            "D Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik."
           ],
-          "antwoord": "A",
+          "antwoord": "B",
           "uitleg": "Het correcte antwoord staat in alinea 1 van de tekst."
         },
         {
           "type": "mc",
           "punten": 1,
           "context": "Alinea 2",
-          "vraag": "Welke uitspraak past bij alinea 2?",
+          "vraag": "Wat maakt de tekst duidelijk over alinea 2?",
           "opties": [
-            "A Ich komme aus Österreich und lebe seit drei Jahren in Deutschland.",
+            "A Mein Name ist Anna.",
             "B Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael…",
-            "C Mein Name ist Anna.",
-            "D Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen."
+            "C Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen.",
+            "D Ich komme aus Österreich und lebe seit drei Jahren in Deutschland."
           ],
-          "antwoord": "D",
+          "antwoord": "C",
           "uitleg": "Het correcte antwoord staat in alinea 2 van de tekst."
+        },
+        {
+          "type": "mc",
+          "punten": 1,
+          "context": "Alinea 3",
+          "vraag": "Welke uitspraak past bij alinea 3?",
+          "opties": [
+            "A Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München.",
+            "B Meine Mutter ist Köchin, mein Vater arbeitet in einer Bank.",
+            "C Nach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis.",
+            "D Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael…"
+          ],
+          "antwoord": "C",
+          "uitleg": "Het correcte antwoord staat in alinea 3 van de tekst."
         },
         {
           "type": "bewering",
@@ -866,7 +866,7 @@
           "vraag": "Geef van elk van de volgende beweringen aan of deze overeenkomt met alinea 2. Noteer 'wel' of 'niet'.",
           "beweringen": [
             {
-              "tekst": "Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Gol…",
+              "tekst": "Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Golâ¦",
               "antwoord": "wel"
             },
             {
@@ -885,7 +885,7 @@
           "punten": 1,
           "context": "Alinea 3",
           "vraag": "Citeer de woordgroep uit alinea 3 die overeenkomt met 'de belangrijkste conclusie hier'.",
-          "antwoord": "meinen Freundinnen spazieren",
+          "antwoord": "meiner Mutter Mittagessen",
           "uitleg": "Deze woordgroep staat letterlijk in alinea 3 van de tekst."
         },
         {
@@ -893,7 +893,7 @@
           "punten": 1,
           "context": "Alinea 3",
           "vraag": "Welke informatie geeft de auteur in alinea 3? Beantwoord in het Nederlands.",
-          "antwoord": "Nach dem Essen gehen wir mit dem Hund am See spazieren.",
+          "antwoord": "Am Samstag gehen wir oft ins Kino.",
           "uitleg": "Het antwoord staat in alinea 3 van de tekst."
         }
       ]
@@ -985,7 +985,8 @@
           "antwoord": "Zuerst besuchte ich einen Sprachkurs. Weil ich schon immer gerne in der Küche stand, machte ich eine Ausbildung zum Ko.",
           "uitleg": ""
         }
-      ]
+      ],
+      "markeringen": "<p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">1</span><span>Reyad Danhar aus Syrien hat in Deutschland eine bessere Zukunft gesucht – und sie auch gefunden. Er ist Koch und hat einen Michelin-Stern bekommen. Hier erzählt er seine Geschichte. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">2</span><span>Ich komme aus Damaskus und lebe heute in Wuppertal in Nordrhein-Westfalen – dazwischen liegt aber eine lange Reise. Als in Syrien im Jahr 2011 der Bürgerkrieg begann, wurde mir klar: In diesem Land gibt es keine Zukunft für mich. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">3</span><span>Ich floh in den Libanon. Dort verdiente ich mein Geld als Barista und Fooddesigner. Doch mit der Zeit wurde es auch dort unsicher. Ich flog nach Brasilien, fand dort aber keine Arbeit. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">4</span><span>Also reiste ich weiter nach Algerien, Tunesien, Libyen. Ich wollte nach Deutschland. Ein Bekannter hatte dort in den 80er-Jahren gearbeitet und mir viel von der deutschen Mentalität und dem guten Leben dort erzählt. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">5</span><span>Ich kontaktierte einen Schmuggler, der Boote für die Flucht nach Europa organisierte. Um fünf Uhr morgens begann die Reise. Um mich herum schrien die Babys, Frauen weinten. Ich hatte noch nie solche Angst. Dann trafen wir ein großes Schiff. Es nahm die Frauen und Kinder auf und rief die italienische Marine, die uns in einem Militärschiff abholte. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">6</span><span>Von Italien fuhr ich mit dem Zug nach Deutschland. Als ich zum ersten Mal die schwarz-rot-goldene Fahne sah, wusste ich: Ich bin endlich angekommen, hier kann meine Zukunft beginnen. Den Deutschen wollte ich etwas kochen, das sie noch nie gegessen haben</span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">7</span><span>Zuerst besuchte ich einen Sprachkurs. Weil ich schon immer gerne in der Küche stand, machte ich eine Ausbildung zum Koch. Ich wollte mir meine eigenen Gerichte überlegen. Den Deutschen wollte ich etwas kochen, das sie noch nie gegessen haben. Ich arbeitete hart, bis ich Küchenchef des Wuppertaler Restaurants Shiraz wurde. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">8</span><span>Ich glaube, dass man erst glücklich mit seinem Leben ist, wenn man etwas Großes erreicht hat. Also stellte ich mir selbst die Aufgabe, einen Michelin-Stern zu bekommen – und ich schaffte es. Andere Köchinnen finden mich chaotisch. Ich koche nicht nach Rezept, sondern nach Gefühl und Erinnerung. Trotzdem bin ich perfektionistisch. Ich glaube, das und die Kombination mit der orientalischen Küche machen meine Gerichte anders als alle anderen. </span></p><p style=\"display:flex;gap:8px;align-items:flex-start;\"><span style=\"min-width:22px;font-size:11px;font-weight:700;color:#888;background:#f0f0f0;border-radius:4px;padding:1px 4px;margin-top:2px;flex-shrink:0;text-align:center;user-select:none;\">9</span><span>Mein nächstes Ziel ist es, unter die 100 besten Köche der Welt zu kommen. Ich möchte Anerkennung. Als Flüchtling bekommt man die selten. Wenn ich das geschafft habe, bin ich zufrieden mit mir. Dann höre ich vielleicht auf mit der stressigen Sterneküche, starte ein kleines Restaurant und koche nur noch Eintöpfe.</span></p>"
     },
     {
       "id": 1777733230744,
