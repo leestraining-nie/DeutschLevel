@@ -2200,14 +2200,40 @@ function checkAllAnswers(){doCheck('questionsBody',currentQuestions,'scoreDispla
 function checkModalAnswers(){doCheck('modalQuestionsBody',modalQuestions,null,modalEntry?.niveau);}
 async function doCheck(bodyId,questions,scoreId,niveau){
   if(!questions||!questions.length)return;
-  // Blokkeer dubbele XP: na eerste nakijken knop disablen
+
   const checkBtn=(bodyId==='modalQuestionsBody')
     ?document.querySelector('#modalCheckWrap .btn-sm')
     :document.querySelector('[onclick="checkAllAnswers()"]');
+
+  // Controleer of leerling iets heeft ingevuld
+  let ietsIngevuld=false;
+  for(let i=0;i<questions.length;i++){
+    const q=questions[i];
+    const qi=document.getElementById(bodyId+'-qi-'+i);
+    if(q.type==='mc'||q.type==='relatie'||q.type==='aansluit'||q.type==='toon'||q.type==='titel'){
+      if((qi?.dataset.chosen||'').trim()) ietsIngevuld=true;
+    } else if(q.type==='bewering'){
+      const chosen=JSON.parse(qi?.dataset.chosen||'{}');
+      if(Object.keys(chosen).length>0) ietsIngevuld=true;
+    } else if(q.type==='citeer'){
+      const cEl=document.getElementById(bodyId+'-citeer-'+i);
+      if((cEl?.value||'').trim()) ietsIngevuld=true;
+    } else if(q.type==='open'){
+      const oEl=document.getElementById(bodyId+'-open-'+i);
+      if((oEl?.value||'').trim()) ietsIngevuld=true;
+    }
+    if(ietsIngevuld) break;
+  }
+
+  if(!ietsIngevuld){
+    showToast('Beantwoord eerst een vraag voor je nakijkt.');
+    return;
+  }
+
+  // Blokkeer dubbele XP na echte nakijkpoging
   const alreadyChecked=_xpClaimed[bodyId];
   if(alreadyChecked){
-    // Toon score opnieuw maar ken geen XP toe
-    showToast('Al nakgekeken — XP is al verdiend voor deze set');return;
+    showToast('Al nagekeken — XP is al verdiend voor deze set.');return;
   }
   _xpClaimed[bodyId]=true;
   if(checkBtn){checkBtn.disabled=true;checkBtn.textContent='✓ Nagekeken';checkBtn.style.opacity='0.55';}
