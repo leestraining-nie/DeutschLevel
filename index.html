@@ -2465,9 +2465,23 @@ function switchModalTab(name,btn){
   document.querySelectorAll('.modal-tab-content').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');document.getElementById('modal-'+name).classList.add('active');
 }
+const _vragenGeneraties={};// bijhoudt hoe vaak per tekst-id nieuwe vragen zijn gegenereerd
+
 async function generateModalQuestions(){
   if(!modalEntry)return;
   const btn=document.getElementById('modalGenQBtn');
+
+  // Telling per tekst-id (student-modus: max 2x opnieuw genereren)
+  const genKey='gen_'+modalEntry.id;
+  const aantalKeer=_vragenGeneraties[genKey]||0;
+  if(currentMode==='student'&&aantalKeer>=2){
+    showToast('Je hebt al 2x nieuwe opgaven gegenereerd voor deze tekst.');
+    btn.disabled=true;
+    btn.textContent='Max. bereikt';
+    btn.style.opacity='0.45';
+    return;
+  }
+
   btn.innerHTML='<div class="spinner"></div><span>Opgaven genereren…</span>';btn.disabled=true;
 
   const niveau=modalEntry.niveau||'B1';
@@ -2484,6 +2498,10 @@ async function generateModalQuestions(){
     return;
   }
 
+  // Verhoog teller
+  _vragenGeneraties[genKey]=(aantalKeer+1);
+  const over=2-_vragenGeneraties[genKey];
+
   renderCITO(modalQuestions,'modalQuestionsBody',null,niveau);
   document.getElementById('modalCheckWrap').style.display='block';
   const entry=library.find(x=>x.id===modalEntry.id);
@@ -2493,8 +2511,16 @@ async function generateModalQuestions(){
   document.getElementById('tabVragen').classList.add('active');
   document.getElementById('tabVragen').textContent='📝 Opgaven ('+modalQuestions.length+')';
   document.getElementById('modal-vragen').classList.add('active');
-  btn.innerHTML='<span>↺ Vernieuw opgaven</span>';btn.disabled=false;
-  showToast('✓ '+modalQuestions.length+' opgaven gegenereerd');
+
+  if(currentMode==='student'&&over<=0){
+    btn.innerHTML='<span>Max. bereikt</span>';
+    btn.disabled=true;btn.style.opacity='0.45';
+    showToast('✓ '+modalQuestions.length+' opgaven gegenereerd — dit was je laatste set.');
+  } else {
+    btn.innerHTML='<span>↺ Vernieuw opgaven'+(currentMode==='student'?' ('+over+'x over)':'')+'</span>';
+    btn.disabled=false;
+    showToast('✓ '+modalQuestions.length+' opgaven gegenereerd'+(currentMode==='student'?' · nog '+over+'x te vernieuwen':'')+'.');
+  }
 }
 
 // ════ MARKING ════
